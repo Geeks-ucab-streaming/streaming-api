@@ -18,8 +18,8 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ secrets.USER  }}/myapp:${{ github.sha }} .
-        docker push ${{ secrets.password }}/myapp:${{ github.sha }}
+        docker build -t ${{ secrets.USER  }}/streaming-app-des-nest-app:v1 .
+        docker push ${{ secrets.password }}/streaming-app-des-nest-app:v1
 
     - name: Deploy to ACI
       run: |
