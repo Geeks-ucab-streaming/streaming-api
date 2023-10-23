@@ -23,7 +23,11 @@ jobs:
         docker build -t ${{ secrets.USER  }}/streaming-app-des-nest-app:v1 .
         docker push ${{ secrets.USER }}/streaming-app-des-nest-app:v1
 
-
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+          creds: '{"clientId": "${{ secrets.AZURE_APP_ID }}", "clientSecret": "${{ secrets.AZURE_PASSWORD }}", "tenantId": "${{ secrets.AZURE_TENANT_ID }}"}'
+          
     - name: Deploy to ACI
       run: |
         az container delete --resource-group deploy_container --name streaming-app-container --yes
