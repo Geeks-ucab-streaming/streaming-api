@@ -27,5 +27,9 @@ jobs:
     - name: Deploy to ACI
       run: |
         az login
-        az container create --resource-group deploy_container --name streaming-app-container --image ${{ secrets.USER }}/streaming-app-des-nest-app:v1 --dns-name-label streaming-api.aagbfcfcfkhfhpez.eastus.azurecontainer.io --query ipAddress.fqdn
+        az container update --resource-group deploy_container --name streaming-app-container --image ${{ secrets.USER }}/streaming-app-des-nest-app:v1
+    - name: Restart ACI
+      run: |
+        az container restart --resource-group deploy_container --name streaming-app-container
+
         
