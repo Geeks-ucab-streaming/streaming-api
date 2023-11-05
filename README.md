@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 # back-end-streaming-app
 Backend of a streaming application 
+<<<<<<< HEAD
 =======
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
@@ -76,3 +77,10 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 >>>>>>> subiendo-proyecto
+=======
+
+## Ejecutar el siguiente comando al tener el dockerfile 
+docker build -t streaming-app-docker .      
+## Ejecutar luego este comando al tener el compose.yml
+docker-compose up
+>>>>>>> ead89ee01f7414e8517bc833eec3d08484b5caaa
