@@ -1,0 +1,35 @@
+name: CI/CD to Azure Container Instance
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.USER }} -p ${{ secrets.password }}
+    - name: List Docker images
+      run: docker images
+
+    - name: Build and push Docker image
+      run: |
+        docker build -t ${{ secrets.USER  }}/streaming-app-des-nest-app:v1 .
+        docker push ${{ secrets.USER }}/streaming-app-des-nest-app:v1
+
+
+    - name: Deploy to ACI
+      run: |
+        az login --service-principal -u "${{ secrets.AZURE_APP_ID }}" -p "${{ secrets.AZURE_PASSWORD }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+        az container delete --resource-group deploy_container --name streaming-app-container --yes
+    - name: Create new ACI with updated image
+      run: |
+          az container create --resource-group deploy_container --name streaming-app-container --image ${{ secrets.USER }}/streaming-app-des-nest-app:v1 --dns-name-label streaming-api --query ipAddress.fqdn --ports 3000
+
+        
