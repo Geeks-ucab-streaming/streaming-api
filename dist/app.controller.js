@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
+const swagger_1 = require("@nestjs/swagger");
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
@@ -22,7 +23,8 @@ let AppController = class AppController {
 };
 exports.AppController = AppController;
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('/hello'),
+    (0, swagger_1.ApiTags)('hello'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", String)
