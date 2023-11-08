@@ -16,6 +16,7 @@ export class AppController {
   @ApiTags('Prueba')
   @Get('algo')
   getPrueba(): string {
+    console.log('algo')
     return this.appService.getHello();
   }
 
