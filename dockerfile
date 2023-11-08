@@ -22,4 +22,4 @@ COPY --from=builder --chown=node:node /home/node/package*.json /home/node/
 COPY --from=builder --chown=node:node /home/node/node_modules/ /home/node/node_modules/
 COPY --from=builder --chown=node:node /home/node/dist/ /home/node/dist/
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
