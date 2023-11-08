@@ -12,9 +12,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
+
   @ApiTags('Prueba')
   @Get('algo')
   getPrueba(): string {
     return this.appService.getHello();
   }
+
 }
