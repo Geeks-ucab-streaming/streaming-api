@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import config from 'ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
-console.log(config)
+
 @Module({
   imports: [
     ConfigModule.forRoot({

@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      NODE_ENV: production
+      NODE_ENV: prod
     env_file:
       - ./deploy/.env.prod
     ports:

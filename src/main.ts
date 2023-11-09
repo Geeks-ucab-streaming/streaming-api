@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-dotenv.config({path: './deploy/.env.dev'});
+dotenv.config({path: `./deploy/.env.${process.env.NODE_ENV}`});
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { swagger } from './docs/swagger.docs';
