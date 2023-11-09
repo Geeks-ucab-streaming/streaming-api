@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import config from 'ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+console.log(config);
 @Module({
   imports: [
     ConfigModule.forRoot({
