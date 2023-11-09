@@ -7,7 +7,7 @@ import { swagger } from './docs/swagger.docs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+    app.enableCors();
   swagger(app);
 
   await app.listen(3000);
