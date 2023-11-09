@@ -14,7 +14,9 @@ RUN npm install && npm run build
 # ---
 FROM node:18.0.0-alpine3.14
 
-ENV NODE_ENV prod
+ENV NODE_ENV production
+ENV ENV_FILE .env.prod
+ENV HOST bd-soundspace.postgres.database.azure.com  
 
 WORKDIR /home/node
 

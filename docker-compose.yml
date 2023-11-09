@@ -5,8 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        ENV_FILE: ./deploy/.env.prod
     environment:
-      NODE_ENV: production
+      NODE_ENV: prod
+    env_file:
+      - ./deploy/.env.prod
     ports:
       - "${PORT}:${PORT}"
     volumes:
