@@ -15,7 +15,6 @@ RUN npm install && npm run build
 FROM node:18.0.0-alpine3.14
 
 ENV NODE_ENV prod
-ENV HOST $N
 
 WORKDIR /home/node
 
