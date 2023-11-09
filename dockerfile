@@ -11,15 +11,17 @@ USER node
 RUN npm install && npm run build
 
 # ---
+
 FROM node:18.0.0-alpine3.14
 
 ENV NODE_ENV production
-ENV HOST=${HOST}
+ENV HOST $N
 
 WORKDIR /home/node
 
 COPY --from=builder --chown=node:node /home/node/package*.json /home/node/
 COPY --from=builder --chown=node:node /home/node/node_modules/ /home/node/node_modules/
 COPY --from=builder --chown=node:node /home/node/dist/ /home/node/dist/
+COPY ./deploy/.env.prod /home/node/deploy/.env.prod
 
 CMD ["node", "dist/src/main.js"]
