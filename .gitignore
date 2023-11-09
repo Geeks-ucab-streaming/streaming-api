@@ -1,5 +1,6 @@
 # compiled output
 /dist
+/deploy
 /node_modules
 
 # Logs
@@ -33,7 +34,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
+/deploy
 .env
 
 secretsAzure.json
