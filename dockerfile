@@ -21,5 +21,6 @@ WORKDIR /home/node
 COPY --from=builder --chown=node:node /home/node/package*.json /home/node/
 COPY --from=builder --chown=node:node /home/node/node_modules/ /home/node/node_modules/
 COPY --from=builder --chown=node:node /home/node/dist/ /home/node/dist/
+COPY --chown=node:node /home/node/deploy/.env.prod /home/node/deploy/.env.prod
 
 CMD ["node", "dist/src/main.js"]
