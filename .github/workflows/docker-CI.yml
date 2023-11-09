@@ -30,8 +30,6 @@ jobs:
         az container delete --resource-group deploy_container --name streaming-app-container --yes
     - name: Create new ACI with updated image
       run: |
-          env_vars=$(echo ${{ secrets.AZURE_ENV_VARS }} | sed 's/\r|\n/ /g')
-          env_arg="--environment-variables $env_vars"
-          az container create --resource-group deploy_container --name streaming-app-container --image ${{ secrets.USER }}/streaming-app-des-nest-app:v1 --dns-name-label streaming-api $env_arg --query ipAddress.fqdn --ports 3000
+          az container create --resource-group deploy_container --name streaming-app-container --image ${{ secrets.USER }}/streaming-app-des-nest-app:v1 --dns-name-label streaming-api  --query ipAddress.fqdn --ports 3000
 
         
