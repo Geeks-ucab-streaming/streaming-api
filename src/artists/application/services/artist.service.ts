@@ -6,13 +6,13 @@ import { Inject, Injectable } from '@nestjs/common';
 export class ArtistService {
   constructor(
     @Inject('ArtistRepository')
-    private readonly artistRepository: ArtistRepository) {}
+    private readonly artistRepository: ArtistRepository,
+  ) {}
 
   async create(artistDto: ArtistDto): Promise<Artist> {
     const artist = new Artist(
       artistDto.id,
       artistDto.name,
-      artistDto.duration,
       artistDto.image_reference,
     );
     return this.artistRepository.save(artist);
