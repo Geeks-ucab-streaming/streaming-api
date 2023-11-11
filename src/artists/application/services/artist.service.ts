@@ -1,26 +1,41 @@
-import { Controller, Get, Injectable, Post, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ArtistDto } from 'src/artists/application/dtos/artist.dto';
-import { Artist } from 'src/artists/domain/artist';
-import { ArtistEntity } from 'src/artists/infrastructure/entities/artist.entity';
-import { DataSource, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { Artist } from '../../domain/artist';
+import { ArtistDto } from '../dtos/artist.dto';
 
 @Injectable()
 export class ArtistService {
-  constructor(
-    @InjectRepository(Artist)
-    private readonly artistRepository: Repository<ArtistEntity>,
+  private artists: Artist[] = [];
 
-    private readonly dataSource: DataSource,
-  ) {}
-
-  public async create(artist: ArtistDto) {
-    await this.artistRepository.create(artist);
-    await this.artistRepository.save(artist);
+  create(artistDto: ArtistDto): Artist {
+    const artist = new Artist(
+      artistDto.id,
+      artistDto.name,
+      artistDto.duration,
+      artistDto.image_reference,
+    );
+    this.artists.push(artist);
+    return artist;
   }
 
-  public async findAll() {
-    const artists = await this.artistRepository.find();
-    return artists || 'manda artistas';
+  findAll(): Artist[] {
+    return this.artists;
+  }
+
+  findOne(id: string): Artist {
+    return this.artists.find((artist) => artist.id === id);
+  }
+
+  update(id: string, artistDto: ArtistDto): Artist {
+    const artist = this.findOne(id);
+    if (artist) {
+      artist.name = artistDto.name;
+      artist.duration = artistDto.duration;
+      artist.image_reference = artistDto.image_reference;
+    }
+    return artist;
+  }
+
+  remove(id: string): void {
+    this.artists = this.artists.filter((artist) => artist.id !== id);
   }
 }
