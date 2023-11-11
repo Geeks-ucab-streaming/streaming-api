@@ -1,9 +1,12 @@
-import { ArtistRepository } from '../../domain/artist.repository';
-import { Artist } from '../../domain/artist';
+
+import { ArtistRepository } from 'src/artists/domain/artist.repository';
+import { IArtistService } from 'src/artists/domain/artist.service.interface';
 import { ArtistDto } from '../dtos/artist.dto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Artist } from 'src/artists/domain/artist';
+import { Injectable, Inject } from '@nestjs/common';
+
 @Injectable()
-export class ArtistService {
+export class ArtistService implements IArtistService {
   constructor(
     @Inject('ArtistRepository')
     private readonly artistRepository: ArtistRepository) {}
@@ -20,9 +23,5 @@ export class ArtistService {
 
   async findAll(): Promise<Artist[]> {
     return this.artistRepository.findAll();
-  }
-
-  async findOne(id: string): Promise<Artist> {
-    return this.artistRepository.findOne(id);
   }
 }
