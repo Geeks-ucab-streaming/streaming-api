@@ -1,3 +1,4 @@
+import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
 import { PlaylistSong } from 'src/common/infrastructure/entities/playlistSong';
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
@@ -36,4 +37,7 @@ export class SongEntity {
 
   @OneToMany(() => PlaylistSong, (playlistSong) => playlistSong.song)
   playlistSong: PlaylistSong[];
+
+  @OneToMany(() => ReproducedSong, (reproducedSong) => reproducedSong.song)
+  reproducedSong: ReproducedSong[];
 }

@@ -1,10 +1,15 @@
 //Decoradores
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, Check, ManyToOne } from "typeorm";
-import { User } from "../../users/infraestructure/users.entity";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  Check,
+  ManyToOne,
+} from 'typeorm';
+import { UserEntity } from '../../users/infraestructure/users.entity';
 
 @Entity()
 export class StoredEdition {
-  
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,8 +29,6 @@ export class StoredEdition {
   @Column()
   newValue: number;
 
-  @ManyToOne(() =>User, (user) => user.edition) //Se hace el cambio en la tabla de reportes por este decorador
-  user: User;
-
-
+  @ManyToOne(() => UserEntity, (user) => user.edition) //Se hace el cambio en la tabla de reportes por este decorador
+  user: UserEntity;
 }

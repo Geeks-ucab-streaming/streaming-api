@@ -1,7 +1,6 @@
-import { Expose } from "class-transformer"
+import { Expose } from 'class-transformer';
 
-export class UserDto{
-
+export class UserDto {
   @Expose()
   id: number;
 
@@ -19,5 +18,4 @@ export class UserDto{
 
   @Expose()
   phonesNumber: number;
-  
 }

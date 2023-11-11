@@ -1,21 +1,18 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { Phone } from "./phones.entity";
-import { Prefixes } from "./prefixes.entity";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { PhoneEntity } from './phones.entity';
+import { Prefixes } from './prefixes.entity';
 
 @Entity()
 export class Line {
-
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
   name: string;
 
-  @OneToMany(() => Phone, (phones) => phones) 
-  phones: Phone[];
+  @OneToMany(() => PhoneEntity, (phones) => phones)
+  phones: PhoneEntity[];
 
-  @OneToMany(() => Prefixes, (prefixes) => prefixes) 
+  @OneToMany(() => Prefixes, (prefixes) => prefixes)
   prefixes: Prefixes[];
-
-} 
-
+}

@@ -1,15 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { Line } from "./lines.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Line } from './lines.entity';
 
 @Entity()
 export class Prefixes {
-
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
-  code: number;
+  prefix: number;
 
-  @ManyToOne(() => Line, (linePhone) => linePhone.prefixes) 
+  @ManyToOne(() => Line, (linePhone) => linePhone.prefixes)
   linePhone: Line;
-} 
+}

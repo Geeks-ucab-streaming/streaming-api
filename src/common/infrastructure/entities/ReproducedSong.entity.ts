@@ -1,19 +1,20 @@
 import { ArtistEntity } from 'src/artists/infrastructure/entities/artist.entity';
 import { PlaylistEntity } from 'src/playlist/infrastructure/entities/playlist.entity';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
+import { UserEntity } from 'src/users/infraestructure/users.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('Playlist_Creator')
-export class PlaylistCreator {
+@Entity('Reproduced_Song')
+export class ReproducedSong {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'date', nullable: false })
-  creation_date: Date;
+  @Column({ type: 'datetime', nullable: false })
+  reproduced_date: Date;
 
-  @ManyToOne(() => PlaylistEntity, (playlist) => playlist.playlistCreator)
-  playlist: PlaylistEntity;
+  @ManyToOne(() => SongEntity, (song) => song.reproducedSong)
+  song: SongEntity;
 
-  @ManyToOne(() => ArtistEntity, (artist) => artist.playlistCreator)
-  artist: ArtistEntity;
+  @ManyToOne(() => UserEntity, (user) => user.reproducedSong)
+  user: UserEntity;
 }

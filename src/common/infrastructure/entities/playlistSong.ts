@@ -2,7 +2,7 @@ import { PlaylistEntity } from 'src/playlist/infrastructure/entities/playlist.en
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('Song_Artist')
+@Entity('Playlist_Song')
 export class PlaylistSong {
   @PrimaryGeneratedColumn('uuid')
   id: string;
