@@ -1,0 +1,18 @@
+import { Expose } from 'class-transformer';
+
+export class PlaylistDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  name: string;
+
+  @Expose()
+  duration: string;
+
+  @Expose()
+  image_reference: string;
+
+  @Expose()
+  reproductions: number;
+}

@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import config from 'ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PruebaArtistasModule } from './prueba-artistas/prueba-artistas.module';
 import { ArtistModule } from './artists/infrastructure/artist.module';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
