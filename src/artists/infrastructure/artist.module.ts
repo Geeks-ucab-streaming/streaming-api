@@ -13,7 +13,11 @@ import { ArtistRepositoryImpl } from './artist.repository.impl';
       provide: 'ArtistRepository',
       useClass: ArtistRepositoryImpl,
     },
+    {
+      provide: 'IArtistService',
+      useClass: ArtistService,
+    }
   ],
-  exports: [ArtistService], // export ArtistService if it's used in other modules
+  controllers: [ArtistController],
 })
 export class ArtistModule {}

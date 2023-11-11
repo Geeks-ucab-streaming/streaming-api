@@ -1,10 +1,10 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from '../domain/artist';
-import { ArtistRepository } from '../domain/artist.repository';
+import { IArtistRepository } from '../domain/artist.repository';
 import { ArtistEntity } from './entities/artist.entity';
 
-export class ArtistRepositoryImpl implements ArtistRepository {
+export class ArtistRepositoryImpl implements IArtistRepository {
   constructor(
     @InjectRepository(ArtistEntity)
     private readonly repository: Repository<Artist>,

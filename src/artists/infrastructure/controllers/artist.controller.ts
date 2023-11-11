@@ -5,7 +5,7 @@ import { IArtistService } from 'src/artists/domain/artist.service.interface';
 @Controller('artists')
 export class ArtistController {
   constructor(
-    @Inject('ArtistService')
+    @Inject('IArtistService')
     private readonly artistService: IArtistService,
   ) {}
 

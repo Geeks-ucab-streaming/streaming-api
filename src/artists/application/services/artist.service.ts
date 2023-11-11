@@ -1,5 +1,4 @@
-
-import { ArtistRepository } from 'src/artists/domain/artist.repository';
+import { IArtistRepository } from 'src/artists/domain/artist.repository';
 import { IArtistService } from 'src/artists/domain/artist.service.interface';
 import { ArtistDto } from '../dtos/artist.dto';
 import { Artist } from 'src/artists/domain/artist';
@@ -9,7 +8,8 @@ import { Injectable, Inject } from '@nestjs/common';
 export class ArtistService implements IArtistService {
   constructor(
     @Inject('ArtistRepository')
-    private readonly artistRepository: ArtistRepository) {}
+    private readonly artistRepository: IArtistRepository,
+  ) {}
 
   async create(artistDto: ArtistDto): Promise<Artist> {
     const artist = new Artist(
