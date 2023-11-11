@@ -1,10 +1,11 @@
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
 import { PlaylistSong } from 'src/common/infrastructure/entities/playlistSong';
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
+import { Song } from 'src/songs/domain/song';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Songs')
-export class SongEntity {
+export class SongEntity extends Song {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

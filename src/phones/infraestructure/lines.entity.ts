@@ -1,9 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { PhoneEntity } from './phones.entity';
-import { Prefixes } from './prefixes.entity';
+import { PrefixEntity } from './prefixes.entity';
+import { Line } from '../domain/line';
 
 @Entity()
-export class Line {
+export class LineEntity extends Line {
   @PrimaryGeneratedColumn()
   id: string;
 
@@ -13,6 +14,6 @@ export class Line {
   @OneToMany(() => PhoneEntity, (phones) => phones)
   phones: PhoneEntity[];
 
-  @OneToMany(() => Prefixes, (prefixes) => prefixes)
-  prefixes: Prefixes[];
+  @OneToMany(() => PrefixEntity, (prefixes) => prefixes)
+  prefixes: PrefixEntity[];
 }

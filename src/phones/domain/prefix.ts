@@ -1,4 +1,4 @@
-export class Phone {
+export class Prefix {
   id: string;
   prefix: number;
 

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
-import { Line } from './lines.entity';
+import { LineEntity } from './lines.entity';
 import { UserEntity } from 'src/users/infraestructure/users.entity';
 import { Phone } from '../domain/phone';
 
@@ -17,8 +17,8 @@ export class PhoneEntity extends Phone {
   @Column()
   phoneNumber: number;
 
-  @ManyToOne(() => Line, (linePhone) => linePhone.phones)
-  linePhone: Line;
+  @ManyToOne(() => LineEntity, (linePhone) => linePhone.phones)
+  linePhone: LineEntity;
 
   @OneToOne(() => UserEntity, (user) => user.phones)
   user: UserEntity;
