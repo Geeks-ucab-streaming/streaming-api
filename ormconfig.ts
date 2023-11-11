@@ -5,10 +5,8 @@ const config: PostgresConnectionOptions = {
   url: process.env.HOST,
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-  synchronize: false,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  synchronize: true,
+  ssl: false
 };
 
 export default config;
