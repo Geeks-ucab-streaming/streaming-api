@@ -8,6 +8,7 @@ const config: PostgresConnectionOptions = {
   synchronize: true,
   ssl: {
     rejectUnauthorized: false,
+    
   },
 };
 
