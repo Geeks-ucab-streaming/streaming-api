@@ -9,7 +9,7 @@ export class ReproducedSong {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'datetime', nullable: false })
+  @Column({ type: 'timestamp', nullable: false })
   reproduced_date: Date;
 
   @ManyToOne(() => SongEntity, (song) => song.reproducedSong)

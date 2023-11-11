@@ -1,9 +1,8 @@
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Artist } from 'src/artists/domain/artist';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
-import { PlaylistSong } from 'src/common/infrastructure/entities/playlistSong';
+import { PlaylistSongEntity } from 'src/common/infrastructure/entities/playlistSong.entity';
 
 @Entity('Playlists')
 export class PlaylistEntity extends Playlist {
@@ -16,7 +15,7 @@ export class PlaylistEntity extends Playlist {
   @Column({ type: 'text', nullable: false, unique: true })
   image_reference: string;
 
-  @Column({ type: 'number', default: 0 })
+  @Column({ type: 'int', default: 0 })
   reproductions: number;
 
   @OneToMany(
@@ -25,6 +24,6 @@ export class PlaylistEntity extends Playlist {
   )
   playlistCreator: SongArtist[];
 
-  @OneToMany(() => PlaylistSong, (playlistSong) => playlistSong.playlist)
-  playlistSong: PlaylistSong[];
+  @OneToMany(() => PlaylistSongEntity, (playlistSong) => playlistSong.playlist)
+  playlistSong: PlaylistSongEntity[];
 }

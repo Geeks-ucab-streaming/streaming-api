@@ -1,5 +1,5 @@
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
-import { PlaylistSong } from 'src/common/infrastructure/entities/playlistSong';
+import { PlaylistSongEntity } from 'src/common/infrastructure/entities/playlistSong.entity';
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
 import { Song } from 'src/songs/domain/song';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
@@ -36,8 +36,8 @@ export class SongEntity extends Song {
   @OneToMany(() => SongArtist, (songArtist) => songArtist.song)
   song_artist: SongArtist[];
 
-  @OneToMany(() => PlaylistSong, (playlistSong) => playlistSong.song)
-  playlistSong: PlaylistSong[];
+  @OneToMany(() => PlaylistSongEntity, (playlistSong) => playlistSong.song)
+  playlistSong: PlaylistSongEntity[];
 
   @OneToMany(() => ReproducedSong, (reproducedSong) => reproducedSong.song)
   reproducedSong: ReproducedSong[];
