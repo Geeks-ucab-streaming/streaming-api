@@ -14,6 +14,6 @@ import { ArtistRepositoryImpl } from './artist.repository.impl';
       useClass: ArtistRepositoryImpl,
     },
   ],
-  controllers: [ArtistController],
+  exports: [ArtistService], // export ArtistService if it's used in other modules
 })
 export class ArtistModule {}
