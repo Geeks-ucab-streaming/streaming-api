@@ -1,41 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { ArtistRepository } from '../../domain/artist.repository';
 import { Artist } from '../../domain/artist';
 import { ArtistDto } from '../dtos/artist.dto';
-
+import { Inject, Injectable } from '@nestjs/common';
 @Injectable()
 export class ArtistService {
-  private artists: Artist[] = [];
+  constructor(
+    @Inject('ArtistRepository')
+    private readonly artistRepository: ArtistRepository) {}
 
-  create(artistDto: ArtistDto): Artist {
+  async create(artistDto: ArtistDto): Promise<Artist> {
     const artist = new Artist(
       artistDto.id,
       artistDto.name,
       artistDto.duration,
       artistDto.image_reference,
     );
-    this.artists.push(artist);
-    return artist;
+    return this.artistRepository.save(artist);
   }
 
-  findAll(): Artist[] {
-    return this.artists;
+  async findAll(): Promise<Artist[]> {
+    return this.artistRepository.findAll();
   }
 
-  findOne(id: string): Artist {
-    return this.artists.find((artist) => artist.id === id);
-  }
-
-  update(id: string, artistDto: ArtistDto): Artist {
-    const artist = this.findOne(id);
-    if (artist) {
-      artist.name = artistDto.name;
-      artist.duration = artistDto.duration;
-      artist.image_reference = artistDto.image_reference;
-    }
-    return artist;
-  }
-
-  remove(id: string): void {
-    this.artists = this.artists.filter((artist) => artist.id !== id);
+  async findOne(id: string): Promise<Artist> {
+    return this.artistRepository.findOne(id);
   }
 }
