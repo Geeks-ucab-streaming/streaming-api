@@ -3,10 +3,10 @@ POST http://localhost:3000/api/user
 content-type: application/json
 
 {
-  "phoneNumber":"4242250600"
+  "phoneNumber":"4242250601"
 }
 
 
 ### Encontrar un usuario en particular
-GET http://localhost:3000/api/user/1
+GET http://localhost:3000/api/user/08cbb969-e202-4e4b-81e1-8a20f6018085
 

@@ -7,7 +7,7 @@ export class PrefixEntity{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'int', nullable: true })
   prefix: number;
 
   @ManyToOne(() => LineEntity, (linePhone) => linePhone.prefixes)
