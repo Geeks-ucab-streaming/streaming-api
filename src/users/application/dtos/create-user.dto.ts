@@ -1,4 +1,4 @@
-import {IsEmail, IsNumber, IsString, IsDate, IsOptional} from "class-validator";
+import {IsNumber, IsString, IsDate} from "class-validator";
 
 export class CreateUserDto{
   

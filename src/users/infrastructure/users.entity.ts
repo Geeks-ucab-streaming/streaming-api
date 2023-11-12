@@ -2,23 +2,19 @@
 import { AfterInsert, AfterUpdate, AfterRemove, Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, Check } from "typeorm";
 import { Phone } from "../../phones/infrastructure/phones.entity";
 import { StoredEdition } from "./storedEdition.entity";
-import { IsOptional } from "class-validator";
 
-@Entity()
+@Entity("Users")
 export class User {
   
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-  @IsOptional()
   @Column()
   name: string;
 
-  @IsOptional()
   @Column()
   birth_date: Date;
 
-  @IsOptional() 
   @Column()
   @Check(`genders IN ('M', 'F')`)
   genders: string;
