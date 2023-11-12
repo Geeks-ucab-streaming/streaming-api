@@ -9,6 +9,7 @@ import {
   OneToMany,
   OneToOne,
   Check,
+  JoinColumn,
 } from 'typeorm';
 import { PhoneEntity } from '../../phones/infraestructure/phones.entity';
 import { StoredEdition } from '../../users/infraestructure/storedEdition.entity';
@@ -33,8 +34,9 @@ export class UserEntity extends User {
   @Check(`genders IN ('M', 'F')`)
   genders: string;
 
-  @OneToOne(() => PhoneEntity, (phones) => phones.user)
-  phones: PhoneEntity;
+  @OneToOne(() => PhoneEntity, (phone) => phone.user)
+  @JoinColumn()
+  phone: PhoneEntity;
 
   @OneToMany(() => StoredEdition, (edition) => edition)
   edition: StoredEdition[];

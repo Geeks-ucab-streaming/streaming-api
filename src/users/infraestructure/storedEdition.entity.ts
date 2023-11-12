@@ -13,7 +13,7 @@ export class StoredEdition {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'date', nullable: false, default: '' })
+  @Column({ type: 'date', nullable: false })
   editionDate: Date;
 
   @Column({ type: 'text', nullable: true })

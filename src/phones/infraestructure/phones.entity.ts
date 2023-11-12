@@ -20,6 +20,6 @@ export class PhoneEntity extends Phone {
   @ManyToOne(() => LineEntity, (linePhone) => linePhone.phones)
   linePhone: LineEntity;
 
-  @OneToOne(() => UserEntity, (user) => user.phones)
+  @OneToOne(() => UserEntity, (user) => user.phone)
   user: UserEntity;
 }
