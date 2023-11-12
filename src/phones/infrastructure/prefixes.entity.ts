@@ -3,7 +3,7 @@ import { LineEntity } from './lines.entity';
 import { Prefix } from '../domain/prefix';
 
 @Entity('Prefixes')
-export class PrefixEntity extends Prefix {
+export class PrefixEntity{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

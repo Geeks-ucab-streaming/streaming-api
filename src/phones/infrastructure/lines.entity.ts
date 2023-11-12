@@ -4,7 +4,7 @@ import { PrefixEntity } from './prefixes.entity';
 import { Line } from '../domain/line';
 
 @Entity('Lines')
-export class LineEntity extends Line {
+export class LineEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

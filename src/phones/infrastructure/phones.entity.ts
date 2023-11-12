@@ -7,10 +7,9 @@ import {
 } from 'typeorm';
 import { LineEntity } from './lines.entity';
 import { UserEntity } from '../../users/infrastructure/users.entity';
-import { Phone } from '../domain/phone';
 
 @Entity('Phones')
-export class PhoneEntity extends Phone {
+export class PhoneEntity  {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

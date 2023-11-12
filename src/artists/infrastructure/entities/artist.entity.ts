@@ -4,7 +4,7 @@ import { Artist } from 'src/artists/domain/artist';
 import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
 
 @Entity('Artists')
-export class ArtistEntity extends Artist {
+export class ArtistEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

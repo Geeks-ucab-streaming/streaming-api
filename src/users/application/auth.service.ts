@@ -15,7 +15,7 @@ export class AuthService{
     return user;
   }
 
-  async signin(id:number){
+  async signin(id:string){
     //Desestructuración
     const [user] = await this.usersService.find(id);
     if(!user){
