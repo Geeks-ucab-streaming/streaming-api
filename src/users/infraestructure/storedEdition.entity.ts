@@ -8,13 +8,10 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../users/infraestructure/users.entity';
 
-@Entity()
+@Entity('StoredEdition')
 export class StoredEdition {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @PrimaryGeneratedColumn()
-  idUser: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   editionDate: Date;

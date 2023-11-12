@@ -3,11 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { IGetFileService } from '../../domain/services/getFiles.service.interface';
 
 @Injectable()
-export class GetFileService implements IGetFileService {
+export class GetImageFileService implements IGetFileService {
   readonly azureConnection = process.env.AZURE_STORAGE_CONNECTION_STRING;
-  readonly containerName = process.env.CONTAINER;
+  readonly containerName = process.env.IMAGES_CONTAINER;
 
   private getBlobClient(filename: string): BlockBlobClient {
+    console.log(this.containerName);
     try {
       const blobClientService = BlobServiceClient.fromConnectionString(
         this.azureConnection,

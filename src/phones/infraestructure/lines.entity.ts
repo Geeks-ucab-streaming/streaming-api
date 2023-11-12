@@ -3,9 +3,9 @@ import { PhoneEntity } from './phones.entity';
 import { PrefixEntity } from './prefixes.entity';
 import { Line } from '../domain/line';
 
-@Entity()
+@Entity('Lines')
 export class LineEntity extends Line {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()

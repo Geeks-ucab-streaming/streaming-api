@@ -2,9 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { LineEntity } from './lines.entity';
 import { Prefix } from '../domain/prefix';
 
-@Entity()
+@Entity('Prefixes')
 export class PrefixEntity extends Prefix {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()

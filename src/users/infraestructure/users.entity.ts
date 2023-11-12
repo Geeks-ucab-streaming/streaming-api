@@ -15,9 +15,9 @@ import { StoredEdition } from '../../users/infraestructure/storedEdition.entity'
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
 import { User } from '../domain/user';
 
-@Entity()
+@Entity('Users')
 export class UserEntity extends User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
