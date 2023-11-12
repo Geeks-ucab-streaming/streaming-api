@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import config from 'ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ArtistModule } from './artists/infrastructure/artist.module';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -13,6 +14,7 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
       envFilePath: `./deploy/.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRoot(config),
+    ArtistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
