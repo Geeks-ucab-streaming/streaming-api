@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IFindGenericService } from 'src/common/infrastructure/entities/domain/find.service';
+import { IFindGenericService } from 'src/common/domain/find.service';
 import { Artist } from 'src/artists/domain/artist';
 import { IArtistRepository } from 'src/artists/domain/artist.repository';
 
