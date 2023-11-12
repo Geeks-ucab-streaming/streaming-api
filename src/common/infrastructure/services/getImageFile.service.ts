@@ -8,7 +8,6 @@ export class GetImageFileService implements IGetFileService {
   readonly containerName = process.env.IMAGES_CONTAINER;
 
   private getBlobClient(filename: string): BlockBlobClient {
-    console.log(this.containerName);
     try {
       const blobClientService = BlobServiceClient.fromConnectionString(
         this.azureConnection,

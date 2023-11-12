@@ -5,7 +5,7 @@ import { IGetFileService } from 'src/common/domain/services/getFiles.service.int
 import { IGenericRepository } from 'src/common/domain/generic.repository';
 
 interface ArtistWithImage extends Artist {
-  image: string;
+  image: Buffer;
 }
 
 @Injectable()
@@ -21,15 +21,13 @@ export class FindArtistService implements IFindGenericService<Artist> {
     const artists: Artist[] = await this.artistRepository.findAll();
 
     const artistPromises = artists.map(async (artist) => {
-      const imageBuffer = await this.getFileService.execute(
+      const image = await this.getFileService.execute(
         artist.image_reference.toLowerCase(),
       );
 
-      const imageBase64 = imageBuffer.toString('base64');
-
       return {
         ...artist,
-        image: imageBase64,
+        image: image,
       };
     });
 
