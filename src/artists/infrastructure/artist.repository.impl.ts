@@ -18,7 +18,7 @@ export class ArtistRepositoryImpl implements IArtistRepository {
     return this.repository.find();
   }
 
-  async findOne(id: string): Promise<Artist> {
+  async findById(id: string): Promise<Artist> {
     return this.repository.findOne({ where: { id: id } });
   }
 }

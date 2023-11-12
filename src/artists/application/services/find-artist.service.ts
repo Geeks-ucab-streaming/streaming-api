@@ -1,37 +1,21 @@
-import { IArtistRepository } from 'src/artists/domain/artist.repository';
-import { IArtistService } from 'src/artists/domain/artist.service.interface';
-import { ArtistDto } from '../dtos/artist.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { IFindGenericService } from 'src/common/domain/find.service';
 import { Artist } from 'src/artists/domain/artist';
-import { Injectable, Inject } from '@nestjs/common';
+import { IArtistRepository } from 'src/artists/domain/artist.repository';
 import { IGetFileService } from 'src/common/domain/services/getFiles.service.interface';
-
-//! SE VA ESTE, ESTAMOS USANDO EL GENERICO
 
 interface ArtistWithImage extends Artist {
   image: Buffer;
 }
 
 @Injectable()
-export class ArtistService implements IArtistService {
+export class FindArtistService implements IFindGenericService<Artist> {
   constructor(
     @Inject('ArtistRepository')
     private readonly artistRepository: IArtistRepository,
     @Inject('IGetFileService')
     private readonly getFileService: IGetFileService,
   ) {}
-
-  async create(artistDto: ArtistDto): Promise<Artist> {
-    const artist = new Artist(
-      artistDto.id,
-      artistDto.name,
-      artistDto.image_reference,
-    );
-    return this.artistRepository.save(artist);
-  }
-
-  // async findAll(): Promise<Artist[]> {
-  //   return this.artistRepository.findAll();
-  // }
 
   async findAll(): Promise<ArtistWithImage[]> {
     const artists: Artist[] = await this.artistRepository.findAll();
@@ -52,5 +36,9 @@ export class ArtistService implements IArtistService {
 
     console.log(artist_with_image);
     return artist_with_image;
+  }
+
+  async findById(id: string): Promise<Artist> {
+    return await this.artistRepository.findById(id);
   }
 }

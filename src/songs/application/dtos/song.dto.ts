@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
+import { Song } from 'src/songs/domain/song';
 
-export class SongDto {
+export class SongDto extends Song {
   @Expose()
   id: string;
 
