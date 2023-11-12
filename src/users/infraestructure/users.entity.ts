@@ -21,18 +21,15 @@ export class UserEntity extends User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text', nullable: true, unique: true })
-  email: string;
-
   @Column({ type: 'text', nullable: true })
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'date', nullable: true })
   birth_date: Date;
 
   @Column({ type: 'text', nullable: true })
-  @Check(`genders IN ('M', 'F')`)
-  genders: string;
+  @Check(`gender IN ('M', 'F')`)
+  gender: string;
 
   @OneToOne(() => PhoneEntity, (phone) => phone.user)
   @JoinColumn()
