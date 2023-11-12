@@ -19,6 +19,14 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
       provide: 'IArtistService',
       useClass: ArtistService,
     },
+    {
+      provide: 'IGetFileService',
+      useClass: GetFileService,
+    },
+    {
+      provide: 'IFindArtistService',
+      useClass: FindArtistService,
+    },
   ],
   controllers: [ArtistController],
 })
