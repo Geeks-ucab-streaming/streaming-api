@@ -5,6 +5,8 @@ import { Artist } from 'src/artists/domain/artist';
 import { Injectable, Inject } from '@nestjs/common';
 import { IGetFileService } from 'src/common/domain/services/getFiles.service.interface';
 
+//! SE VA ESTE, ESTAMOS USANDO EL GENERICO
+
 interface ArtistWithImage extends Artist {
   image: Buffer;
 }

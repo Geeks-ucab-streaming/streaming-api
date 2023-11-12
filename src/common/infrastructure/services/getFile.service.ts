@@ -35,6 +35,7 @@ export class GetFileService implements IGetFileService {
   }
 
   async execute(filename: string): Promise<Buffer> {
+    console.log('llegó aquí');
     try {
       const blobClient = this.getBlobClient(filename);
       console.log(filename);
