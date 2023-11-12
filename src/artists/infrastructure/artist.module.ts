@@ -10,7 +10,7 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
   imports: [TypeOrmModule.forFeature([ArtistEntity])],
   providers: [
     {
-      provide: 'ArtistRepository',
+      provide: 'IGenericRepository',
       useClass: ArtistRepository,
     },
     {

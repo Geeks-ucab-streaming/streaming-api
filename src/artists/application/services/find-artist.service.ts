@@ -11,7 +11,7 @@ interface ArtistWithImage extends Artist {
 @Injectable()
 export class FindArtistService implements IFindGenericService<Artist> {
   constructor(
-    @Inject('ArtistRepository')
+    @Inject('IGenericRepository')
     private readonly artistRepository: IGenericRepository<Artist>,
     @Inject('IGetFileService')
     private readonly getFileService: IGetFileService,
