@@ -1,6 +1,6 @@
-import { Artist } from "./artist";
+import { Artist } from './artist';
 
-export interface ArtistRepository {
+export interface IArtistRepository {
   save(artist: Artist): Promise<Artist>;
   findAll(): Promise<Artist[]>;
   findOne(id: string): Promise<Artist>;
