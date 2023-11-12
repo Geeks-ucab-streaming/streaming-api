@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistEntity } from './entities/artist.entity';
 import { ArtistRepositoryImpl } from './artist.repository.impl';
 import { FindArtistService } from '../application/services/find-artist.service';
+import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ArtistEntity])],
@@ -18,10 +19,6 @@ import { FindArtistService } from '../application/services/find-artist.service';
       provide: 'IArtistService',
       useClass: ArtistService,
     },
-    {
-      provide: 'IFindGenericService',
-      useClass: FindArtistService,
-    }
   ],
   controllers: [ArtistController],
 })
