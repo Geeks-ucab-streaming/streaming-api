@@ -2,6 +2,7 @@
 import { AfterInsert, AfterUpdate, AfterRemove, Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, Check } from "typeorm";
 import { Phone } from "../../phones/infrastructure/phones.entity";
 import { StoredEdition } from "./storedEdition.entity";
+import { IsOptional } from "class-validator";
 
 @Entity()
 export class User {
@@ -9,15 +10,15 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  email: string;
-
+  @IsOptional()
   @Column()
   name: string;
 
+  @IsOptional()
   @Column()
   birth_date: Date;
 
+  @IsOptional() 
   @Column()
   @Check(`genders IN ('M', 'F')`)
   genders: string;

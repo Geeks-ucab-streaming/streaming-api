@@ -19,7 +19,6 @@ export class UsersController {
 
  @Post("/user")
  async createUser(@Body() body: CreateUserDto, @Session() session: any){
-    console.log("aja");
     const user= await this.authService.signup(body.phonesNumber);
     return user;
  }
