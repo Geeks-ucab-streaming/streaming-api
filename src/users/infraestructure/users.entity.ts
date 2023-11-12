@@ -20,16 +20,16 @@ export class UserEntity extends User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: true, unique: true })
   email: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   name: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   birth_date: Date;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   @Check(`genders IN ('M', 'F')`)
   genders: string;
 
