@@ -1,6 +1,6 @@
 //Decoradores
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, Check, ManyToOne } from "typeorm";
-import { User } from "../../users/infraestructure/users.entity";
+import { User } from "./users.entity";
 
 @Entity()
 export class StoredEdition {

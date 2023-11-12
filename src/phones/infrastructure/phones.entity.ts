@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne } from "typeorm";
 import { Line } from "./lines.entity";
-import { User } from "src/users/infraestructure/users.entity";
+import { User } from "src/users/infrastructure/users.entity";
 
 @Entity()
 export class Phone {

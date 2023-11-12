@@ -1,0 +1,12 @@
+### Crear un nuevo usuario
+POST http://localhost:3000/api/user
+content-type: application/json
+
+{
+  "phoneNumber":"4242250600"
+}
+
+
+### Encontrar un usuario en particular
+GET http://localhost:3000/api/user/1
+

@@ -1,7 +1,7 @@
 //Decoradores
 import { AfterInsert, AfterUpdate, AfterRemove, Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, Check } from "typeorm";
-import { Phone } from "../../phones/infraestructure/phones.entity";
-import { StoredEdition } from "../../users/infraestructure/storedEdition.entity";
+import { Phone } from "../../phones/infrastructure/phones.entity";
+import { StoredEdition } from "./storedEdition.entity";
 
 @Entity()
 export class User {
