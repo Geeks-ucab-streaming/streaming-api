@@ -1,8 +1,11 @@
+import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
+import { PlaylistSongEntity } from 'src/common/infrastructure/entities/playlistSong.entity';
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
+import { Song } from 'src/songs/domain/song';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Songs')
-export class SongEntity {
+export class SongEntity extends Song {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -32,4 +35,10 @@ export class SongEntity {
 
   @OneToMany(() => SongArtist, (songArtist) => songArtist.song)
   song_artist: SongArtist[];
+
+  @OneToMany(() => PlaylistSongEntity, (playlistSong) => playlistSong.song)
+  playlistSong: PlaylistSongEntity[];
+
+  @OneToMany(() => ReproducedSong, (reproducedSong) => reproducedSong.song)
+  reproducedSong: ReproducedSong[];
 }

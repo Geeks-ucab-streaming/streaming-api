@@ -1,6 +1,7 @@
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Artist } from 'src/artists/domain/artist';
+import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
 
 @Entity('Artists')
 export class ArtistEntity extends Artist {
@@ -15,4 +16,7 @@ export class ArtistEntity extends Artist {
 
   @OneToMany(() => SongArtist, (songArtist) => songArtist.artist)
   song_artist: SongArtist[];
+
+  @OneToMany(() => PlaylistCreator, (playlistCreator) => playlistCreator.artist)
+  playlistCreator: PlaylistCreator[];
 }
