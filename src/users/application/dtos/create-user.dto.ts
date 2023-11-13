@@ -1,4 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNumber, IsString, IsDate } from 'class-validator';
+import { PhonesNumber } from 'src/users/domain/value-objects/phoneNumber';
 
 export class CreateUserDto {
   @IsEmail()
@@ -14,5 +16,6 @@ export class CreateUserDto {
   genero: string;
 
   @IsNumber()
-  phonesNumber: number;
+  @ApiProperty()
+  phonesNumber: PhonesNumber;
 }
