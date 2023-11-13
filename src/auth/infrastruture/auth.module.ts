@@ -6,6 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategies';
+import { jwtcontanst } from './jwt.constansts';
 
 @Module({
   imports: [
@@ -13,8 +14,7 @@ import { JwtStrategy } from './jwt.strategies';
     JwtModule.registerAsync({
       useFactory: () => {
         return {
-          secret: 'THE123!@#',
-          signOptions: {
+          secret: jwtcontanst.secret,signOptions: {
             expiresIn: '10h',
           },
         };
