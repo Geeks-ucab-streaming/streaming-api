@@ -6,11 +6,10 @@ import {
   OneToOne,
 } from 'typeorm';
 import { LineEntity } from './lines.entity';
-import { UserEntity } from 'src/users/infraestructure/users.entity';
-import { Phone } from '../domain/phone';
+import { UserEntity } from '../../users/infrastructure/users.entity';
 
 @Entity('Phones')
-export class PhoneEntity extends Phone {
+export class PhoneEntity  {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

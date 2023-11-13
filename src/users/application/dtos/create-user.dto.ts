@@ -1,5 +1,4 @@
 import { IsEmail, IsNumber, IsString, IsDate } from 'class-validator';
-import { isDate } from 'util/types';
 
 export class CreateUserDto {
   @IsEmail()
