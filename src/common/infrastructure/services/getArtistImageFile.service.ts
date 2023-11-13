@@ -1,12 +1,14 @@
 import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 import { Injectable } from '@nestjs/common';
 import { IGetFileService } from '../../domain/services/getFiles.service.interface';
+import { IService } from 'src/common/domain/services/services.interface';
 
 @Injectable()
-export class GetArtistImageFileService implements IGetFileService {
+export class GetArtistImageFileService implements IService<string, Buffer> {
   readonly azureConnection = process.env.AZURE_STORAGE_CONNECTION_STRING;
   readonly containerName = process.env.ARTISTS_IMAGES_CONTAINER;
 
+  
   private getBlobClient(filename: string): BlockBlobClient {
     console.log(this.containerName);
     console.log(filename);
