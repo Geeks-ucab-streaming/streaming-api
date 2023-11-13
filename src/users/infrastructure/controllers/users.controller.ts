@@ -21,6 +21,7 @@ export class UsersController {
 @ApiTags('Users')
  @Post("/user")
  async createUser(@Body() body: CreateUserDto, @Session() session: any){
+  console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
     const user= await this.authService.signup(body);
     return user;
  }

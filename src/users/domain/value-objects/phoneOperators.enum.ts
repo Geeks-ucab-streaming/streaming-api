@@ -1,5 +1,5 @@
 export enum phoneOperatorsEnum {
-    DIGITEL = "0412",
-    MOVISTAR = "0414",
-    MOVISTAROTHER = "0424",
+    DIGITEL = "412",
+    MOVISTAR = "414",
+    MOVISTAROTHER = "424",
 }

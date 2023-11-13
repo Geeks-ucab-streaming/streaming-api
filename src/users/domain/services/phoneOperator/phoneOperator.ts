@@ -4,10 +4,10 @@ export class Operators implements PhoneOperator{
 
     constructor(prefix : number) {
         if(this.isUsableOperator(prefix)){
-            throw new Error("Invalid Operator");
+            console.log("Operador no disponible");
         }
     }
     isUsableOperator(phoneNumber: number): boolean {
-        return !Object.values(phoneOperatorsEnum).includes(phoneNumber.toString() as phoneOperatorsEnum);
+        return !Object.values(phoneOperatorsEnum).includes(phoneNumber.toString().substring(0,3) as phoneOperatorsEnum);
     }
 }
