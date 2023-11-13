@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IFindGenericService } from 'src/common/domain/find.service';
 import { Artist } from 'src/artists/domain/artist';
 import { IGetFileService } from 'src/common/domain/services/getFiles.service.interface';
-import { IGenericRepository } from 'src/common/domain/generic.repository';
+import { IGenericRepositoryFinder } from 'src/common/domain/generic.repository';
 
 interface ArtistWithImage extends Artist {
   image: Buffer;
@@ -12,7 +12,7 @@ interface ArtistWithImage extends Artist {
 export class FindArtistService implements IFindGenericService<Artist> {
   constructor(
     @Inject('IGenericRepository')
-    private readonly artistRepository: IGenericRepository<Artist>,
+    private readonly artistRepository: IGenericRepositoryFinder<Artist>,
     @Inject('IGetFileService')
     private readonly getFileService: IGetFileService,
   ) {}

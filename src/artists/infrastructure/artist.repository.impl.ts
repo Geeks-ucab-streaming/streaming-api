@@ -2,9 +2,9 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from '../domain/artist';
 import { ArtistEntity } from './entities/artist.entity';
-import { IGenericRepository } from 'src/common/domain/generic.repository';
+import { IGenericRepositoryFinder } from 'src/common/domain/generic.repository';
 
-export class ArtistRepository implements IGenericRepository<Artist> {
+export class ArtistRepository implements IGenericRepositoryFinder<Artist> {
   constructor(
     @InjectRepository(ArtistEntity)
     private readonly repository: Repository<Artist>,
