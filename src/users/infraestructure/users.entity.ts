@@ -9,32 +9,31 @@ import {
   OneToMany,
   OneToOne,
   Check,
+  JoinColumn,
 } from 'typeorm';
 import { PhoneEntity } from '../../phones/infraestructure/phones.entity';
 import { StoredEdition } from '../../users/infraestructure/storedEdition.entity';
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
 import { User } from '../domain/user';
 
-@Entity()
+@Entity('Users')
 export class UserEntity extends User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  email: string;
-
-  @Column()
+  @Column({ type: 'text', nullable: true })
   name: string;
 
-  @Column()
+  @Column({ type: 'date', nullable: true })
   birth_date: Date;
 
-  @Column()
-  @Check(`genders IN ('M', 'F')`)
-  genders: string;
+  @Column({ type: 'text', nullable: true })
+  @Check(`gender IN ('M', 'F')`)
+  gender: string;
 
-  @OneToOne(() => PhoneEntity, (phones) => phones.user)
-  phones: PhoneEntity;
+  @OneToOne(() => PhoneEntity, (phone) => phone.user)
+  @JoinColumn()
+  phone: PhoneEntity;
 
   @OneToMany(() => StoredEdition, (edition) => edition)
   edition: StoredEdition[];

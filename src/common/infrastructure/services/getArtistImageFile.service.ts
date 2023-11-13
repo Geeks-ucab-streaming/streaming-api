@@ -3,11 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { IGetFileService } from '../../domain/services/getFiles.service.interface';
 
 @Injectable()
-export class GetFileService implements IGetFileService {
+export class GetArtistImageFileService implements IGetFileService {
   readonly azureConnection = process.env.AZURE_STORAGE_CONNECTION_STRING;
-  readonly containerName = process.env.CONTAINER;
+  readonly containerName = process.env.ARTISTS_IMAGES_CONTAINER;
 
   private getBlobClient(filename: string): BlockBlobClient {
+    console.log(this.containerName);
+    console.log(filename);
     try {
       const blobClientService = BlobServiceClient.fromConnectionString(
         this.azureConnection,
@@ -35,10 +37,10 @@ export class GetFileService implements IGetFileService {
   }
 
   async execute(filename: string): Promise<Buffer> {
-    console.log('llegó aquí');
+    //console.log('llegó aquí');
     try {
       const blobClient = this.getBlobClient(filename);
-      console.log(filename);
+      //console.log(filename);
       const blobDownloaded = await blobClient.download();
       const buffer = await this.readableStreamBodyToBuffer(
         blobDownloaded.readableStreamBody,
