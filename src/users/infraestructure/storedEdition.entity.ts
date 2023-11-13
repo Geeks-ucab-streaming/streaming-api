@@ -13,18 +13,18 @@ export class StoredEdition {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'date', nullable: false })
   editionDate: Date;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   @Check(`fields IN ('email', 'name', 'birth_date', 'genders', 'phones')`)
   fields: string;
 
-  @Column()
-  oldValue: number;
+  @Column({ type: 'text', nullable: true })
+  oldValue: string;
 
-  @Column()
-  newValue: number;
+  @Column({ type: 'text', nullable: true })
+  newValue: string;
 
   @ManyToOne(() => UserEntity, (user) => user.edition) //Se hace el cambio en la tabla de reportes por este decorador
   user: UserEntity;

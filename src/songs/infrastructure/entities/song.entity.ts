@@ -5,14 +5,14 @@ import { Song } from 'src/songs/domain/song';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Songs')
-export class SongEntity extends Song {
+export class SongEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'text', nullable: false })
   name: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'text', nullable: false })
   duration: string;
 
   @Column({ type: 'date', nullable: false })

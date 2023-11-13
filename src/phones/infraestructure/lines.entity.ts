@@ -8,7 +8,7 @@ export class LineEntity extends Line {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   name: string;
 
   @OneToMany(() => PhoneEntity, (phones) => phones)
