@@ -1,7 +1,6 @@
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
 import { PlaylistSongEntity } from 'src/common/infrastructure/entities/playlistSong.entity';
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
-import { Song } from 'src/songs/domain/song';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Songs')
@@ -24,7 +23,7 @@ export class SongEntity {
   @Column({ type: 'text', nullable: false, unique: true })
   preview_reference: string;
 
-  @Column({ type: 'text', nullable: false, unique: true })
+  @Column({ type: 'text', nullable: false })
   image_reference: string;
 
   @Column({ type: 'int', nullable: false })
