@@ -4,11 +4,14 @@ import { Body,
   Get, 
   Param, 
   NotFoundException, 
-  Session,} from '@nestjs/common';
+  Session,
+  Inject,} from '@nestjs/common';
 import { CreateUserDto } from  '../../application/dtos/create-user.dto';
 import { UsersService } from "../../application/services/users.service";
 import { AuthService } from "../../application/auth.service";
 import { ApiTags } from '@nestjs/swagger';
+import { findByPhoneUserService } from 'src/users/application/services/find-by-phone-user.service';
+import { User } from 'src/users/domain/user';
 
 
 //NOTA: Recuerda que Session es para manejar los cookies.
@@ -16,13 +19,19 @@ import { ApiTags } from '@nestjs/swagger';
 
 export class UsersController {
 
- constructor (private usersService: UsersService, private authService: AuthService){}
+ constructor (
+  private usersService: UsersService, 
+  private authService: AuthService,
+  private readonly phoneService: findByPhoneUserService
+  ){}
 
 @ApiTags('Users')
  @Post("/user")
  async createUser(@Body() body: CreateUserDto, @Session() session: any){
-    const user= await this.authService.signup(body);
-    return user;
+  const user = await this.phoneService.execute(body.phonesNumber);
+    console.log(user);
+    //TODO: Hacer los responses con una etructura de datos.
+    return "hoal";
  }
  @ApiTags('Users')
  @Get("/user/:id")

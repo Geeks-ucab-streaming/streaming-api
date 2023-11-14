@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UsersService } from "../application/services/users.service";
-import { CreateUserDto } from "../application/dtos/create-user.dto";
+import { UsersService } from "./services/users.service";
+import { CreateUserDto } from "./dtos/create-user.dto";
 import { PhonesNumber } from "../domain/value-objects/phoneNumber";
 import { User } from "../domain/user";
 import { v4 as uuidv4 } from 'uuid';
@@ -16,8 +16,7 @@ export class AuthService{
       users.name,
       users.birth_date,
       users.genero,
-      new PhonesNumber(users.phonesNumber),
-      
+      new PhonesNumber({value: users.phonesNumber}),
     )
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);

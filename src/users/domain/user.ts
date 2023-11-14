@@ -1,12 +1,11 @@
-import { PhonesNumber } from "./value-objects/phoneNumber";
-
+import { PhonesNumber, numberPhoneProps } from "./value-objects/phoneNumber";
 export class User {
   id: string;
   email: string;
   name: string;
   birth_date: Date;
   genero: string;
-  phonesNumber: PhonesNumber;
+  phonesNumber: PhonesNumber ;
 
   constructor(
     id: string,
