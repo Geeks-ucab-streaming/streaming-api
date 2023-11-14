@@ -25,10 +25,12 @@ export class FindArtistService implements IFindGenericService<Artist> {
         artist.image_reference.toLowerCase(),
       );
 
-      return {
-        ...artist,
+      const artistWithImage: ArtistWithImage = Object.assign(artist, {
         image: image,
-      };
+        equals: (other: Artist) => artist.equals(other),
+      });
+
+      return artistWithImage;
     });
 
     const artist_with_image: ArtistWithImage[] =
