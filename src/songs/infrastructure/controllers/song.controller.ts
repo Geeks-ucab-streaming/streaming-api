@@ -2,8 +2,9 @@ import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { FindAllArtistService } from 'src/artists/application/services/FindAllArtist.service';
 import { FindOneArtistService } from 'src/artists/application/services/FindOneArtist.service';
 import { Artist } from 'src/artists/domain/artist';
-@Controller('artists')
-export class ArtistController {
+
+@Controller('songs')
+export class SongsController {
   constructor(
     @Inject('FindOneArtistService')
     private readonly findOneArtistService: FindOneArtistService,
