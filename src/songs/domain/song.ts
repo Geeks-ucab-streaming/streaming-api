@@ -9,6 +9,9 @@ export class Song {
   reproductions: number;
   genres: string[];
   artistId: number;
+  songImage: Buffer | null;
+  song: Buffer | null;
+  preview: Buffer | null;
 
   constructor(
     id: string,
