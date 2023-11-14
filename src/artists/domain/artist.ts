@@ -1,25 +1,23 @@
-import { Entity } from "src/common/domain/Entity/entity";
-import { UniqueEntityID } from "src/common/domain/unique-entity-id";
-import { ArtistName } from "./artistName-valueobject";
-import { Result } from "src/common/domain/logic/Result";
-import { Guard } from "src/common/domain/logic/Guard";
-import { ArtistImage } from "./artistImage-valueobject";
+import { Entity } from 'src/common/domain/Entity/entity';
+import { UniqueEntityID } from 'src/common/domain/unique-entity-id';
+import { ArtistName } from './artistName-valueobject';
+import { Result } from 'src/common/domain/logic/Result';
+import { Guard } from 'src/common/domain/logic/Guard';
+import { ArtistImage } from './artistImage-valueobject';
 
-interface ArtistProps{
+interface ArtistProps {
   name: ArtistName;
   image_reference: ArtistImage;
 }
 export class Artist extends Entity<ArtistProps> {
   name: string;
   image_reference: string;
+  image: Buffer | null;
 
   get id(): UniqueEntityID {
     return this._id;
   }
-  private constructor(
-    props: ArtistProps,
-    id: UniqueEntityID,
-  ) {
+  private constructor(props: ArtistProps, id: UniqueEntityID) {
     super(props, id);
   }
 
@@ -46,4 +44,3 @@ export class Artist extends Entity<ArtistProps> {
     }
   }
 }
-

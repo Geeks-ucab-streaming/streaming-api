@@ -1,21 +1,17 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { Artist } from "src/artists/domain/artist";
-import { IGenericRepository } from "src/common/domain/generic.repository";
-import { IFindService } from "src/common/domain/ifind.service";
-interface ArtistWithImage extends Artist {
-  image: Buffer;
-}
+import { Inject, Injectable } from '@nestjs/common';
+import { Artist } from 'src/artists/domain/artist';
+import { IGenericRepository } from 'src/common/domain/generic.repository';
+import { IFindService } from 'src/common/domain/ifind.service';
 @Injectable()
-export class FindAllArtistService
-  implements IFindService<void, ArtistWithImage[]>{
-      constructor(
+export class FindAllArtistService implements IFindService<void, Artist[]> {
+  constructor(
     @Inject('IGenericRepository')
     private readonly artistRepository: IGenericRepository<Artist>,
     @Inject('GetArtistImageService')
     private readonly getFileService: IFindService<string, Buffer>,
   ) {}
-  
-  async execute(): Promise<ArtistWithImage[]> {
+
+  async execute(): Promise<Artist[]> {
     const artists: Artist[] = await this.artistRepository.findAll();
 
     const artistPromises = artists.map(async (artist) => {
@@ -23,7 +19,7 @@ export class FindAllArtistService
         artist.image_reference.toLowerCase(),
       );
 
-      const artistWithImage: ArtistWithImage = Object.assign(artist, {
+      const artistWithImage: Artist = Object.assign(artist, {
         image: image,
         equals: (other: Artist) => artist.equals(other),
       });
