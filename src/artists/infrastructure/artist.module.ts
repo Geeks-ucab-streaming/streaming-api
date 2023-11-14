@@ -3,8 +3,9 @@ import { ArtistController } from './controllers/artist.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistEntity } from './entities/artist.entity';
 import { ArtistRepository } from './artist.repository.impl';
-import { FindArtistService } from '../application/services/find-artist.service';
+import { FindOneArtistService } from '../application/services/FindOneArtist.service';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
+import { FindAllArtistService } from '../application/services/FindAllArtist.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ArtistEntity])],
@@ -14,8 +15,12 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
       useClass: ArtistRepository,
     },
     {
-      provide: 'IFindGenericService',
-      useClass: FindArtistService,
+      provide: 'FindOneArtistService',
+      useClass: FindOneArtistService,
+    },
+    {
+      provide: 'FindAllArtistService',
+      useClass: FindAllArtistService,
     },
     {
       provide: 'GetArtistImageService',
