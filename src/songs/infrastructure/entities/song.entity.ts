@@ -23,7 +23,7 @@ export class SongEntity {
   @Column({ type: 'text', nullable: false, unique: true })
   preview_reference: string;
 
-  @Column({ type: 'text', nullable: false, unique: true })
+  @Column({ type: 'text', nullable: false })
   image_reference: string;
 
   @Column({ type: 'int', nullable: false })
