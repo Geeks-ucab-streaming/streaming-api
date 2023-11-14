@@ -1,3 +1,3 @@
 export interface IValueObject<T> {
-  validate(): boolean;
+  equals(vo:T): boolean;
 }
