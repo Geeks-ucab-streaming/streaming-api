@@ -11,7 +11,7 @@ export class SongEntity {
   @Column({ type: 'text', nullable: false })
   name: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'text', nullable: false })
   duration: string;
 
   @Column({ type: 'date', nullable: false })
