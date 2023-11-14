@@ -1,4 +1,4 @@
-export interface IGenericRepositoryFinder<T> {
-    findAll(): Promise<T[]>;
-    findById(id: string): Promise<T>;
+export interface IGenericRepository<T> {
+  findAll(): Promise<T[]>;
+  findById(id: string): Promise<T>;
 }

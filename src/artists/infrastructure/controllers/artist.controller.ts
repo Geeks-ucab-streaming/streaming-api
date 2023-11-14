@@ -1,21 +1,24 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
-import { ArtistDto } from '../../application/dtos/artist.dto';
+import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { FindAllArtistService } from 'src/artists/application/services/FindAllArtist.service';
+import { FindOneArtistService } from 'src/artists/application/services/FindOneArtist.service';
 import { Artist } from 'src/artists/domain/artist';
-import { IFindGenericService } from 'src/common/domain/find.service';
 @Controller('artists')
 export class ArtistController {
   constructor(
-    @Inject('IFindGenericService')
-    private readonly findArtistService: IFindGenericService<Artist>,
+    @Inject('FindOneArtistService')
+    private readonly findOneArtistService: FindOneArtistService,
+
+    @Inject('FindAllArtistService')
+    private readonly findAllArtistService: FindAllArtistService,
   ) {}
 
   @Get()
   findAll(): Promise<Artist[]> {
-    return this.findArtistService.findAll();
+    return this.findAllArtistService.execute();
   }
 
   @Get('/:id')
   findById(@Param('id') id: string): Promise<Artist> {
-    return this.findArtistService.findById(id);
+    return this.findOneArtistService.execute(id);
   }
 }
