@@ -1,10 +1,12 @@
+import { PhonesNumber } from "./value-objects/phoneNumber";
+
 export class User {
   id: string;
   email: string;
   name: string;
   birth_date: Date;
   genero: string;
-  phonesNumber: number;
+  phonesNumber: PhonesNumber;
 
   constructor(
     id: string,
@@ -12,7 +14,7 @@ export class User {
     name: string,
     birth_date: Date,
     genero: string,
-    phonesNumber: number,
+    phonesNumber:  PhonesNumber,
   ) {
     this.id = id;
     this.email = email;

@@ -2,18 +2,25 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { UsersService } from "../application/services/users.service";
 import { CreateUserDto } from "../application/dtos/create-user.dto";
 import { PhonesNumber } from "../domain/value-objects/phoneNumber";
-import { Entity } from "src/common/domain/Entity/entity";
-
+import { User } from "../domain/user";
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AuthService{
   constructor(private usersService: UsersService){}
 
   async signup(users: CreateUserDto){
-    //Ver si el email está ya en uso
-    const userPhpne = new PhonesNumber(users.phonesNumber);
+    const usuario = new User(
+      uuidv4(),
+      users.email,
+      users.name,
+      users.birth_date,
+      users.genero,
+      new PhonesNumber(users.phonesNumber),
+      
+    )
     //Crear nuevo usuario y guardarlo
-    const user = await this.usersService.create(users);
+    const user = await this.usersService.create(usuario);
     //Retornar el usuario
     return user;
   }
@@ -27,3 +34,5 @@ export class AuthService{
     return user;
   }
 }
+
+

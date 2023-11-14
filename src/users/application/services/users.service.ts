@@ -3,6 +3,8 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../../infrastructure/users.entity";
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { User } from 'src/users/domain/user';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +14,9 @@ export class UsersService {
   //Se usa el decorador porque Repository<User> tiene un parámetro genérico
   constructor(@InjectRepository(UserEntity) private repo: Repository<UserEntity>){}
 
-  create(users: CreateUserDto){
+  create(users: User){
+    //Crea una instancia de UserEntity
+   
     const user = this.repo.create(users); //Crea la intancia del usuario
     return this.repo.save(user); //Guarda la instancia en la BD.
   }
