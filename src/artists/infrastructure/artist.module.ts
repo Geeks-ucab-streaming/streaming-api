@@ -18,8 +18,10 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
       useClass: FindArtistService,
     },
     {
-      provide: 'IGetFileService',
-      useClass: GetFileService,
+      provide: 'GetArtistImageService',
+      useFactory: () => {
+        return new GetFileService(process.env.ARTISTS_IMAGES_CONTAINER);
+      },
     },
   ],
   controllers: [ArtistController],
