@@ -28,6 +28,7 @@ export class UsersController {
 @ApiTags('Users')
  @Post("/user")
  async createUser(@Body() body: CreateUserDto, @Session() session: any){
+  console.log(body)
   const user = await this.phoneService.execute(body.phonesNumber);
     console.log(user);
     //TODO: Hacer los responses con una etructura de datos.

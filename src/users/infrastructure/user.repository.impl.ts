@@ -23,6 +23,7 @@ export class UserRepository implements  IgenericRepo<PhoneEntity,User> {
     }
 
     async finderCriteria(criteria: Partial<PhoneEntity>): Promise<User | undefined> {
+        console.log(criteria)
         return this.repository.createQueryBuilder('user')
             .innerJoinAndSelect('user.phone', 'phone')
             .where('phone.phoneNumber = :phoneNumber', { phoneNumber: criteria.phoneNumber })

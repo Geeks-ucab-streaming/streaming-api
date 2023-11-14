@@ -17,7 +17,9 @@ export class findByPhoneUserService implements IFindService<number, User> {
   ){}
 
   execute(value?: number): Promise<User> {
-      return this.repo. finderCriteria({phoneNumber: value});
+      const valueFormatted = value.toString().substring(3);
+      console.log(valueFormatted)
+      return this.repo.finderCriteria({phoneNumber: Number(valueFormatted)});
   }
 
 }
