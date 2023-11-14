@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
-import { ArtistDto } from '../../application/dtos/artist.dto';
 import { Artist } from 'src/artists/domain/artist';
 import { IFindGenericService } from 'src/common/domain/find.service';
 @Controller('artists')

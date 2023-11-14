@@ -5,6 +5,7 @@ import { ArtistEntity } from './entities/artist.entity';
 import { ArtistRepository } from './artist.repository.impl';
 import { FindArtistService } from '../application/services/find-artist.service';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
+
 @Module({
   imports: [TypeOrmModule.forFeature([ArtistEntity])],
   providers: [
