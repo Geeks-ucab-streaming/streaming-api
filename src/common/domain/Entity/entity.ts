@@ -6,7 +6,7 @@ export abstract class Entity<T extends IValueObject<T>> {
     this.id = id;
   }
 
- public validate(): boolean {
-    return this.id.validate();
+ public equals(vo:T): boolean {
+    return this.id.equals(vo);
   }
 }
