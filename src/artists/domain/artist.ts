@@ -8,6 +8,7 @@ import { ArtistImage } from './artistImage-valueobject';
 interface ArtistProps {
   name: ArtistName;
   image_reference: ArtistImage;
+  image: Buffer | null;
 }
 export class Artist extends Entity<ArtistProps> {
   name: string;
