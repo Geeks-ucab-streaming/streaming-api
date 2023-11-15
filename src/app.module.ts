@@ -6,6 +6,8 @@ import config from 'ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistModule } from './artists/infrastructure/artist.module';
 import { SongModule } from './songs/infrastructure/song.module';
+import { Playlist } from './playlist/domain/playlist';
+import { PlaylistModule } from './playlist/infrastructure/playlist.module';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -17,6 +19,7 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     TypeOrmModule.forRoot(config),
     ArtistModule,
     SongModule,
+    PlaylistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
