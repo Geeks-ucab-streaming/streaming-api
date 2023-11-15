@@ -1,12 +1,12 @@
 import { Repository, createQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IGenericRepository } from 'src/common/domain/generic.repository';
+import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { Song } from '../domain/song';
 import { SongEntity } from './entities/song.entity';
 import { Inject } from '@nestjs/common';
 import { Factory } from 'src/common/domain/icreator.interface';
 
-export class SongRepository implements IGenericRepository<Song> {
+export class SongRepository implements IFindGenericRepository<Song> {
   constructor(
     @InjectRepository(SongEntity)
     private readonly repository: Repository<SongEntity>,
