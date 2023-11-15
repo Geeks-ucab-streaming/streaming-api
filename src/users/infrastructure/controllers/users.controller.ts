@@ -4,22 +4,22 @@ import { Body,
   Get, 
   Param, 
   NotFoundException, 
-  Session,} from '@nestjs/common';
+  } from '@nestjs/common';
 import { CreateUserDto } from  '../../application/dtos/create-user.dto';
 import { UsersService } from "../../application/services/users.service";
 import { AuthService } from "../../application/auth.service";
+import { PhonesService } from 'src/phones/application/services/phones.service';
 
 
-//NOTA: Recuerda que Session es para manejar los cookies.
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
 
 export class UsersController {
 
- constructor (private usersService: UsersService, private authService: AuthService){}
+ constructor (private usersService: UsersService, private authService: AuthService, private phonesService: PhonesService){}
 
 
- @Post("/user")
- async createUser(@Body() body: CreateUserDto, @Session() session: any){
+ @Post("/auth/validate_operator")
+ async createUser(@Body() body: CreateUserDto){
     const user= await this.authService.signup(body);
     return user;
  }

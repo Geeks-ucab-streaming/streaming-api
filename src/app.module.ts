@@ -17,8 +17,10 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     TypeOrmModule.forRoot(config),
     UsersModule,
     ArtistModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+
