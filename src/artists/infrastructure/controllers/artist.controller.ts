@@ -25,7 +25,7 @@ export class ArtistController {
   findById(@Param('id') id: string): Promise<Artist> {
     return this.findOneArtistService.execute(id);
   }
-  @Get('/songs/:id')
+  @Get('/ArtistsSongsByArtistId/:id')
   findSongsById(@Param('id') id: string): Promise<any> {
     return this.findSongsByArtistIdService.execute(id);
   }
