@@ -12,6 +12,7 @@ import { AuthService } from "../../application/auth.service";
 import { ApiTags } from '@nestjs/swagger';
 import { findByPhoneUserService } from 'src/users/application/services/find-by-phone-user.service';
 import { User } from 'src/users/domain/user';
+import { Result } from 'src/common/domain/logic/Result';
 
 
 //NOTA: Recuerda que Session es para manejar los cookies.
@@ -32,7 +33,7 @@ export class UsersController {
   const user = await this.phoneService.execute(body.phonesNumber);
     console.log(user);
     //TODO: Hacer los responses con una etructura de datos.
-    return "hoal";
+    return Result.ok<User>(user);
  }
  @ApiTags('Users')
  @Get("/user/:id")
