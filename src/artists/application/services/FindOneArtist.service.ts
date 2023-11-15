@@ -9,12 +9,12 @@ export class FindOneArtistService implements IFindService<string, Artist> {
     @Inject('IGenericRepository')
     private readonly artistRepository: IGenericRepository<Artist>,
     @Inject('GetArtistImageService')
-    private readonly getArtistImageService: IFindService<string, Buffer>,
+    private readonly getFileService: IFindService<string, Buffer>,
   ) {}
 
   async execute(id: string): Promise<Artist> {
     const artist = await this.artistRepository.findById(id);
-    const image = await this.getArtistImageService.execute(
+    const image = await this.getFileService.execute(
       artist.image_reference.toLowerCase(),
     );
 

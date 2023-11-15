@@ -5,6 +5,8 @@ import { SongEntity } from './entities/song.entity';
 import { SongRepository } from './song.repository.impl';
 import { SongsController } from './controllers/song.controller';
 import { GetSongByIdService } from '../application/services/GetSongById.service';
+import { SongFactory } from './songFactory';
+import { Song } from '../domain/song';
 @Module({
   imports: [TypeOrmModule.forFeature([SongEntity])],
   providers: [
@@ -32,6 +34,12 @@ import { GetSongByIdService } from '../application/services/GetSongById.service'
       provide: 'GetSongPreviewService',
       useFactory: () => {
         return new GetFileService(process.env.PREVIEWS_CONTAINER);
+      },
+    },
+    {
+      provide: 'SongFactory',
+      useFactory: () => {
+        return new SongFactory();
       },
     },
   ],
