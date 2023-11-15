@@ -1,12 +1,12 @@
 ### Crear un nuevo usuario
-POST http://localhost:3000/api/user
+POST http://localhost:3000/api/auth/validate_operator
 content-type: application/json
 
 {
-  "phoneNumber":"4242250601"
+  "phoneNumber":"4242250603"
 }
 
 
 ### Encontrar un usuario en particular
-GET http://localhost:3000/api/user/08cbb969-e202-4e4b-81e1-8a20f6018085
+GET http://localhost:3000/api/user/1eedbc70-479a-422d-b86d-426370f39074
 

@@ -3,17 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../domain/user'; 
 import { UserEntity } from './users.entity'; 
 
-import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
+import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
+import { Phone } from 'src/phones/domain/phone';
 
-export interface IgenericRepo<T,R>{
-    finderCriteria(criteria: Partial<T>): Promise<R | undefined>;
-}
-
-export class UserRepository implements  IgenericRepo<PhoneEntity,User> {
+export class UserRepository implements  IgenericRepo<Phone,User> {
     constructor(
         @InjectRepository(UserEntity)
         private readonly repository: Repository<User>,
-    ) {}
+    ) {}    
     findById(id: string): Promise<User> {
         throw new Error('Method not implemented.');
     }
@@ -22,8 +19,8 @@ export class UserRepository implements  IgenericRepo<PhoneEntity,User> {
         return this.repository.find();
     }
 
-    async finderCriteria(criteria: Partial<PhoneEntity>): Promise<User | undefined> {
-        console.log(criteria)
+    async finderCriteria(criteria: Partial<Phone>): Promise<User | undefined> {
+        console.log(criteria.phoneNumber);
         return this.repository.createQueryBuilder('user')
             .innerJoinAndSelect('user.phone', 'phone')
             .where('phone.phoneNumber = :phoneNumber', { phoneNumber: criteria.phoneNumber })

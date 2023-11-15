@@ -7,9 +7,6 @@ export class UserDto extends User {
   id: string;
 
   @Expose()
-  email: string;
-
-  @Expose()
   name: string;
 
   @Expose()
