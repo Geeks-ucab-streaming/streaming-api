@@ -7,8 +7,8 @@ export class SongsController {
   constructor(
     @Inject('GetSongById')
     private readonly findSongById: GetSongByIdService, // @Inject('FindAllArtistService')
-  ) // private readonly findAllArtistService: FindAllArtistService,
-  {}
+    // private readonly findAllArtistService: FindAllArtistService,
+  ) {}
 
   // @Get()
   // findAll(): Promise<Artist[]> {
