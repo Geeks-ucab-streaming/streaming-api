@@ -20,8 +20,8 @@ import { User } from 'src/users/domain/user';
 export class UsersController {
 
  constructor (
-  private usersService: UsersService, 
-  private authService: AuthService,
+  private readonly usersService: UsersService, 
+  private readonly authService: AuthService,
   private readonly phoneService: findByPhoneUserService
   ){}
 
