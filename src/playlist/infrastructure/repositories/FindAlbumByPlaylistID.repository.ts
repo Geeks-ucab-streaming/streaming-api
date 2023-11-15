@@ -31,6 +31,8 @@ export class FindAlbumByPlaylistIDRepository
       .innerJoinAndSelect('playlistCreator.artist', 'artist')
       .innerJoinAndSelect('playlist.playlistSong', 'playlistSong')
       .innerJoinAndSelect('playlistSong.song', 'song')
+      .innerJoinAndSelect('song.song_artist', 'song_artist')
+      .innerJoinAndSelect('song_artist.artist', 'songArtist')
       .where('playlist.id = :playlistId', { playlistId })
       .getMany();
     return playlists;
