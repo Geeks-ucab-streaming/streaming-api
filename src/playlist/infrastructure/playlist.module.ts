@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { PlaylistEntity } from "./entities/playlist.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { PlaylistController } from "./entities/controllers/playlist.controller";
+import { PlaylistController } from "./controllers/playlist.controller";
 import { FindAlbumByArtistIDService } from "../application/dtos/services/FindAlbumByArtistID";
 import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { GetFileService } from "src/common/infrastructure/services/getFile.service";

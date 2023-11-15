@@ -15,9 +15,8 @@ export class PlaylistController {
 //     return this.findAllPlaylistService.execute();
 //   }
 
-  @Get('/:id')
+  @Get('/FindByArtistID/:id')
   find(@Param('id') id: string): Promise<Playlist> {
-        console.log('lolasocon');
     return this.findOnePlaylistService.execute(id);
   }
 }

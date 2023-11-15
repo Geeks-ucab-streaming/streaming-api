@@ -13,7 +13,6 @@ export class FindAlbumByArtistIDService implements IFindService<string, Playlist
   ) {}
 
   async execute(id: string): Promise<Playlist> {
-    console.log('lolasoser');
     const result = await this.albumRepository.find(id);
     const album = Array.isArray(result) ? result[0] : result;
     if (!album) {
