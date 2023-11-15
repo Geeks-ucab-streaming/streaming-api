@@ -13,9 +13,6 @@ export class SongRepository implements IFindGenericRepository<Song> {
     @Inject('SongFactory')
     private readonly songFactory: Factory<SongEntity, Song>,
   ) {}
-  findAll(): Promise<Song[]> {
-    throw new Error('Method not implemented.');
-  }
 
   async find(id: string): Promise<Song> {
     const songResponse = await this.repository.findOne({
