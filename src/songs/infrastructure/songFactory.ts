@@ -19,9 +19,9 @@ export class SongFactory implements Factory<SongEntity, Song> {
 
   private operation(songResponse: SongEntity): string[] {
     let artists: string[] = [];
-    songResponse.song_artist.map((artist_song) =>
-      artists.push(artist_song.artist.name),
-    );
+    songResponse.song_artist.map((artist_song) => {
+      artists.push(artist_song.artist.name);
+    });
     return artists;
   }
 }

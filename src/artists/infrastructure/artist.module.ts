@@ -9,6 +9,8 @@ import { FindAllArtistService } from '../application/services/FindAllArtist.serv
 import { FindSongsByArtistIdService } from 'src/songs/application/services/getSongsByArtistId.service';
 import { SongsByArtistIdRepository } from '../../songs/infrastructure/repositories/songsByArtistRepository';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
+import { SongFactory } from 'src/songs/infrastructure/songFactory';
+import { GetSongByArtistId } from '../application/services/GetSongsByArtistId.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ArtistEntity, SongEntity])],
@@ -36,6 +38,10 @@ import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
       useClass: FindSongsByArtistIdService,
     },
     {
+      provide: 'GetSongByArtistId',
+      useClass: GetSongByArtistId,
+    },
+    {
       provide: 'FindAllArtistService',
       useClass: FindAllArtistService,
     },
@@ -43,6 +49,12 @@ import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
       provide: 'GetArtistImageService',
       useFactory: () => {
         return new GetFileService(process.env.ARTISTS_IMAGES_CONTAINER);
+      },
+    },
+    {
+      provide: 'SongFactory',
+      useFactory: () => {
+        return new SongFactory();
       },
     },
   ],

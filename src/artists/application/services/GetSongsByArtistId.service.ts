@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common';
 import { Artist } from 'src/artists/domain/artist';
-import { IGenericRepository } from 'src/common/domain/generic.repository';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { Song } from 'src/songs/domain/song';
 
@@ -20,11 +19,9 @@ export class GetSongByArtistId
   ) {}
 
   async execute(artistId: string): Promise<ArtistWithSongs> {
-    const artist: Artist = await this.findArtistService.execute(artistId);
+    const artist = await this.findArtistService.execute(artistId);
 
-    const songs: Song[] =
-      await this.findSongsByArtistIdService.execute(artistId);
-
+    let songs: Song[] = await this.findSongsByArtistIdService.execute(artistId);
     const artistWithSongs: ArtistWithSongs = { artist: artist, songs: songs };
 
     return artistWithSongs;

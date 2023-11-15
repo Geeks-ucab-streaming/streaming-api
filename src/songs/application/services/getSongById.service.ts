@@ -16,7 +16,6 @@ export class GetSongByIdService implements IFindService<String, Song> {
     song.songImage = await this.getSongImageService.execute(
       song.image_reference,
     );
-    console.log(song);
     return song;
   }
 }

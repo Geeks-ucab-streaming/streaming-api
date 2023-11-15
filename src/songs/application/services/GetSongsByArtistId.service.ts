@@ -16,13 +16,14 @@ export class FindSongsByArtistIdService
 
   async execute(artistId: string): Promise<Song[]> {
     const songs: Song[] = await this.songsByArtistId.findById(artistId);
-    songs.forEach(async (song) => {
-      song.songImage = await this.getSongImageService.execute(
-        song.image_reference,
-      );
-    });
 
-    console.log(songs);
-    return;
+    await Promise.all(
+      songs.map(async (song) => {
+        song.songImage = await this.getSongImageService.execute(
+          song.image_reference,
+        );
+      }),
+    );
+    return songs;
   }
 }

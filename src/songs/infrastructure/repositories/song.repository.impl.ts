@@ -1,4 +1,4 @@
-import { Repository, createQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IGenericRepository } from 'src/common/domain/generic.repository';
 import { Song } from '../../domain/song';

@@ -22,7 +22,6 @@ export class FindOneArtistService implements IFindService<string, Artist> {
       image: image,
       equals: (other: Artist) => artist.equals(other),
     });
-
     return artistWithImage;
   }
 }

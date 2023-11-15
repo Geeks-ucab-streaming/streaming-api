@@ -1,9 +1,8 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { FindAllArtistService } from 'src/artists/application/services/FindAllArtist.service';
 import { FindOneArtistService } from 'src/artists/application/services/FindOneArtist.service';
+import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByArtistId.service';
 import { Artist } from 'src/artists/domain/artist';
-import { FindSongsByArtistIdService } from 'src/songs/application/services/getSongsByArtistId.service';
-import { Song } from 'src/songs/domain/song';
 @Controller('artists')
 export class ArtistController {
   constructor(
@@ -13,8 +12,8 @@ export class ArtistController {
     @Inject('FindAllArtistService')
     private readonly findAllArtistService: FindAllArtistService,
 
-    @Inject('FindSongsByArtistIdService')
-    private readonly findSongsByArtistIdService: FindSongsByArtistIdService,
+    @Inject('GetSongByArtistId')
+    private readonly findSongsByArtistIdService: GetSongByArtistId,
   ) {}
 
   @Get()
@@ -27,7 +26,7 @@ export class ArtistController {
     return this.findOneArtistService.execute(id);
   }
   @Get('/songs/:id')
-  findSongsById(@Param('id') id: string): Promise<Song[]> {
+  findSongsById(@Param('id') id: string): Promise<any> {
     return this.findSongsByArtistIdService.execute(id);
   }
 }
