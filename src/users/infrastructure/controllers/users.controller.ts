@@ -43,11 +43,6 @@ export class UsersController {
  @ApiTags('Users')
  @Post("/auth/login")
  async signin(@Body() body: CreateUserDto){
-  const users = await this.findByPhoneUserService.execute(body.phonesNumber); 
-  if(!users){
-    throw new NotFoundException("User not found!");
-    //Manejar excepciones con Optional 
-  }
   const user= await this.authService.signin(body.phonesNumber);
   return user;
  }

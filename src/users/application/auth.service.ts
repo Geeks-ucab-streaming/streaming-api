@@ -34,7 +34,6 @@ export class AuthService{
   async signin(phone: number){
     //Desestructuraci
     //validation by operator in service
-    await this.phone.execute(new PhoneDto(uuidv4(),phone));
     //validation if user exists
     const users = await this.findByPhoneUserService.execute(phone); 
     if(!users){
