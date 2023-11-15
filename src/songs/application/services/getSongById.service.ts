@@ -12,7 +12,16 @@ export class GetSongByIdService implements IFindService<String, Song> {
   ) {}
 
   async execute(songId: string): Promise<Song> {
-    const song: Song = await this.songsRepository.findById(songId);
+        // const result = await this.artistRepository.find(id);
+        // const artist = Array.isArray(result) ? result[0] : result;
+        // if (!artist) {
+        //   throw new Error('Artist not found');
+        // }
+    const result = await this.songsRepository.find(songId);
+    const song = Array.isArray(result) ? result[0] : result;
+    if(!song) {
+      throw new Error('Song not found');
+    }
     song.songImage = await this.getSongImageService.execute(
       song.image_reference,
     );

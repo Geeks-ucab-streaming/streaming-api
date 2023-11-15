@@ -17,7 +17,7 @@ export class SongRepository implements IGenericRepository<Song> {
     throw new Error('Method not implemented.');
   }
 
-  async findById(id: string): Promise<Song> {
+  async find(id: string): Promise<Song> {
     const songResponse = await this.repository.findOne({
       where: { id },
       relations: ['song_artist.artist'],
