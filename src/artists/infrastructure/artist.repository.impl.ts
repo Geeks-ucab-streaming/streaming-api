@@ -10,11 +10,15 @@ export class ArtistRepository implements IGenericRepository<Artist> {
     private readonly repository: Repository<Artist>,
   ) {}
 
-  async findAll(): Promise<Artist[]> {
-    return this.repository.find();
-  }
+  // async findAll(): Promise<Artist[]> {
+  //   return this.repository.find();
+  // }
 
-  async findById(id: string): Promise<Artist> {
-    return this.repository.findOne({ where: { id: id } });
+  async find(id?: string): Promise<Artist | Artist[]> {
+    if (id) {
+      const artist = await this.repository.findOne({ where: { id: id } });
+      return artist ? artist : null;
+    }
+    return this.repository.find();
   }
 }

@@ -13,7 +13,12 @@ export class FindOneArtistService implements IFindService<string, Artist> {
   ) {}
 
   async execute(id: string): Promise<Artist> {
-    const artist = await this.artistRepository.findById(id);
+    
+    const result = await this.artistRepository.find(id);
+    const artist = Array.isArray(result) ? result[0] : result;
+      if (!artist) {
+        throw new Error('Artist not found');
+      }
     const image = await this.getFileService.execute(
       artist.image_reference.toLowerCase(),
     );

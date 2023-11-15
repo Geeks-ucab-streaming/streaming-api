@@ -12,7 +12,8 @@ export class FindAllArtistService implements IFindService<void, Artist[]> {
   ) {}
 
   async execute(): Promise<Artist[]> {
-    const artists: Artist[] = await this.artistRepository.findAll();
+      const result = await this.artistRepository.find();
+      const artists = Array.isArray(result) ? result : [result];
 
     const artistPromises = artists.map(async (artist) => {
       const image = await this.getFileService.execute(
