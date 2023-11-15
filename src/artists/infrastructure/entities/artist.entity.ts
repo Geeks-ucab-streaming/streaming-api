@@ -3,9 +3,9 @@
 // import { Artist } from 'src/artists/domain/artist';
 // import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
 
-import { PlaylistCreator } from "src/common/infrastructure/entities/playlistCreator.entity";
-import { SongArtist } from "src/common/infrastructure/entities/songArtist.entity";
-import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
+import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // @Entity('Artists')
 // export class ArtistEntity extends Artist {

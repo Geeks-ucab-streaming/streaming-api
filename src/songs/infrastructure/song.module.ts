@@ -4,6 +4,7 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
 import { SongEntity } from './entities/song.entity';
 import { SongRepository } from './song.repository.impl';
 import { SongsController } from './controllers/song.controller';
+import { GetSongByIdService } from '../application/services/GetSongById.service';
 @Module({
   imports: [TypeOrmModule.forFeature([SongEntity])],
   providers: [
@@ -11,11 +12,14 @@ import { SongsController } from './controllers/song.controller';
       provide: 'IGenericRepository',
       useClass: SongRepository,
     },
-
+    {
+      provide: 'GetSongById',
+      useClass: GetSongByIdService,
+    },
     {
       provide: 'GetSongImageService',
       useFactory: () => {
-        return new GetFileService(process.env.ARTISTS_IMAGES_CONTAINER);
+        return new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER);
       },
     },
     {
@@ -33,4 +37,4 @@ import { SongsController } from './controllers/song.controller';
   ],
   controllers: [SongsController],
 })
-export class ArtistModule {}
+export class SongModule {}
