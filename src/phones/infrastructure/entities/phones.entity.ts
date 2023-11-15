@@ -14,7 +14,7 @@ export class PhoneEntity  {
   id: string;
 
   @Column({ type: 'bigint', nullable: true })
-  phoneNumber: number;
+  phoneNumber: number; 
 
   @ManyToOne(() => LineEntity, (linePhone) => linePhone.phones)
   linePhone: LineEntity;
