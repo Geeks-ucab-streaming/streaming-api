@@ -4,26 +4,28 @@ import { Body,
   Get, 
   Param, 
   NotFoundException, 
-  Session,} from '@nestjs/common';
+  } from '@nestjs/common';
 import { CreateUserDto } from  '../../application/dtos/create-user.dto';
 import { UsersService } from "../../application/services/users.service";
 import { AuthService } from "../../application/auth.service";
 import { ApiTags } from '@nestjs/swagger';
-import { findByPhoneUserService } from 'src/users/application/services/find-by-phone-user.service';
+import { findByPhoneUserService } from 'src/phones/application/services/find-by-phone-user.service';
 
 
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
 
 export class UsersController {
 
- constructor (private usersService: UsersService, private authService: AuthService, private findByPhoneUserService: findByPhoneUserService){}
+ constructor (private usersService: UsersService, 
+              private authService: AuthService, 
+              private findByPhoneUserService: findByPhoneUserService){}
 
 
  @Post("/auth/validate_operator")
  async createUser(@Body() body: CreateUserDto){
     const users = await this.findByPhoneUserService.execute(body.phonesNumber);
     if(users){
-      throw new NotFoundException("Phone already exists!");
+      throw new Error("Phone already exists!");
       //Manejar excepciones con Optional 
     }
     const user= await this.authService.signup(body);

@@ -3,7 +3,16 @@ POST http://localhost:3000/api/auth/validate_operator
 content-type: application/json
 
 {
-  "phoneNumber":"4242250603"
+  "phonesNumber":"4242250603"
+}
+
+
+### Iniciar Sesión 
+POST http://localhost:3000/api/auth/login
+content-type: application/json
+
+{
+  "phonesNumber":"4242250603"
 }
 
 

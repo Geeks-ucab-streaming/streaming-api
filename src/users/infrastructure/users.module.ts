@@ -5,7 +5,7 @@ import { UsersService } from '../application/services/users.service';
 import { AuthService } from '../application/auth.service';
 import { UserEntity } from "./users.entity";
 import { UserRepository } from './user.repository.impl';
-import { findByPhoneUserService } from '../application/services/find-by-phone-user.service';
+import { findByPhoneUserService } from '../../phones/application/services/find-by-phone-user.service';
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
   providers: [

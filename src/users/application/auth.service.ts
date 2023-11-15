@@ -10,13 +10,14 @@ export class AuthService{
   constructor(private usersService: UsersService){}
 
   async signup(users: CreateUserDto){
-    const usuario = new User(
+    let usuario = new User(
       uuidv4(),
       users.name,
       users.birth_date,
       users.genero,
       new PhonesNumber({value: users.phonesNumber}),
     )
+    //usuario.phone = new PhonesNumber({value: users.phonesNumber});
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);
     //Retornar el usuario

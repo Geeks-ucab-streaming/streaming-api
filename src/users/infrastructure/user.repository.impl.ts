@@ -9,7 +9,7 @@ export interface IgenericRepo<T,R>{
     finderCriteria(criteria: Partial<T>): Promise<R | undefined>;
 }
 
-export class UserRepository implements  IgenericRepo<PhoneEntity,User> {
+export class UserRepository implements IgenericRepo<PhoneEntity,User> {
     constructor(
         @InjectRepository(UserEntity)
         private readonly repository: Repository<User>,
