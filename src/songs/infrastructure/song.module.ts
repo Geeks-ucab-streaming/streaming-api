@@ -6,12 +6,14 @@ import { SongRepository } from './repositories/song.repository.impl';
 import { SongsController } from './controllers/song.controller';
 import { GetSongByIdService } from '../application/services/GetSongById.service';
 import { SongFactory } from './songFactory';
-import { FindSongsByArtistIdService } from '../application/services/getSongsByArtistId.service';
+import { FindSongsByArtistIdService } from '../application/services/getSongsByArtist.service';
 import { SongsByArtistIdRepository } from './repositories/songsByArtistRepository';
+import { TransmitWsGateway } from './sockets/transmit-ws.gateway';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SongEntity])],
   providers: [
+    TransmitWsGateway,
     {
       provide: 'IGenericRepository',
       useClass: SongRepository,
@@ -35,7 +37,7 @@ import { SongsByArtistIdRepository } from './repositories/songsByArtistRepositor
       },
     },
     {
-      provide: 'GetSongService',
+      provide: 'GetAudioService',
       useFactory: () => {
         return new GetFileService(process.env.SONGS_CONTAINER);
       },

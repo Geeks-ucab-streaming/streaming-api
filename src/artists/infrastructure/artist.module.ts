@@ -6,7 +6,7 @@ import { ArtistRepository } from './repositories/artist.repository.impl';
 import { FindOneArtistService } from '../application/services/FindOneArtist.service';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { FindAllArtistService } from '../application/services/FindAllArtist.service';
-import { FindSongsByArtistIdService } from 'src/songs/application/services/getSongsByArtistId.service';
+import { FindSongsByArtistIdService } from 'src/songs/application/services/getSongsByArtist.service';
 import { SongsByArtistIdRepository } from '../../songs/infrastructure/repositories/songsByArtistRepository';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
 import { SongFactory } from 'src/songs/infrastructure/songFactory';
