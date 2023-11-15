@@ -8,10 +8,8 @@ export class Song {
   image_reference: string;
   reproductions: number;
   genres: string[];
-  artistId: number;
+  artists: string[];
   songImage: Buffer | null;
-  song: Buffer | null;
-  preview: Buffer | null;
 
   constructor(
     id: string,
@@ -23,8 +21,9 @@ export class Song {
     image_reference: string,
     reproductions: number,
     genres: string[],
-    artistId: number,
+    artists: string[],
   ) {
+    this.id = id;
     this.name = name;
     this.duration = duration;
     this.creation_date = creation_date;
@@ -33,6 +32,6 @@ export class Song {
     this.image_reference = image_reference;
     this.reproductions = reproductions;
     this.genres = genres;
-    this.artistId = artistId;
+    this.artists = artists;
   }
 }
