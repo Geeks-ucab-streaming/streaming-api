@@ -3,6 +3,7 @@ export class Playlist {
   name: string;
   duration: string;
   image_reference: string;
+  playlist_Image: Buffer | null;
   reproductions: number;
 
   constructor(

@@ -1,12 +1,14 @@
 import { Repository, getManager } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IGenericRepository } from 'src/common/domain/generic.repository';
+import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { Inject } from '@nestjs/common';
 import { Factory } from 'src/common/domain/icreator.interface';
 
-export class SongsByArtistIdRepository implements IGenericRepository<Song[]> {
+export class SongsByArtistIdRepository
+  implements IFindGenericRepository<Song[]>
+{
   constructor(
     @InjectRepository(SongEntity)
     private readonly repository: Repository<SongEntity>,
@@ -14,11 +16,7 @@ export class SongsByArtistIdRepository implements IGenericRepository<Song[]> {
     private readonly songFactory: Factory<SongEntity, Song>,
   ) {}
 
-  findAll(): Promise<Song[][]> {
-    throw new Error('Method not implemented.');
-  }
-
-  async findById(artistId: string): Promise<Song[]> {
+  async find(artistId: string): Promise<Song[]> {
     const subquery = await this.repository
       .createQueryBuilder('song')
       .innerJoin(
