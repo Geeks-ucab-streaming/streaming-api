@@ -13,7 +13,7 @@ export class PhoneEntity  {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'bigint', nullable: true })
   phoneNumber: number;
 
   @ManyToOne(() => LineEntity, (linePhone) => linePhone.phones)
