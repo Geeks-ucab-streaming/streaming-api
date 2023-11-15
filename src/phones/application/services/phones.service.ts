@@ -24,6 +24,5 @@ export class PhonesService implements IFindService<PhoneDto,PhoneEntity> {
     phone.linePhone = new LineEntity();
     return this.repo.create(phone) as Promise<PhoneEntity>;
   }
-
 }
 

@@ -3,8 +3,7 @@ import { Body,
   Post, 
   Get, 
   Param, 
-  NotFoundException, 
-  Session,} from '@nestjs/common';
+  NotFoundException, } from '@nestjs/common';
 import { CreateUserDto } from  '../../application/dtos/create-user.dto';
 import { UsersService } from "../../application/services/users.service";
 import { AuthService } from "../../application/auth.service";
