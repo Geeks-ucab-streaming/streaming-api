@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { GetSongByIdService } from 'src/songs/application/services/GetSongById.service';
+import { GetSongByIdService } from '../../application/services/getSongById.service';
 import { Song } from 'src/songs/domain/song';
 
 @Controller('songs')

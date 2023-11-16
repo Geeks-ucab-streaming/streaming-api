@@ -4,13 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistEntity } from './entities/artist.entity';
 import { ArtistRepository } from './repositories/artist.repository.impl';
 import { FindOneArtistService } from '../application/services/FindOneArtist.service';
-import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
+import { GetFileService } from '../../common/infrastructure/services/getFile.service';
 import { FindAllArtistService } from '../application/services/FindAllArtist.service';
 import { FindSongsByArtistIdService } from 'src/songs/application/services/getSongsByArtist.service';
 import { SongsByArtistIdRepository } from '../../songs/infrastructure/repositories/songsByArtistRepository';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
 import { SongFactory } from 'src/songs/infrastructure/songFactory';
-import { GetSongByArtistId } from '../application/services/GetSongsByArtistId.service';
+import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByArtistId.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ArtistEntity, SongEntity])],
