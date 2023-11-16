@@ -11,11 +11,4 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  @ApiTags('Prueba')
-  @Get('algo')
-  getPrueba(): string {
-    console.log('algo');
-    return this.appService.getHello();
-  }
 }

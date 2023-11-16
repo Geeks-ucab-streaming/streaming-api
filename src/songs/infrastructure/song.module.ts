@@ -2,19 +2,31 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { SongEntity } from './entities/song.entity';
-import { SongRepository } from './song.repository.impl';
+import { SongRepository } from './repositories/song.repository.impl';
 import { SongsController } from './controllers/song.controller';
-import { GetSongByIdService } from '../application/services/GetSongById.service';
+import { GetSongByIdService } from '../../songs/application/services/getSongById.service';
+import { SongFactory } from './songFactory';
+import { FindSongsByArtistIdService } from '../../songs/application/services/GetSongsByArtistId.service';
+import { SongsByArtistIdRepository } from './repositories/songsByArtistRepository';
+
 @Module({
   imports: [TypeOrmModule.forFeature([SongEntity])],
   providers: [
     {
-      provide: 'IGenericRepository',
+      provide: ' IFindGenericRepository',
       useClass: SongRepository,
     },
     {
       provide: 'GetSongById',
       useClass: GetSongByIdService,
+    },
+    {
+      provide: 'SongsByArtistIdRepository',
+      useClass: SongsByArtistIdRepository,
+    },
+    {
+      provide: 'FindSongsByArtistIdService',
+      useClass: FindSongsByArtistIdService,
     },
     {
       provide: 'GetSongImageService',
@@ -32,6 +44,12 @@ import { GetSongByIdService } from '../application/services/GetSongById.service'
       provide: 'GetSongPreviewService',
       useFactory: () => {
         return new GetFileService(process.env.PREVIEWS_CONTAINER);
+      },
+    },
+    {
+      provide: 'SongFactory',
+      useFactory: () => {
+        return new SongFactory();
       },
     },
   ],

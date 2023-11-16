@@ -11,7 +11,7 @@ import { FindOnePromotionsService } from "../application/services/FindOnePromoti
     imports: [TypeOrmModule.forFeature([PromotionEntity])],
     providers: [
       {
-        provide: 'IGenericRepository',
+        provide: 'IFindGenericRepository',
         useClass: PromotionRepository,
       },
       {

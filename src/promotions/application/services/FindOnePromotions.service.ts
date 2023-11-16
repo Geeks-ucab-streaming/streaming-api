@@ -1,13 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { IGenericRepository } from "src/common/domain/generic.repository";
+import { IFindGenericRepository } from "src/common/domain/generic.repository";
 import { IFindService } from "src/common/domain/ifind.service";
 import { Promotion } from "src/promotions/domain/promotion";
 
 @Injectable()
 export class FindOnePromotionsService implements IFindService<string, Promotion> {
   constructor(
-    @Inject('IGenericRepository')
-    private readonly promotionRepository: IGenericRepository<Promotion>,
+    @Inject('IFindGenericRepository')
+    private readonly promotionRepository: IFindGenericRepository<Promotion>,
     @Inject('getPromotionImageService')
     private readonly getPromotionImageService: IFindService<string, Buffer>,
   ) {}
