@@ -1,7 +1,7 @@
-import { Controller, Get, Inject, Param } from "@nestjs/common";
-import { FindAlbumByArtistIDService } from "src/playlist/application/dtos/services/FindAlbumByArtistID";
-import { FindAlbumByPlaylistIDService } from "src/playlist/application/dtos/services/FindAlbumByPlaylistID.service";
-import { Playlist } from "src/playlist/domain/playlist";
+import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { FindAlbumByArtistIDService } from 'src/playlist/application/dtos/services/FindAlbumByArtistID';
+import { FindAlbumByPlaylistIDService } from 'src/playlist/application/dtos/services/FindAlbumByPlaylistID.service';
+import { Playlist } from 'src/playlist/domain/playlist';
 
 @Controller('playlists')
 export class PlaylistController {
@@ -10,13 +10,12 @@ export class PlaylistController {
     private readonly findOnePlaylistService: FindAlbumByArtistIDService,
     @Inject('FindPlaylistByIdService')
     private readonly findPlaylistByIdService: FindAlbumByPlaylistIDService,
-
   ) {}
 
-//   @Get()
-//   findAll(): Promise<Playlist[]> {
-//     return this.findAllPlaylistService.execute();
-//   }
+  //   @Get()
+  //   findAll(): Promise<Playlist[]> {
+  //     return this.findAllPlaylistService.execute();
+  //   }
 
   @Get('/FindByArtistID/:id')
   find(@Param('id') id: string): Promise<Playlist> {
