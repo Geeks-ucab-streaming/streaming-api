@@ -11,8 +11,6 @@ export class GetFileService implements IFindService<String, Buffer> {
 
 
   private getBlobClient(filename: string): BlockBlobClient {
-    console.log(this.containerName);
-    console.log(filename);
     try {
       const blobClientService = BlobServiceClient.fromConnectionString(
         this.azureConnection,
@@ -40,10 +38,8 @@ export class GetFileService implements IFindService<String, Buffer> {
   }
 
   async execute(filename: string): Promise<Buffer> {
-    //console.log('llegó aquí');
     try {
       const blobClient = this.getBlobClient(filename);
-      //console.log(filename);
       const blobDownloaded = await blobClient.download();
       const buffer = await this.readableStreamBodyToBuffer(
         blobDownloaded.readableStreamBody,
