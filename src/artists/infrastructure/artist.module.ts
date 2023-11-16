@@ -10,7 +10,7 @@ import { FindSongsByArtistIdService } from 'src/songs/application/services/getSo
 import { SongsByArtistIdRepository } from '../../songs/infrastructure/repositories/songsByArtistRepository';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
 import { SongFactory } from 'src/songs/infrastructure/songFactory';
-import { GetSongByArtistId } from '../application/services/GetSongsByArtistId.service';
+import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByArtistId.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ArtistEntity, SongEntity])],
