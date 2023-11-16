@@ -22,7 +22,7 @@ import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByAr
       },
     },
     {
-      provide: 'IGenericRepository',
+      provide: ' IFindGenericRepository',
       useClass: ArtistRepository,
     },
     {

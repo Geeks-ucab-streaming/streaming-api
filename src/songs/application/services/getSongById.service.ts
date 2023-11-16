@@ -5,7 +5,7 @@ import { Song } from 'src/songs/domain/song';
 
 export class GetSongByIdService implements IFindService<String, Song> {
   constructor(
-    @Inject('IGenericRepository')
+    @Inject(' IFindGenericRepository')
     private readonly songsRepository: IFindGenericRepository<Song>,
     @Inject('GetSongImageService')
     private readonly getSongImageService: IFindService<string, Buffer>,

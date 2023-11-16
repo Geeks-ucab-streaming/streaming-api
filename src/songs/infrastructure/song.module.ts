@@ -13,7 +13,7 @@ import { SongsByArtistIdRepository } from './repositories/songsByArtistRepositor
   imports: [TypeOrmModule.forFeature([SongEntity])],
   providers: [
     {
-      provide: 'IGenericRepository',
+      provide: ' IFindGenericRepository',
       useClass: SongRepository,
     },
     {

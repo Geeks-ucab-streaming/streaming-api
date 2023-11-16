@@ -1,31 +1,31 @@
+import { DomainException } from "../domain.exceptions";
+
 export class Result<T> {
-  public isSuccess: boolean;
-  public isFailure: boolean;
-  public error: T | string;
+  public statusCode: number;
+  public message: string;
+  public error: DomainException | string;
+  public value : T;
   private _value: T;
 
-  public constructor(isSuccess: boolean, error?: T | string, value?: T) {
-    if (isSuccess && error) {
-      throw new Error(
-        'InvalidOperation: Un result no puede ser exitoso y contener un error',
-      );
-    }
-    if (!isSuccess && !error) {
-      throw new Error(
-        'InvalidOperation: Un resultado fallido necesita contener un mensaje de error',
-      );
-    }
+  public constructor(isSuccess: boolean, error?: DomainException, value?: T) {
 
-    this.isSuccess = isSuccess;
-    this.isFailure = !isSuccess;
-    this.error = error;
-    this._value = value;
+      if (error) {
+        console.log(error.httpStatus);
+            this.statusCode = error.errorCode ? error.httpStatus : 500;
+            this.message = error?.message ? error?.message : "Unknown.";
+            this.error = "Internal Domain Error";
+        }
+        else {
+          this.statusCode = 200;
+          this.message = "OK";
+          this.value = value;
+        }
 
     Object.freeze(this);
   }
 
   public getValue(): T {
-    if (!this.isSuccess) {
+    if (this.statusCode !== 200) {
       console.log(this.error);
       throw new Error(
         "No se puede obtener el valor de un resultado de error. Use 'errorValue' en su lugar.",
@@ -49,7 +49,7 @@ export class Result<T> {
 
   public static combine(results: Result<any>[]): Result<any> {
     for (let result of results) {
-      if (result.isFailure) return result;
+      if (result.error) return result;
     }
     return Result.ok();
   }

@@ -14,6 +14,7 @@ import { PhonesService } from 'src/phones/application/services/phones.service';
 import { CreatePhoneDto } from 'src/phones/application/dtos/create-phone.dto';
 import { Optional } from 'src/common/optional';
 import { User } from 'src/users/domain/user';
+import { Result } from 'src/common/domain/logic/Result';
 
 
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -24,22 +25,28 @@ export class UsersController {
 
  @ApiTags('Users')
  @Post("/auth/validate_operator")
- async createUser(@Body() bodyUser: CreateUserDto, @Body() bodyPhone: CreatePhoneDto){
-    const users = await this.findByPhoneUserService.execute(bodyUser.phonesNumber);
+ async createUser(@Body() body: CreateUserDto){
+  try {
+    const users = await this.findByPhoneUserService.execute(body.phonesNumber);
+   
     if(users){
       throw new BadRequestException("Phone already exists!");
       //Manejar excepciones con Optional 
     }
-    const phone = await this.phonesService.execute(bodyPhone);
-    const user = await this.authService.signup(bodyUser);
-    user.phone = phone;
-    return user;
+    const user= await this.authService.signup(body);
+    return Result.ok<User>(users);
+  } catch (error) {
+    console.log(error);
+    return Result.fail<User>(error,);
+  }
+
  }
 
  @ApiTags('Users')
  @Post("/auth/login")
  async signin(@Body() body: CreateUserDto){
   const user= await this.authService.signin(body.phonesNumber);
+
   return user;
  }
  
