@@ -47,6 +47,12 @@ import { SongFactory } from 'src/songs/infrastructure/songFactory';
         return new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER);
       },
     },
+    {
+      provide: 'GetArtistImageService',
+      useFactory: () => {
+        return new GetFileService(process.env.ARTISTS_IMAGES_CONTAINER);
+      },
+    },
   ],
   controllers: [PlaylistController],
 })
