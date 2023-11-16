@@ -5,7 +5,7 @@ import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCrea
 import { PlaylistSongEntity } from 'src/common/infrastructure/entities/playlistSong.entity';
 
 @Entity('Playlists')
-export class PlaylistEntity{
+export class PlaylistEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
