@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistEntity } from './entities/artist.entity';
 import { ArtistRepository } from './repositories/artist.repository.impl';
 import { FindOneArtistService } from '../application/services/FindOneArtist.service';
-import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
+import { GetFileService } from '../../common/infrastructure/services/getFile.service';
 import { FindAllArtistService } from '../application/services/FindAllArtist.service';
 import { FindSongsByArtistIdService } from 'src/songs/application/services/getSongsByArtistId.service';
 import { SongsByArtistIdRepository } from '../../songs/infrastructure/repositories/songsByArtistRepository';
