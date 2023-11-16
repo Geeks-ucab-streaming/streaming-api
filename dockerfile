@@ -10,6 +10,7 @@ RUN chown -R node:node /home/node
 USER node
 RUN npm ci \
     && npm run build \
+    && npx tsc -p tsconfig.build.json \
     && npm prune --production
 
 

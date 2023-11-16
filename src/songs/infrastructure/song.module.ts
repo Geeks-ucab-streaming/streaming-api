@@ -4,9 +4,9 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
 import { SongEntity } from './entities/song.entity';
 import { SongRepository } from './repositories/song.repository.impl';
 import { SongsController } from './controllers/song.controller';
-import { GetSongByIdService } from '../application/services/GetSongById.service';
+import { GetSongByIdService } from '../../songs/application/services/getSongById.service';
 import { SongFactory } from './songFactory';
-import { FindSongsByArtistIdService } from '../application/services/getSongsByArtistId.service';
+import { FindSongsByArtistIdService } from '../../songs/application/services/GetSongsByArtistId.service';
 import { SongsByArtistIdRepository } from './repositories/songsByArtistRepository';
 
 @Module({
