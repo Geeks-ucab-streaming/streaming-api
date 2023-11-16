@@ -1,6 +1,7 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { GetSongByIdService } from '../../application/services/getSongById.service';
 import { Song } from 'src/songs/domain/song';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('songs')
 export class SongsController {
@@ -14,7 +15,7 @@ export class SongsController {
   // findAll(): Promise<Artist[]> {
   //   return this.findAllArtistService.execute();
   // }
-
+  @ApiTags('Songs')
   @Get('/:id')
   findById(@Param('id') id: string): Promise<Song> {
     return this.findSongById.execute(id);
