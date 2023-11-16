@@ -6,7 +6,7 @@ import { SongRepository } from './repositories/song.repository.impl';
 import { SongsController } from './controllers/song.controller';
 import { GetSongByIdService } from '../../songs/application/services/getSongById.service';
 import { SongFactory } from './songFactory';
-import { FindSongsByArtistIdService } from '../../songs/application/services/GetSongsByArtist.service';
+import { FindSongsByArtistIdService } from '../application/services/getSongsByArtist.service';
 import { SongsByArtistIdRepository } from './repositories/songsByArtistRepository';
 import { TransmitWsGateway } from './sockets/transmit-ws.gateway';
 

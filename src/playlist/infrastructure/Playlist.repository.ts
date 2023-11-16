@@ -1,8 +1,8 @@
-import { IFindGenericRepository } from "src/common/domain/ifindgeneric.repository";
-import { PlaylistEntity } from "./entities/playlist.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Playlist } from "../domain/playlist";
+import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
+import { PlaylistEntity } from './entities/playlist.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Playlist } from '../domain/playlist';
 
 export class PlaylistRepository implements IFindGenericRepository<Playlist> {
   constructor(
