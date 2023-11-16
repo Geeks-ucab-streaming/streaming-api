@@ -17,6 +17,7 @@ export class Optional<T> {
   hasValue(): boolean {
     return this.assigned;
     }
+    
     getValue(): T {
     if (!this.assigned) throw Error(); 
     return <T>this.value;

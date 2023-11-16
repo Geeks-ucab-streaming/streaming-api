@@ -13,7 +13,7 @@ export class findByPhoneUserService implements IFindService<number, User> {
     private readonly repo:IgenericRepo<PhoneEntity,User>,
   ){} 
 
-  execute(value?: number): Promise<User> {
+  execute(value?: number): Promise<User>  {
       if (!Object.values(phoneOperatorsEnum).includes(value.toString().substring(0,3) as phoneOperatorsEnum)) throw new BadRequestException('Invalid phone operator');
       return this.repo.finderCriteria({phoneNumber: Number(value)});
   }
