@@ -12,6 +12,8 @@ export class FindAlbumByPlaylistIDService
     private readonly albumRepository: IFindGenericRepository<Playlist>,
     @Inject('GetAlbumImageService2')
     private readonly getFileService: IFindService<string, Buffer>,
+    @Inject('GetArtistImageService')
+    private readonly getFileService2: IFindService<string, Buffer>,
   ) {}
 
   async execute(id: string): Promise<Playlist> {
