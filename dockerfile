@@ -8,7 +8,13 @@ COPY . /home/node
 RUN chown -R node:node /home/node
 
 USER node
-RUN npm install && npm run build
+RUN npm ci \
+    && npm run build \
+    && npm prune --production
+
+
+
+# ---
 
 # ---
 
