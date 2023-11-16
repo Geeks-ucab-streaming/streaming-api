@@ -8,6 +8,7 @@ import { ArtistImage } from './artistImage-valueobject';
 interface ArtistProps {
   name: ArtistName;
   image_reference: ArtistImage;
+  image: Buffer | null;
 }
 export class Artist extends Entity<ArtistProps> {
   name: string;
@@ -22,7 +23,7 @@ export class Artist extends Entity<ArtistProps> {
   }
 
   public static create(
-    props: ArtistProps,
+    props: ArtistProps, 
     id?: UniqueEntityID,
   ): Result<Artist> {
     const guardResult = Guard.againstNullOrUndefinedBulk([

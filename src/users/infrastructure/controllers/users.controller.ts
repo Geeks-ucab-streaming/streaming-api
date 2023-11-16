@@ -31,6 +31,7 @@ export class UsersController {
   @ApiTags('Users')
  @Post("/auth/validate_operator")
  async createUser(@Body() body: CreateUserDto){
+  try {
     const users = await this.findByPhoneUserService.execute(body.phonesNumber);
    
     if(users){
@@ -39,11 +40,17 @@ export class UsersController {
     }
     const user= await this.authService.signup(body);
     return Result.ok<User>(users);
+  } catch (error) {
+    console.log(error);
+    return Result.fail<User>(error,);
+  }
+
  }
  @ApiTags('Users')
  @Post("/auth/login")
  async signin(@Body() body: CreateUserDto){
   const user= await this.authService.signin(body.phonesNumber);
+
   return user;
  }
  
