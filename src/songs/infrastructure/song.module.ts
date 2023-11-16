@@ -2,8 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { SongEntity } from './entities/song.entity';
-import { SongRepository } from './song.repository.impl';
+import { SongRepository } from './repositories/song.repository.impl';
 import { SongsController } from './controllers/song.controller';
+import { GetSongByIdService } from '../application/services/GetSongById.service';
+import { SongFactory } from './songFactory';
+import { FindSongsByArtistIdService } from '../application/services/getSongsByArtistId.service';
+import { SongsByArtistIdRepository } from './repositories/songsByArtistRepository';
+
 @Module({
   imports: [TypeOrmModule.forFeature([SongEntity])],
   providers: [
@@ -11,11 +16,22 @@ import { SongsController } from './controllers/song.controller';
       provide: 'IGenericRepository',
       useClass: SongRepository,
     },
-
+    {
+      provide: 'GetSongById',
+      useClass: GetSongByIdService,
+    },
+    {
+      provide: 'SongsByArtistIdRepository',
+      useClass: SongsByArtistIdRepository,
+    },
+    {
+      provide: 'FindSongsByArtistIdService',
+      useClass: FindSongsByArtistIdService,
+    },
     {
       provide: 'GetSongImageService',
       useFactory: () => {
-        return new GetFileService(process.env.ARTISTS_IMAGES_CONTAINER);
+        return new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER);
       },
     },
     {
@@ -30,7 +46,13 @@ import { SongsController } from './controllers/song.controller';
         return new GetFileService(process.env.PREVIEWS_CONTAINER);
       },
     },
+    {
+      provide: 'SongFactory',
+      useFactory: () => {
+        return new SongFactory();
+      },
+    },
   ],
   controllers: [SongsController],
 })
-export class ArtistModule {}
+export class SongModule {}
