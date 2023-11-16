@@ -7,6 +7,7 @@ import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
 import { User } from 'src/users/domain/user';
 import {v4 as uuidv4} from 'uuid';
 import { LineEntity } from 'src/phones/infrastructure/lines.entity';
+import { CreatePhoneDto } from '../dtos/create-phone.dto';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class PhonesService implements IFindService<PhoneDto,PhoneEntity> {
   constructor( @Inject('ICreateRepository')
   private readonly repo:ICreateRepository<Phone>
   ){}
-  execute(value?: PhoneDto): Promise<PhoneEntity> {
+  execute(value?: CreatePhoneDto): Promise<PhoneEntity> {
     const phone = new Phone(uuidv4(),value.phoneNumber) as PhoneEntity;
     phone.linePhone = new LineEntity();
     return this.repo.create(phone) as Promise<PhoneEntity>;

@@ -11,14 +11,12 @@ export class PlaylistRepository implements IFindGenericRepository<Playlist> {
   ) {}
 
   async find(artistId: string): Promise<Playlist[]> {
-    console.log('lolaso');
     const playlists = await this.repository
       .createQueryBuilder('playlist')
       .innerJoinAndSelect('playlist.playlistCreator', 'playlistCreator')
       .innerJoinAndSelect('playlistCreator.artist', 'artist')
       .where('artist.id = :artistId', { artistId })
       .getMany();
-      console.log('lolaso');
 
     return playlists;
   }

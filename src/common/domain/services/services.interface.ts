@@ -1,4 +1,4 @@
 
-export interface IGenericRepository<T, R> {
+export interface  IFindGenericRepository<T, R> {
     execute(request: T): Promise<R>;
 }

@@ -4,11 +4,13 @@ import { IFindGenericRepository } from "src/common/domain/ifindgeneric.repositor
 import { Playlist } from "src/playlist/domain/playlist";
 
 @Injectable()
-export class FindAlbumByArtistIDService implements IFindService<string, Playlist> {
+export class FindAlbumByPlaylistIDService
+  implements IFindService<string, Playlist>
+{
   constructor(
-    @Inject('PlaylistRepository')
+    @Inject('FindAlbumByPlaylistIDRepository')
     private readonly albumRepository: IFindGenericRepository<Playlist>,
-    @Inject('GetAlbumImageService')
+    @Inject('GetAlbumImageService2')
     private readonly getFileService: IFindService<string, Buffer>,
   ) {}
 
@@ -22,6 +24,5 @@ export class FindAlbumByArtistIDService implements IFindService<string, Playlist
       album.image_reference,
     );
     return album;
-
   }
 }

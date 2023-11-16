@@ -32,7 +32,6 @@ export class AuthService{
   }
 
   async signin(phone: number){
-    //Desestructuraci
     //validation by operator in service
     //validation if user exists
     const users = await this.findByPhoneUserService.execute(phone); 
@@ -44,5 +43,3 @@ export class AuthService{
     return users;
   }
 }
-
-

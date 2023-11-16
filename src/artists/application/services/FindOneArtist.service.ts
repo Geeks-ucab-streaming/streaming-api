@@ -6,7 +6,7 @@ import { IFindService } from 'src/common/domain/ifind.service';
 @Injectable()
 export class FindOneArtistService implements IFindService<string, Artist> {
   constructor(
-    @Inject('IGenericRepository')
+    @Inject(' IFindGenericRepository')
     private readonly artistRepository: IFindGenericRepository<Artist>,
     @Inject('GetArtistImageService')
     private readonly getFileService: IFindService<string, Buffer>,
