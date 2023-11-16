@@ -6,7 +6,7 @@ import {
   Check,
   ManyToOne,
 } from 'typeorm';
-import { UserEntity } from '../../users/infraestructure/users.entity';
+import { UserEntity } from '../infrastructure/users.entity';
 
 @Entity('StoredEdition')
 export class StoredEdition {
@@ -17,7 +17,7 @@ export class StoredEdition {
   editionDate: Date;
 
   @Column({ type: 'text', nullable: true })
-  @Check(`fields IN ('email', 'name', 'birth_date', 'genders', 'phones')`)
+  @Check(`fields IN ('email', 'name', 'birth_date', 'gender', 'phones')`)
   fields: string;
 
   @Column({ type: 'text', nullable: true })
