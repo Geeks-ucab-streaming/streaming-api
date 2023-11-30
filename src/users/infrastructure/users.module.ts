@@ -10,13 +10,25 @@ import { PhonesService } from '../../phones/application/services/phones.service'
 import { PhoneRepository } from '../../phones/infrastructure/phone.repository.imp';
 import { PhoneEntity } from '../../phones/infrastructure/phones.entity';
 import { LineEntity } from 'src/phones/infrastructure/lines.entity';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtcontanst } from '../application/constants/jwt.constansts';
+import { JwtStrategy } from '../application/jwtoken/jwt.strategies';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity,PhoneEntity])],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity,PhoneEntity]),
+    PassportModule,
+    JwtModule.register({
+      secret: jwtcontanst.secret,
+      signOptions: {expiresIn: '60h'},
+    }),
+  ],
   providers: [
     PhonesService,
     UsersService, 
-    AuthService, 
+    AuthService,
+    JwtStrategy, 
     findByPhoneUserService,
     {
       provide: 'IgenericRepo',

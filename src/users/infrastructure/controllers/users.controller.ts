@@ -4,19 +4,21 @@ import { Body,
   Get, 
   Param, 
   NotFoundException,
-  BadRequestException, } from '@nestjs/common';
+  BadRequestException,
+  UseGuards, } from '@nestjs/common';
 import { CreateUserDto } from  '../../application/dtos/create-user.dto';
 import { UsersService } from "../../application/services/users.service";
 import { AuthService } from "../../application/auth.service";
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.service';
 import { PhonesService } from 'src/phones/application/services/phones.service';
 import { CreatePhoneDto } from 'src/phones/application/dtos/create-phone.dto';
 import { Optional } from 'src/common/optional';
 import { User } from 'src/users/domain/user';
 import { Result } from 'src/common/domain/logic/Result';
+import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 
-
+@ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
 
 export class UsersController {
@@ -33,7 +35,7 @@ export class UsersController {
       throw new BadRequestException("Phone already exists!");
       //Manejar excepciones con Optional 
     }
-    const user= await this.authService.signup(body);
+    const user = await this.authService.signup(body);
     return Result.ok<User>(users);
   } catch (error) {
     console.log(error);
@@ -45,11 +47,12 @@ export class UsersController {
  @ApiTags('Users')
  @Post("/auth/login")
  async signin(@Body() body: CreateUserDto){
-  const user= await this.authService.signin(body.phonesNumber);
+  const data = await this.authService.signin(body.phonesNumber);
 
-  return user;
+  return data;
  }
  
+ @UseGuards(JwtAuthGuard)
  @ApiTags('Users')
  @Get("/user/:id")
  async findUser(@Param("id") id:string){
