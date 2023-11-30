@@ -9,6 +9,7 @@ import { SongModule } from './songs/infrastructure/song.module';
 import { Playlist } from './playlist/domain/playlist';
 import { PlaylistModule } from './playlist/infrastructure/playlist.module';
 import { PromotionModule } from './promotions/infrastructure/promotion.module';
+import { PromotionsController } from './promotions/infrastructure/controllers/promotions.controller';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -21,9 +22,9 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     ArtistModule,
     SongModule,
     PlaylistModule,
-    PromotionModule,
+    // PromotionModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, PromotionsController],
   providers: [AppService],
 })
 export class AppModule {}

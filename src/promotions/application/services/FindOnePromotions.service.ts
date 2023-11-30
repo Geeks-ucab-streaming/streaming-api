@@ -1,21 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { Promotion } from 'src/promotions/domain/promotion';
+import { IPromotionRepository } from 'src/promotions/domain/IPromotionRepository';
 
-@Injectable()
 export class FindOnePromotionsService
   implements IFindService<string, Promotion>
 {
+  private readonly promotionRepository: IPromotionRepository;
+  private readonly getPromotionImageService: IFindService<string, Buffer>;
   constructor(
-    @Inject('IFindGenericRepository')
-    private readonly promotionRepository: IFindGenericRepository<Promotion>,
-    @Inject('getPromotionImageService')
-    private readonly getPromotionImageService: IFindService<string, Buffer>,
-  ) {}
+    promotionRepository: IPromotionRepository,
+    getPromotionImageService: IFindService<string, Buffer>,
+  ) {
+    this.promotionRepository = promotionRepository;
+    this.getPromotionImageService = getPromotionImageService;
+  }
 
   async execute(id: string): Promise<Promotion> {
-    const result = await this.promotionRepository.find(id);
+    const result = await this.promotionRepository.findById(id);
     const promotion = Array.isArray(result) ? result[0] : result;
     if (!promotion) {
       throw new Error('Promotion not found');

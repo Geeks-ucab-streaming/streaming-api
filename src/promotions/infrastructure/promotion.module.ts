@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PromotionsController } from './controllers/promotions.controller';
 import { PromotionEntity } from './entities/promotion.entity';
-import { PromotionRepository } from './promotion.repository.impl';
+import { PromotionRepository } from './Repositories/PromotionRepository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { FindAllPromotionsService } from '../application/services/FindAllPromotions.service';
