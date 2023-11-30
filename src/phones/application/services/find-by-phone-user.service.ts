@@ -3,7 +3,7 @@ import { User } from 'src/users/domain/user';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
 import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
-import { phoneOperatorsEnum } from 'src/users/domain/value-objects/phoneOperators.enum';
+import { phoneOperatorsEnum } from 'src/phones/domain/value-objects/phoneOperators.enum';
 import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../domain/user'; 
 import { UserEntity } from './users.entity'; 
-import { PhonesNumber } from '../domain/value-objects/phoneNumber';
+import { PhonesNumber } from '../../phones/domain/value-objects/phoneNumber';
 import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 import { Phone } from 'src/phones/domain/phone';
 

@@ -12,7 +12,6 @@ export class GetSongByArtistId
   implements IFindService<String, ArtistWithSongs>
 {
   constructor(
-    @Inject('FindOneArtistService')
     private readonly findArtistService: IFindService<string, Artist>,
     @Inject('FindSongsByArtistIdService')
     private readonly findSongsByArtistIdService: IFindService<string, Song[]>,

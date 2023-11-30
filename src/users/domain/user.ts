@@ -1,5 +1,5 @@
 import { Phone } from "src/phones/domain/phone";
-import { PhonesNumber } from "./value-objects/phoneNumber";
+import { PhonesNumber } from "../../phones/domain/value-objects/phoneNumber";
 import { PhoneEntity } from "src/phones/infrastructure/phones.entity";
 export class User {
   id: string;
@@ -7,7 +7,7 @@ export class User {
   birth_date: Date;
   genero: string;
   phonesNumber: PhonesNumber ;
-  phone: PhoneEntity;
+
 
   constructor(
     id: string,
@@ -22,6 +22,5 @@ export class User {
     this.birth_date = birth_date;
     this.genero = genero;
     this.phonesNumber = phonesNumber;
-    this.phone = phone;
   }
 }

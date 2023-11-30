@@ -1,8 +1,8 @@
 
 import { ValueObject } from "src/common/domain/ValueObjects/value-object.interface";
-import { Operators } from "../services/phoneOperator/phoneOperator";
+import { Operators } from "../../../users/domain/services/phoneOperator/phoneOperator";
 import { phoneOperatorsEnum } from "./phoneOperators.enum";
-import { PhoneOperator } from "../phoneOperator/phoneOperator.interface";
+import { PhoneOperator } from "../../../users/domain/phoneOperator/phoneOperator.interface";
 export interface numberPhonePrefixProps {
     value: number;
 }   
