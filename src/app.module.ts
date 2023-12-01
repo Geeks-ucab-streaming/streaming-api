@@ -5,11 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import config from 'ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistModule } from './artists/infrastructure/artist.module';
-import { SongModule } from './songs/infrastructure/song.module';
-import { Playlist } from './playlist/domain/playlist';
 import { PlaylistModule } from './playlist/infrastructure/playlist.module';
-import { PromotionModule } from './promotions/infrastructure/promotion.module';
 import { PromotionsController } from './promotions/infrastructure/controllers/promotions.controller';
+import { SongsController } from './songs/infrastructure/controllers/song.controller';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -20,11 +18,11 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     }),
     TypeOrmModule.forRoot(config),
     ArtistModule,
-    SongModule,
+    // SongModule,
     PlaylistModule,
     // PromotionModule,
   ],
-  controllers: [AppController, PromotionsController],
+  controllers: [AppController, PromotionsController, SongsController],
   providers: [AppService],
 })
 export class AppModule {}

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { SongEntity } from './entities/song.entity';
-import { SongRepository } from './repositories/song.repository.impl';
+// import { SongRepository } from './repositories/song.repository.impl';
 import { SongsController } from './controllers/song.controller';
 import { GetSongByIdService } from '../../songs/application/services/getSongById.service';
 import { SongFactory } from './songFactory';
@@ -14,10 +14,10 @@ import { TransmitWsGateway } from './sockets/transmit-ws.gateway';
   imports: [TypeOrmModule.forFeature([SongEntity])],
   providers: [
     TransmitWsGateway,
-    {
-      provide: 'IGenericRepository',
-      useClass: SongRepository,
-    },
+    // {
+    //   provide: 'IGenericRepository',
+    // useClass: SongRepository,
+    // },
     {
       provide: 'GetSongById',
       useClass: GetSongByIdService,

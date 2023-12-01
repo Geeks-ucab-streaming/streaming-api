@@ -16,20 +16,22 @@ export class FindOnePromotionsService
   }
 
   async execute(id: string): Promise<Promotion> {
-    const result = await this.promotionRepository.findById(id);
-    const promotion = Array.isArray(result) ? result[0] : result;
-    if (!promotion) {
-      throw new Error('Promotion not found');
-    }
-    const image = await this.getPromotionImageService.execute(
-      promotion.image_reference.toLowerCase(),
-    );
+    return this.promotionRepository.findById(id);
 
-    const promotionWithImage: Promotion = Object.assign(promotion, {
-      image: image,
-      equals: (other: Promotion) => promotion.equals(other),
-    });
+    // const result = await this.promotionRepository.findById(id);
+    // const promotion = Array.isArray(result) ? result[0] : result;
+    // if (!promotion) {
+    //   throw new Error('Promotion not found');
+    // }
+    // const image = await this.getPromotionImageService.execute(
+    //   promotion.image_reference.toLowerCase(),
+    // );
 
-    return promotionWithImage;
+    // const promotionWithImage: Promotion = Object.assign(promotion, {
+    //   image: image,
+    //   equals: (other: Promotion) => promotion.equals(other),
+    // });
+
+    // return promotionWithImage;
   }
 }

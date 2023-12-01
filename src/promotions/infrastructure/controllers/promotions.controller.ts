@@ -2,7 +2,7 @@ import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { FindAllPromotionsService } from 'src/promotions/application/services/FindAllPromotions.service';
 import { FindOnePromotionsService } from 'src/promotions/application/services/FindOnePromotions.service';
 import { Promotion } from 'src/promotions/domain/promotion';
-import { PromotionRepository } from '../Repositories/PromotionRepository';
+import { OrmPromotionRepository } from '../Repositories/promotion.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { EntityManager, getManager } from 'typeorm';
 
@@ -10,14 +10,15 @@ import { EntityManager, getManager } from 'typeorm';
 export class PromotionsController {
   private readonly findOnePromotionsService: FindOnePromotionsService;
   private readonly findAllPromotionsService: FindAllPromotionsService;
-  private readonly ormPromotionRepository: PromotionRepository;
+  private readonly ormPromotionRepository: OrmPromotionRepository;
   constructor(private readonly manager: EntityManager) {
     if (!manager) {
       throw new Error("Entity manager can't be null.");
     }
 
-    this.ormPromotionRepository =
-      this.manager.getCustomRepository(PromotionRepository);
+    this.ormPromotionRepository = this.manager.getCustomRepository(
+      OrmPromotionRepository,
+    );
 
     this.findAllPromotionsService = new FindAllPromotionsService(
       this.ormPromotionRepository,
