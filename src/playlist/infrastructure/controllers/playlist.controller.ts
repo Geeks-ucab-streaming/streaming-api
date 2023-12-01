@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { FindAlbumByArtistIDService } from 'src/playlist/application/dtos/services/FindAlbumByArtistID';
-import { FindAlbumByPlaylistIDService } from 'src/playlist/application/dtos/services/FindAlbumByPlaylistID.service';
+import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumByArtistID';
+import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindAlbumByPlaylistID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
 
 @Controller('playlists')
