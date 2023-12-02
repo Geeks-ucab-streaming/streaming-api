@@ -5,15 +5,12 @@ import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
 
 @Injectable()
-export class FindAlbumByPlaylistIDService
-  implements IFindService<string, Playlist>
+export class FindAlbumByArtistIDService
+  implements IFindService<string, Playlist[]>
 {
-  private readonly repository: IPlaylistRepository;
-  constructor(repository: IPlaylistRepository) {
-    this.repository = repository;
-  }
+  constructor(private readonly albumRepository: IPlaylistRepository) {}
 
-  async execute(id: string): Promise<Playlist> {
-    return await this.repository.findPlaylistById(id);
+  async execute(id: string): Promise<Playlist[]> {
+    return this.albumRepository.findPlaylistsByArtistId(id);
   }
 }

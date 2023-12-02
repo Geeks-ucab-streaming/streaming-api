@@ -5,6 +5,7 @@ import { FindSongsByArtistIdService } from '../../application/services/getSongsB
 import { EntityManager } from 'typeorm';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
+import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 
 @Controller('songs')
 export class SongsController {
@@ -12,14 +13,10 @@ export class SongsController {
   private readonly findSongsByArtistIdService: FindSongsByArtistIdService;
   private readonly ormSongRepository: OrmSongRepository;
   // private readonly findSongsByArtistIdService: FindSongsByPlaylistIdService;
-  constructor(private readonly manager: EntityManager) {
-    if (!manager) {
-      throw new Error("Entity manager can't be null.");
-    }
-
-    this.ormSongRepository =
-      this.manager.getCustomRepository(OrmSongRepository);
-
+  constructor() {
+    this.ormSongRepository = new OrmSongRepository(
+      DataSourceSingleton.getInstance(),
+    );
     this.getSongByIdService = new GetSongByIdService(
       this.ormSongRepository,
       new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),

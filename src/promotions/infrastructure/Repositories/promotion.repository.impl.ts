@@ -4,7 +4,6 @@ import { IPromotionRepository } from '../../domain/IPromotionRepository';
 import { Promotion } from 'src/promotions/domain/promotion';
 import { GetFileService } from '../../../common/infrastructure/services/getFile.service';
 
-@EntityRepository(PromotionEntity)
 export class OrmPromotionRepository
   extends Repository<PromotionEntity>
   implements IPromotionRepository

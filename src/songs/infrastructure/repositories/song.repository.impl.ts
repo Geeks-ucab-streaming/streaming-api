@@ -5,7 +5,6 @@ import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { SongFactory } from '../songFactory';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 
-@EntityRepository(SongEntity)
 export class OrmSongRepository
   extends Repository<SongEntity>
   implements ISongRepository

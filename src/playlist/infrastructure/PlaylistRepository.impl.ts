@@ -25,12 +25,7 @@ export class PlaylistRepository
       .getMany();
 
     console.log('---------------------------------------------------');
-    console.log(playlist[0].playlistCreator[0]);
-
-    // const album: Playlist = Array.isArray(playlist) ? playlist[0] : playlist;
-    // if (!album) {
-    //   throw new Error('Album not found');
-    // }
+    console.log(playlist[0].playlistCreator[0].artist);
 
     console.log(playlist[0].id);
 
@@ -42,8 +37,10 @@ export class PlaylistRepository
       playlist[0].reproductions,
     );
 
-    playlistWithImage.playlistCreator =
-      playlist[0].playlistCreator[0].artist[0];
+    //!CUANDO HAGAMOS LOS MAPPERS TENEMOS QUE SOLUCIONAR MUCHAS VAINAS CON LAS CONSULTAS
+
+    playlistWithImage.playlistCreator.push();
+    playlist[0].playlistCreator[0].artist;
     for (const song of playlist[0].playlistSong) {
       playlistWithImage.playlistSong.push(song[0]);
     }

@@ -4,8 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import config from 'ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ArtistModule } from './artists/infrastructure/artist.module';
-import { PlaylistModule } from './playlist/infrastructure/playlist.module';
 import { PromotionsController } from './promotions/infrastructure/controllers/promotions.controller';
 import { SongsController } from './songs/infrastructure/controllers/song.controller';
 import { PlaylistController } from './playlist/infrastructure/controllers/playlist.controller';
@@ -18,15 +16,15 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
       envFilePath: `./deploy/.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRoot(config),
-    ArtistModule,
+    // ArtistModule,
     // SongModule,
     // PlaylistModule,
     // PromotionModule,
   ],
   controllers: [
     AppController,
-    // PromotionsController,
-    // SongsController,
+    PromotionsController,
+    SongsController,
     PlaylistController,
   ],
   providers: [AppService],

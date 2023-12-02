@@ -1,60 +1,30 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumByArtistID';
+import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindAlbumByPlaylistID.service';
-import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
-import { DataSource, getMetadataArgsStorage } from 'typeorm';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
+import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 
 @Controller('playlists')
 export class PlaylistController {
-  dataSource: DataSource;
   private repository: PlaylistRepository;
   private findPlaylistByIdService: FindAlbumByPlaylistIDService;
-  private readonly findOnePlaylistService: FindAlbumByArtistIDService;
-
-  async init() {
-    this.dataSource = await this.dataSource.initialize();
-  }
+  private findPlaylistByArtistIdService: FindAlbumByArtistIDService;
 
   constructor() {
-    // private readonly findOnePlaylistService: FindAlbumByArtistIDService,  @Inject('FindPlaylistByIdService') // @Inject('FindOnePlaylistService') // private readonly findPlaylistByIdService: FindAlbumByPlaylistIDService,
-    this.dataSource = new DataSource({
-      type: 'postgres',
-      url: process.env.HOST,
-      // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
-      migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-      synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
-      },
-    });
-    this.init().then(() => {
-      this.repository = new PlaylistRepository(
-        this.dataSource,
-        new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
-      );
-    });
-    // this.dataSource = this.dataSource.initialize();
-    // this.repository = new PlaylistRepository(
-    //   this.dataSource,
-    //   new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
-    // );
+    this.repository = new PlaylistRepository(
+      DataSourceSingleton.getInstance(),
+      new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
+    );
   }
 
-  //   @Get()
-  //   findAll(): Promise<Playlist[]> {
-  //     return this.findAllPlaylistService.execute();
-  //   }
-
   @Get('/FindByArtistID/:id')
-  find(@Param('id') id: string): Promise<Playlist> {
-    this.findPlaylistByIdService = new FindAlbumByPlaylistIDService(
+  find(@Param('id') id: string): Promise<Playlist[]> {
+    this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
       this.repository,
     );
-    return this.findPlaylistByIdService.execute(id);
+    return this.findPlaylistByArtistIdService.execute(id);
   }
 
   @Get(':id')

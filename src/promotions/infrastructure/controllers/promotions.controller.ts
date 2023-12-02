@@ -4,29 +4,23 @@ import { FindOnePromotionsService } from 'src/promotions/application/services/Fi
 import { Promotion } from 'src/promotions/domain/promotion';
 import { OrmPromotionRepository } from '../Repositories/promotion.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
-import { EntityManager, getManager } from 'typeorm';
+import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 
 @Controller('promotion')
 export class PromotionsController {
   private readonly findOnePromotionsService: FindOnePromotionsService;
   private readonly findAllPromotionsService: FindAllPromotionsService;
   private readonly ormPromotionRepository: OrmPromotionRepository;
-  constructor(private readonly manager: EntityManager) {
-    if (!manager) {
-      throw new Error("Entity manager can't be null.");
-    }
-
-    this.ormPromotionRepository = this.manager.getCustomRepository(
-      OrmPromotionRepository,
+  constructor() {
+    this.ormPromotionRepository = new OrmPromotionRepository(
+      DataSourceSingleton.getInstance(),
     );
 
     this.findAllPromotionsService = new FindAllPromotionsService(
       this.ormPromotionRepository,
-      new GetFileService(process.env.PROMOTION_IMAGES_CONTAINER),
     );
     this.findOnePromotionsService = new FindOnePromotionsService(
       this.ormPromotionRepository,
-      new GetFileService(process.env.PROMOTION_IMAGES_CONTAINER),
     );
   }
 
