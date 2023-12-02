@@ -24,6 +24,7 @@ export class PlaylistRepository
       .where('playlist.id = :playlistId', { playlistId: id })
       .getMany();
 
+    console.log(playlist);
     console.log('---------------------------------------------------');
     console.log(playlist[0].playlistCreator[0].artist);
 
