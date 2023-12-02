@@ -21,7 +21,7 @@ export class AuthService{
       users.name,
       users.birth_date,
       users.genero,
-      new PhonesNumber({value: users.phonesNumber}),
+      new PhonesNumber(null),
       phone
     );
 

@@ -23,7 +23,7 @@ export class UsersService {
     userEntity.name = user.name;
     userEntity.birth_date = user.birth_date;
     userEntity.gender = user.genero; // Change property name to 'genero'
-    userEntity.phone = user.phone;
+    userEntity.phone = null;
     
     const savedUser = await this.repo.save(userEntity); //Guarda la instancia en la BD.
     return savedUser;

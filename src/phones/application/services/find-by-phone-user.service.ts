@@ -16,7 +16,8 @@ export class findByPhoneUserService implements IFindService<number, User> {
 
   execute(value?: number): Promise<User> {
       if (!Object.values(phoneOperatorsEnum).includes(value.toString().substring(0,3) as phoneOperatorsEnum)) throw new PhoneInvalidExceptions();
-      return this.repo.finderCriteria({phoneNumber: Number(value)});
+      return null
+ //     return this.repo.finderCriteria({phoneNumber: Number(value)});
   }
 
 }
