@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { DataSource, EntityRepository, Repository } from 'typeorm';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
@@ -12,8 +12,8 @@ export class OrmSongRepository
 {
   private readonly getSongImageService: GetFileService;
   private readonly songFactory: SongFactory;
-  constructor() {
-    super();
+  constructor(dataSource: DataSource) {
+    super(SongEntity, dataSource.manager);
     this.songFactory = new SongFactory();
     this.getSongImageService = new GetFileService(
       process.env.SONG_ALBUM_PLAYLIST_CONTAINER,

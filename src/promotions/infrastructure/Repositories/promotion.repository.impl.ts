@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { DataSource, EntityRepository, Repository } from 'typeorm';
 import { PromotionEntity } from '../entities/promotion.entity';
 import { IPromotionRepository } from '../../domain/IPromotionRepository';
 import { Promotion } from 'src/promotions/domain/promotion';
@@ -10,8 +10,8 @@ export class OrmPromotionRepository
   implements IPromotionRepository
 {
   private readonly getPromoImageService: GetFileService;
-  constructor() {
-    super();
+  constructor(dataSource: DataSource) {
+    super(PromotionEntity, dataSource.manager);
     this.getPromoImageService = new GetFileService(
       process.env.PROMOTION_IMAGES_CONTAINER,
     );

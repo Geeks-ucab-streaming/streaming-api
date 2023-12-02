@@ -1,5 +1,5 @@
-import { Artist } from "src/artists/domain/artist";
-import { Song } from "src/songs/domain/song";
+import { Artist } from 'src/artists/domain/artist';
+import { Song } from 'src/songs/domain/song';
 
 export class Playlist {
   id: string;
@@ -22,5 +22,7 @@ export class Playlist {
     this.duration = duration;
     this.image_reference = image_reference;
     this.reproductions = reproductions;
+    this.playlistCreator = [];
+    this.playlistSong = [];
   }
 }
