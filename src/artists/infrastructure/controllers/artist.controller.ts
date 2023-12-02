@@ -3,18 +3,14 @@ import { FindAllArtistService } from 'src/artists/application/services/FindAllAr
 import { FindOneArtistService } from 'src/artists/application/services/FindOneArtist.service';
 import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByArtistId.service';
 import { Artist } from 'src/artists/domain/artist';
+import { OrmArtistRepository } from '../repositories/artist.repository.impl';
 @Controller('artists')
 export class ArtistController {
-  constructor(
-    @Inject('FindOneArtistService')
-    private readonly findOneArtistService: FindOneArtistService,
-
-    @Inject('FindAllArtistService')
-    private readonly findAllArtistService: FindAllArtistService,
-
-    @Inject('GetSongByArtistId')
-    private readonly findSongsByArtistIdService: GetSongByArtistId,
-  ) {}
+  private findOneArtistService: FindOneArtistService;
+  private findAllArtistService: FindAllArtistService;
+  private findSongsByArtistIdService: GetSongByArtistId;
+  private readonly ormSongRepository: OrmArtistRepository;
+  constructor() {}
 
   @Get()
   findAll(): Promise<Artist[]> {

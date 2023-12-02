@@ -1,22 +1,37 @@
-import { Controller, Get, Inject, Param } from "@nestjs/common";
-import { FindAlbumByArtistIDService } from "src/playlist/application/dtos/services/FindAlbumByArtistID";
-import { Playlist } from "src/playlist/domain/playlist";
+import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
+import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindAlbumByPlaylistID.service';
+import { Playlist } from 'src/playlist/domain/playlist';
+import { PlaylistRepository } from '../PlaylistRepository.impl';
+import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
+import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 
 @Controller('playlists')
 export class PlaylistController {
-  constructor(
-    @Inject('FindOnePlaylistService')
-    private readonly findOnePlaylistService: FindAlbumByArtistIDService,
+  private repository: PlaylistRepository;
+  private findPlaylistByIdService: FindAlbumByPlaylistIDService;
+  private findPlaylistByArtistIdService: FindAlbumByArtistIDService;
 
-  ) {}
-
-//   @Get()
-//   findAll(): Promise<Playlist[]> {
-//     return this.findAllPlaylistService.execute();
-//   }
+  constructor() {
+    this.repository = new PlaylistRepository(
+      DataSourceSingleton.getInstance(),
+      new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
+    );
+  }
 
   @Get('/FindByArtistID/:id')
-  find(@Param('id') id: string): Promise<Playlist> {
-    return this.findOnePlaylistService.execute(id);
+  find(@Param('id') id: string): Promise<Playlist[]> {
+    this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
+      this.repository,
+    );
+    return this.findPlaylistByArtistIdService.execute(id);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<Playlist> {
+    this.findPlaylistByIdService = new FindAlbumByPlaylistIDService(
+      this.repository,
+    );
+    return this.findPlaylistByIdService.execute(id);
   }
 }

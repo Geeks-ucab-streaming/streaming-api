@@ -1,3 +1,6 @@
+import { Artist } from 'src/artists/domain/artist';
+import { Song } from 'src/songs/domain/song';
+
 export class Playlist {
   id: string;
   name: string;
@@ -5,7 +8,8 @@ export class Playlist {
   image_reference: string;
   playlist_Image: Buffer | null;
   reproductions: number;
-
+  playlistCreator?: Artist[] | null;
+  playlistSong?: Song[] | null;
   constructor(
     id: string,
     name: string,
@@ -18,5 +22,7 @@ export class Playlist {
     this.duration = duration;
     this.image_reference = image_reference;
     this.reproductions = reproductions;
+    this.playlistCreator = [];
+    this.playlistSong = [];
   }
 }
