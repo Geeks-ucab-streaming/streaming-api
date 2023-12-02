@@ -3,6 +3,7 @@ import { Song } from '../domain/song';
 import { SongEntity } from './entities/song.entity';
 export class SongFactory implements Factory<SongEntity, Song> {
   factoryMethod(songResponse: SongEntity): Song {
+    console.log(songResponse);
     return new Song(
       songResponse.id,
       songResponse.name,
