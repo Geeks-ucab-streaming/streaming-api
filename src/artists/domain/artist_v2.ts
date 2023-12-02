@@ -1,6 +1,6 @@
-import { artist_id } from "../value objects/artist_id_VO";
-import { artist_name } from "../value objects/artist_name_VO";
-import { artist_image_reference } from "../value objects/artist_image_reference_VO";
+import { artist_id } from "../value objects/artist_VO_v2/artist_id_VO";
+import { artist_name } from "../value objects/artist_VO_v2/artist_name_VO";
+import { artist_image_reference } from "../value objects/artist_VO_v2/artist_image_reference_VO";
 
 export class artist_entity{
 private id: artist_id;
