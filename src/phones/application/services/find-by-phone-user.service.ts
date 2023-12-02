@@ -5,20 +5,21 @@ import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
 import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 import { phoneOperatorsEnum } from 'src/phones/domain/value-objects/phoneOperators.enum';
 import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
+import { IUserRepository } from 'src/users/domain/IUserRepository';
 
-@Injectable()
 export class findByPhoneUserService implements IFindService<number, User> {
-
-  constructor(
-    @Inject('IgenericRepo')
-    private readonly repo:IgenericRepo<PhoneEntity,User>,
-  ){} 
-
-  execute(value?: number): Promise<User> {
-      if (!Object.values(phoneOperatorsEnum).includes(value.toString().substring(0,3) as phoneOperatorsEnum)) throw new PhoneInvalidExceptions();
-      return null
- //     return this.repo.finderCriteria({phoneNumber: Number(value)});
+  private readonly repo: IUserRepository;
+  constructor(repo: IUserRepository) {
+    this.repo = repo;
   }
 
+  execute(value?: number): Promise<User> {
+    if (
+      !Object.values(phoneOperatorsEnum).includes(
+        value.toString().substring(0, 3) as phoneOperatorsEnum,
+      )
+    )
+      throw new PhoneInvalidExceptions();
+    return this.repo.finderCriteria({ phoneNumber: Number(value) });
+  }
 }
-

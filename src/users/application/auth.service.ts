@@ -7,11 +7,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { PhonesService } from "src/phones/application/services/phones.service";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { findByPhoneUserService } from "src/phones/application/services/find-by-phone-user.service";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService{
   constructor(private usersService: UsersService, private phone:PhonesService,
-    private findByPhoneUserService: findByPhoneUserService
+    private findByPhoneUserService: findByPhoneUserService,
+    private jwtService: JwtService
     ){}
 
   async signup(users: CreateUserDto){
@@ -27,6 +29,7 @@ export class AuthService{
 
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);
+
     //Retornar el usuario
     return user;
   }
@@ -39,7 +42,12 @@ export class AuthService{
       throw new NotFoundException ("User not found");
       //MANEJAR OPTIONAL
     }
+    
+    //generar token
+    const payload = {phone: users.id,id: users.id, name: users.name};
+    const token = this.jwtService.sign(payload);
+    
     //permitir al usuario aplicar el login
-    return users;
+    return {users, token};
   }
 }

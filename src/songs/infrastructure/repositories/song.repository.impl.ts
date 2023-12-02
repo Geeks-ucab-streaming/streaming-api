@@ -29,6 +29,8 @@ export class OrmSongRepository
     console.log(songResponse);
     let song: Song = this.songFactory.factoryMethod(songResponse);
 
+    console.log(songResponse.image_reference);
+
     const songImage = await this.getSongImageService.execute(
       song.image_reference,
     );

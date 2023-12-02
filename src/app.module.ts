@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PromotionsController } from './promotions/infrastructure/controllers/promotions.controller';
 import { SongsController } from './songs/infrastructure/controllers/song.controller';
 import { PlaylistController } from './playlist/infrastructure/controllers/playlist.controller';
+import { UsersController } from './users/infrastructure/controllers/users.controller';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -27,6 +28,7 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     PromotionsController,
     SongsController,
     PlaylistController,
+    UsersController,
   ],
   providers: [AppService],
 })
