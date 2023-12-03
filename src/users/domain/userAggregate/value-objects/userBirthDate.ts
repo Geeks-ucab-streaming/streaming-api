@@ -1,5 +1,7 @@
-export class UserBirthDate {
-  private birthDate: Date;
+import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
+
+export class UserBirthDate implements IValueObject<UserBirthDate> {
+private birthDate: Date;
 
   constructor(birthDate: Date, birthYearUser:number) {  
     if (!this.validateOldRangeBirthDate(birthDate, birthYearUser) && !this.validateYoungRangeBirthDate(birthDate, birthYearUser)) {
@@ -11,6 +13,10 @@ export class UserBirthDate {
 
     getBirthDate() {
         return this.birthDate;
+    }
+
+    public equals(userBirthDate: UserBirthDate): boolean {
+        return this.birthDate === userBirthDate.getBirthDate();
     }
 
     validateOldRangeBirthDate(birthDate: Date, yearBirthUser:number): boolean {

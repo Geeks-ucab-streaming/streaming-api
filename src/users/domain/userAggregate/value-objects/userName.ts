@@ -1,4 +1,6 @@
-export class userName {
+import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
+
+export class userName implements IValueObject<userName> {
   private name: string;
 
   constructor(name: string) {
