@@ -1,12 +1,12 @@
-import { Phone } from "src/phones/domain/phone";
-import { PhonesNumber } from "./value-objects/phoneNumber";
-import { PhoneEntity } from "src/phones/infrastructure/phones.entity";
+import { Phone } from 'src/phones/domain/phone';
+import { PhonesNumber } from './value-objects/phoneNumber';
+import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
 export class User {
   id: string;
   name: string;
   birth_date: Date;
   genero: string;
-  phonesNumber: PhonesNumber ;
+  phonesNumber: PhonesNumber;
   phone: PhoneEntity;
 
   constructor(
@@ -14,7 +14,7 @@ export class User {
     name: string,
     birth_date: Date,
     genero: string,
-    phonesNumber:  PhonesNumber,
+    phonesNumber: PhonesNumber,
     phone: PhoneEntity,
   ) {
     this.id = id;
