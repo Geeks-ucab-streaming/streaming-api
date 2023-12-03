@@ -1,6 +1,6 @@
-import { PhoneInvalidExceptions } from './exceptions/phone-not-valid-exception';
+import { PhoneInvalidExceptions } from '../exceptions/phone-not-valid-exception';
 import { Line } from './line';
-import { phoneOperatorsEnum } from './value-objects/phoneOperators.enum';
+import { phoneOperatorsEnum } from './phoneOperators.enum';
 
 export class Phone {
   id: string;

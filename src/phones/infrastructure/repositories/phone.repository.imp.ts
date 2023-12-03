@@ -2,7 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhoneEntity } from '../phones.entity';
 import { ICreateRepository } from 'src/phones/domain/generic-repo-phones';
-import { Phone } from '../../domain/phone';
+import { Phone } from '../../domain/value-objects/phone';
 
 export class OrmPhoneRepository extends Repository<PhoneEntity> implements ICreateRepository<Phone> {
   

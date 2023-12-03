@@ -1,7 +1,7 @@
 import { DataSource, Repository } from 'typeorm';
 import { User } from '../domain/user';
 import { UserEntity } from './users.entity';
-import { Phone } from 'src/phones/domain/phone';
+import { Phone } from 'src/phones/domain/value-objects/phone';
 import { IUserRepository } from '../domain/IUserRepository';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 

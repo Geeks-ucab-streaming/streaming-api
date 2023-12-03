@@ -7,7 +7,7 @@ import { PhonesService } from "src/phones/application/services/phones.service";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { findByPhoneUserService } from "src/phones/application/services/find-by-phone-user.service";
 import { JwtService } from "@nestjs/jwt";
-import { Phone } from "src/phones/domain/phone";
+import { Phone } from "src/phones/domain/value-objects/phone";
 
 @Injectable()
 export class AuthService{

@@ -1,5 +1,5 @@
 
-import { Phone } from "src/phones/domain/phone";
+import { Phone } from "src/phones/domain/value-objects/phone";
 
 export class User {
   id: string;
