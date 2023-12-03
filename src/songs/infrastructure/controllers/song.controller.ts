@@ -6,6 +6,7 @@ import { EntityManager } from 'typeorm';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('songs')
 export class SongsController {
@@ -32,7 +33,7 @@ export class SongsController {
   // findAll(): Promise<Artist[]> {
   //   return this.findAllArtistService.execute();
   // }
-
+  @ApiTags('Songs')
   @Get('/:id')
   async findById(@Param('id') id: string): Promise<Song> {
     return await this.getSongByIdService.execute(id);

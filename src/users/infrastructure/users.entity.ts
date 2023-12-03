@@ -11,13 +11,12 @@ import {
   Check,
   JoinColumn,
 } from 'typeorm';
-import { PhoneEntity } from '../../phones/infraestructure/phones.entity';
-import { StoredEdition } from '../../users/infraestructure/storedEdition.entity';
+import { PhoneEntity } from '../../phones/infrastructure/phones.entity';
+import { StoredEdition } from './storedEdition.entity';
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
-import { User } from '../domain/user';
 
 @Entity('Users')
-export class UserEntity extends User {
+export class UserEntity  {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
