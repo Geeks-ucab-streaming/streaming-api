@@ -2,7 +2,6 @@ import { Repository, DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from 'src/artists/domain/artist';
 import { ArtistEntity } from '../entities/artist.entity';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
 
 export class OrmArtistRepository

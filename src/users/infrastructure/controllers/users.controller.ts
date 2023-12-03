@@ -20,15 +20,26 @@ import { User } from 'src/users/domain/user';
 import { Result } from 'src/common/domain/logic/Result';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { OrmUserRepository } from '../user.repository.impl';
+import { OrmPhoneRepository } from 'src/phones/infrastructure/repositories/phone.repository.imp';
+import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefixes.repository.imp';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
 export class UsersController {
   private findByPhoneUserService: findByPhoneUserService;
   private userRepository: OrmUserRepository = new OrmUserRepository();
+  private phoneRepository: OrmPhoneRepository = new OrmPhoneRepository(DataSourceSingleton.getInstance());
+  private lineRepository: OrmLineRepository = new OrmLineRepository(DataSourceSingleton.getInstance());
   private usersService: UsersService;
   private authService: AuthService;
   private phonesService: PhonesService;
+
+  constructor() {
+    this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
+
+    
+  }
 
   @ApiTags('Users')
   @Post('/auth/validate_operator')
@@ -70,5 +81,12 @@ export class UsersController {
       throw new NotFoundException('user not found!');
     }
     return user;
+  }
+  @ApiTags('Users')
+  @Post('/users/prueba')
+  async pruebita(@Body() body: CreatePhoneDto) {
+    const users = await this.phonesService.execute(body);
+    console.log(users)
+    return users;
   }
 }

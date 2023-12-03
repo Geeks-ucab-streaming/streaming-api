@@ -7,7 +7,7 @@ import { UserEntity } from './users.entity';
 // import { UserRepository } from './user.repository.impl';
 import { findByPhoneUserService } from '../../phones/application/services/find-by-phone-user.service';
 import { PhonesService } from '../../phones/application/services/phones.service';
-import { PhoneRepository } from '../../phones/infrastructure/phone.repository.imp';
+import { OrmPhoneRepository } from '../../phones/infrastructure/repositories/phone.repository.imp';
 import { PhoneEntity } from '../../phones/infrastructure/phones.entity';
 import { LineEntity } from 'src/phones/infrastructure/lines.entity';
 import { PassportModule } from '@nestjs/passport';
@@ -36,9 +36,11 @@ import { JwtStrategy } from '../application/jwtoken/jwt.strategies';
     // },
     {
       provide: 'ICreateRepository',
-      useClass: PhoneRepository,
+      useClass: OrmPhoneRepository,
     },
   ],
   controllers: [UsersController],
 })
 export class UsersModule {}
+
+

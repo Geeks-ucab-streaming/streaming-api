@@ -8,23 +8,25 @@ import { PhonesService } from "src/phones/application/services/phones.service";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { findByPhoneUserService } from "src/phones/application/services/find-by-phone-user.service";
 import { JwtService } from "@nestjs/jwt";
+import { Phone } from "src/phones/domain/phone";
 
 @Injectable()
 export class AuthService{
-  constructor(private usersService: UsersService, private phone:PhonesService,
+  constructor(private usersService: UsersService, 
+    private phone:PhonesService,
     private findByPhoneUserService: findByPhoneUserService,
     private jwtService: JwtService
     ){}
 
   async signup(users: CreateUserDto){
-    const phone = await this.phone.execute(new PhoneDto(uuidv4(),users.phonesNumber));
+//!TODO: SE DEBE CAMBIAR LA ESTRUCTURA DE LOS VALUE OBJECT PARA QUE SE PUEDA HACER LA VALIDACIÓN DE LOS DATOS
+    const phone = await this.phone.execute(new PhoneDto(uuidv4(),users.phonesNumber,null));
     let usuario = new User(
       uuidv4(),
       users.name,
       users.birth_date,
       users.genero,
-      new PhonesNumber(null),
-      phone
+      new Phone(phone.id,phone.phoneNumber,phone.linePhone),
     );
 
     //Crear nuevo usuario y guardarlo

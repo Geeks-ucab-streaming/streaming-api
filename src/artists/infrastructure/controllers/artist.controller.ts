@@ -12,7 +12,7 @@ export class ArtistController {
   private findSongsByArtistIdService: GetSongByArtistId;
   private readonly ormSongRepository: OrmArtistRepository;
   constructor() {}
-
+  @ApiTags('Artist')
   @Get()
   async findAll(): Promise<Artist[]> {
     return await this.findAllArtistService.execute();

@@ -5,6 +5,7 @@ import { Promotion } from 'src/promotions/domain/promotion';
 import { OrmPromotionRepository } from '../Repositories/promotion.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('promotion')
 export class PromotionsController {
@@ -23,12 +24,12 @@ export class PromotionsController {
       this.ormPromotionRepository,
     );
   }
-
+  @ApiTags('Promotions')
   @Get()
   async findAll(): Promise<Promotion[]> {
     return await this.findAllPromotionsService.execute();
   }
-
+  @ApiTags('Promotions')
   @Get('/:id')
   async findById(@Param('id') id: string): Promise<Promotion> {
     return await this.findOnePromotionsService.execute(id);
