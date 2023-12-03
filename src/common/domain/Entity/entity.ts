@@ -1,32 +1,26 @@
-import { UniqueEntityID } from "../unique-entity-id";
+import { IValueObject } from "../ValueObjects/value-object.interface";
 
+/** Entity: Es una clase abstracta y genérica utilizada para implementar Entidades del dominio.
+ *  @typeParam `T` Tipo paramtrizado del ID de la entidad. Debe extender de IValueObject.*/
+export abstract class Entity<T extends IValueObject<T>> {
+  /** Identificador único de la entidad. */
+  private readonly id: T;
 
-const isEntity = (v: any): v is Entity<any> => {
-  return v instanceof Entity;
-};
-
-export abstract class Entity<T> {
-  protected readonly _id: UniqueEntityID;
-  public readonly props: T;
-
-  constructor(props: T, id?: UniqueEntityID) {
-    this._id = id ? id : new UniqueEntityID();
-    this.props = props;
+  /**Constructor de la entidad.
+   * @param id Identificador único de la entidad. */
+  protected constructor(id: T) {
+    this.id = id;
   }
 
-  public equals(object?: Entity<T>): boolean {
-    if (object == null || object == undefined) {
-      return false;
-    }
+  /** ID: Getter del identificador único de la entidad. */
+  get Id() {
+    return this.id;
+  }
 
-    if (this === object) {
-      return true;
-    }
-
-    if (!isEntity(object)) {
-      return false;
-    }
-
-    return this._id.equals(object._id);
+  /**Compara la igualdad entre dos Entidades en función de sus IDs.
+   * @param otherID ID de la entidad a compara.
+   * @returns `boolean`*/
+  equals(otherID: T): boolean {
+    return this.id.equals(otherID);
   }
 }

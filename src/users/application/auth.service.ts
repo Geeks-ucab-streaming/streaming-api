@@ -17,13 +17,13 @@ export class AuthService{
     ){}
 
   async signup(users: CreateUserDto){
-    const phone = await this.phone.execute(new PhoneDto(uuidv4(),users.phonesNumber));
+    const phone = await this.phone.execute(new PhoneDto(uuidv4(), users.phonesNumber));
     let usuario = new User(
       uuidv4(),
       users.name,
       users.birth_date,
       users.genero,
-      new PhonesNumber({value: users.phonesNumber}),
+      new PhonesNumber(users.phonesNumber),
       phone
     );
 
