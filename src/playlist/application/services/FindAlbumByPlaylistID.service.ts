@@ -1,10 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
 
-@Injectable()
 export class FindAlbumByPlaylistIDService
   implements IFindService<string, Playlist>
 {

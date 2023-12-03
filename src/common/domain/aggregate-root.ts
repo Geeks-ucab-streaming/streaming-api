@@ -1,39 +1,43 @@
-import { Entity } from './Entity/entity';
-import { DomainEvents } from './events/domain-events';
-import { IDomainEvent } from './events/idomain-events';
-import { UniqueEntityID } from './unique-entity-id';
+import { Entity } from "./Entity/entity";
+import { DomainEvent } from "./Event/domain-event";
+import { IValueObject } from "./ValueObjects/value-object.interface";
 
-export abstract class AggregateRoot<T> extends Entity<T> {
-  private _domainEvents: IDomainEvent[] = [];
+/** AggregateRoot: Es una clase abstracta y genérica utilizada para implementar Agregados del dominio.
+ *  @typeParam `T` Tipo paramtrizado del ID de la entidad. Debe extender de IValueObject.*/
+export abstract class AggregateRoot<
+  T extends IValueObject<T>,
+> extends Entity<T> {
+  /**Eventos de dominio que han modificado el estado del agregado. */
+  protected events: DomainEvent[] = [];
 
-  get id(): UniqueEntityID {
-    return this._id;
+  /**Constructor del agregado.
+   * @param id ID de la entidad del agregado.
+   * @param event Evento con los cambios. */
+  protected constructor(id: T, event: DomainEvent) {
+    super(id);
+    this.apply(event);
   }
 
-  get domainEvents(): IDomainEvent[] {
-    return this._domainEvents;
+  /**Retorna y elimina todos los cambios realizados en el aggregate root.
+   * @returns Cambios ocurridos en el aggregate root. */
+  public pullEvents(): DomainEvent[] {
+    const result = this.events;
+    this.events = [];
+    return result;
   }
 
-  protected addDomainEvent(domainEvent: IDomainEvent): void {
-    this._domainEvents.push(domainEvent);
-
-    DomainEvents.markAggregateForDispatch(this);
-
-    this.logDomainEventAdded(domainEvent);
+  /**Permite cambiar el estado del agregado en función de un evento de dominio.
+   * @param event Nuevo estado del agregado. */
+  protected apply(event: DomainEvent): void {
+    this.when(event);
+    this.ensureValidState();
+    this.events.push(event);
   }
 
-  public clearEvents(): void {
-    this._domainEvents.splice(0, this._domainEvents.length);
-  }
+  /**Realiza los cambios en los atributos del agregado según el evento.
+   * @param event Nuevo estado del agregado. */
+  protected abstract when(event: DomainEvent): void;
 
-  private logDomainEventAdded(domainEvent: IDomainEvent): void {
-    const thisClass = Reflect.getPrototypeOf(this);
-    const domainEventClass = Reflect.getPrototypeOf(domainEvent);
-    console.info(
-      `[Domain Event Created]:`,
-      thisClass.constructor.name,
-      '==>',
-      domainEventClass.constructor.name,
-    );
-  }
+  /**Valida que el nuevo estado del agregado sea válido.*/
+  protected abstract ensureValidState(): void;
 }

@@ -27,7 +27,7 @@ export class UserEntity  {
   birth_date: Date;
 
   @Column({ type: 'text', nullable: true })
-  @Check(`suscriptionState IN ('gratuito', 'premium' ,'vencido' ,'eliminado')`)
+  @Check(`"suscriptionState" IN ('gratuito', 'premium' ,'vencido' ,'eliminado')`)
   suscriptionState: string;
 
   @Column({ type: 'text', nullable: true })

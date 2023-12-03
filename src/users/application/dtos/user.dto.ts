@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
-import { User } from 'src/users/domain/user';
-import { PhonesNumber } from 'src/users/domain/value-objects/phoneNumber';
+import { User } from 'src/users/domain/userAggregate/user';
+import { PhonesNumber } from 'src/users/domain/userAggregate/value-objects/phoneNumber';
 
 export class UserDto extends User {
   @Expose()

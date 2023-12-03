@@ -1,5 +1,5 @@
 import { PhoneOperator } from "../../phoneOperator/phoneOperator.interface";
-import {  phoneOperatorsEnum } from "../../value-objects/phoneOperators.enum";
+import {  phoneOperatorsEnum } from "../../userAggregate/value-objects/phoneOperators.enum";
 export class Operators implements PhoneOperator{
 
     constructor(prefix : number) {

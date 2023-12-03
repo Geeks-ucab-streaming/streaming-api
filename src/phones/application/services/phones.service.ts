@@ -4,7 +4,7 @@ import { IFindService } from 'src/common/domain/ifind.service';
 import { Phone } from 'src/phones/domain/phone';
 import { ICreateRepository } from 'src/phones/domain/generic-repo-phones';
 import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
-import { User } from 'src/users/domain/user';
+import { User } from 'src/users/domain/userAggregate/user';
 import {v4 as uuidv4} from 'uuid';
 import { LineEntity } from 'src/phones/infrastructure/lines.entity';
 import { CreatePhoneDto } from '../dtos/create-phone.dto';

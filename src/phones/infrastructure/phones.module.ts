@@ -1,14 +1,14 @@
-import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { PhoneEntity } from "../../phones/infrastructure/entities/phones.entity";
-import { PhonesService } from "../application/services/phones.service";
-import { UsersModule } from "../../users/infrastructure/users.module";
-import { PhoneRepository } from "./phone.repository.imp";
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PhoneEntity } from '../../phones/infrastructure/entities/phones.entity';
+import { PhonesService } from '../application/services/phones.service';
+import { UsersModule } from '../../users/infrastructure/users.module';
+import { PhoneRepository } from './phone.repository.imp';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PhoneEntity])],
   controllers: [],
-  exports: [PhonesService,PhoneRepository],
+  exports: [PhonesService, PhoneRepository],
   providers: [
     PhonesService,
     {
@@ -17,5 +17,4 @@ import { PhoneRepository } from "./phone.repository.imp";
     },
   ],
 })
-
 export class PhonesModule {}
