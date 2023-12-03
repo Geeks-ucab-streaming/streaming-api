@@ -5,6 +5,7 @@ import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('playlists')
 export class PlaylistController {
@@ -26,7 +27,7 @@ export class PlaylistController {
     );
     return this.findPlaylistByArtistIdService.execute(id);
   }
-
+  @ApiTags('Playlist')
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Playlist> {
     this.findPlaylistByIdService = new FindAlbumByPlaylistIDService(
