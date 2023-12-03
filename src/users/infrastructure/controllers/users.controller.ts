@@ -57,7 +57,7 @@ export class UsersController {
         //Manejar excepciones con Optional
       }
       const user = await this.authService.signup(body);
-      return Result.ok<User>(users);
+      return Result.success<User>(users);
     } catch (error) {
       console.log(error);
       return Result.fail<User>(error);

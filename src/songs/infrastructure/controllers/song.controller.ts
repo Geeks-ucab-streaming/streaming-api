@@ -7,25 +7,18 @@ import { OrmSongRepository } from '../repositories/song.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
+import { GetSongBPlaylistIdService } from 'src/songs/application/services/getSongsByPlaylistId.service';
 
 @Controller('songs')
 export class SongsController {
-  private readonly getSongByIdService: GetSongByIdService;
-  private readonly findSongsByArtistIdService: FindSongsByArtistIdService;
+  private getSongByIdService: GetSongByIdService;
+  private getSongBPlaylistIdService: GetSongBPlaylistIdService;
+  private findSongsByArtistIdService: FindSongsByArtistIdService;
   private readonly ormSongRepository: OrmSongRepository;
   // private readonly findSongsByArtistIdService: FindSongsByPlaylistIdService;
   constructor() {
     this.ormSongRepository = new OrmSongRepository(
       DataSourceSingleton.getInstance(),
-    );
-    this.getSongByIdService = new GetSongByIdService(
-      this.ormSongRepository,
-      new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
-    );
-
-    this.findSongsByArtistIdService = new FindSongsByArtistIdService(
-      this.ormSongRepository,
-      new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
     );
   }
 
@@ -36,6 +29,7 @@ export class SongsController {
   @ApiTags('Songs')
   @Get('/:id')
   async findById(@Param('id') id: string): Promise<Song> {
+    this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
     return await this.getSongByIdService.execute(id);
   }
 
@@ -43,6 +37,17 @@ export class SongsController {
   @ApiTags('Songs')  
   @Get('/artist/:artistId')
   findByArtistId(@Param('artistId') id: string): Promise<Song[]> {
+    this.findSongsByArtistIdService = new FindSongsByArtistIdService(
+      this.ormSongRepository,
+    );
     return this.findSongsByArtistIdService.execute(id);
+  }
+
+  @Get('/playlist/:playlistId')
+  findByPlaylistId(@Param('playlistId') id: string): Promise<Song[]> {
+    this.getSongBPlaylistIdService = new GetSongBPlaylistIdService(
+      this.ormSongRepository,
+    );
+    return this.getSongBPlaylistIdService.execute(id);
   }
 }

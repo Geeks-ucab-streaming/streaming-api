@@ -2,21 +2,16 @@ import { DataSource, EntityRepository, Repository } from 'typeorm';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
-import { SongFactory } from '../songFactory';
-import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
+import { SongsMapper } from '../mappers/Song.mapper';
 
 export class OrmSongRepository
   extends Repository<SongEntity>
   implements ISongRepository
 {
-  private readonly getSongImageService: GetFileService;
-  private readonly songFactory: SongFactory;
+  private readonly songMapper: SongsMapper;
   constructor(dataSource: DataSource) {
     super(SongEntity, dataSource.manager);
-    this.songFactory = new SongFactory();
-    this.getSongImageService = new GetFileService(
-      process.env.SONG_ALBUM_PLAYLIST_CONTAINER,
-    );
+    this.songMapper = new SongsMapper();
   }
   async findById(id: string): Promise<Song> {
     console.log(id);
@@ -27,15 +22,8 @@ export class OrmSongRepository
       .getOne();
 
     console.log(songResponse);
-    let song: Song = this.songFactory.factoryMethod(songResponse);
 
-    console.log(songResponse.image_reference);
-
-    const songImage = await this.getSongImageService.execute(
-      song.image_reference,
-    );
-    song = { ...song, songImage: songImage };
-
+    const song: Song = await this.songMapper.ormToDomain(songResponse);
     return song;
   }
   async findByArtistId(artistId: string): Promise<Song[]> {
@@ -59,23 +47,42 @@ export class OrmSongRepository
       .where('song.id IN (:...values)', { values })
       .getMany();
 
-    const songs: Song[] = [];
+    const songs: Promise<Song>[] = [];
     songsResponse.forEach((song) =>
-      songs.push(this.songFactory.factoryMethod(song)),
+      songs.push(this.songMapper.ormToDomain(song)),
     );
 
-    if (Array.isArray(songs)) {
-      await Promise.all(
-        songs.map(async (song) => {
-          song.songImage = await this.getSongImageService.execute(
-            song.image_reference,
-          );
-        }),
-      );
-      return songs;
-    }
+    return await Promise.all(songs);
   }
-  findByPlaylistId(id: string): Promise<Song[]> {
-    throw new Error('Method not implemented.');
+  async findByPlaylistId(playlistId: string): Promise<Song[]> {
+    const subquery = await this.createQueryBuilder('song')
+      .innerJoin(
+        'song.playlistSong',
+        'playlistSong',
+        'song.id = playlistSong.song',
+      )
+      .innerJoin('Playlists', 'p', 'p.id = playlistSong.playlist')
+      .where('p.id = :playlistId', { playlistId })
+      .select('song.id')
+      .getMany();
+
+    let values = [];
+    subquery.forEach((sub) => values.push(sub.id));
+
+    console.log(values);
+
+    const songsResponse = await this.createQueryBuilder('song')
+      .innerJoinAndSelect('song.song_artist', 'songArtist')
+      .innerJoinAndSelect('songArtist.artist', 'artist')
+      .where('song.id IN (:...values)', { values })
+      .getMany();
+
+    console.log(songsResponse);
+
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) =>
+      songs.push(this.songMapper.ormToDomain(song)),
+    );
+    return await Promise.all(songs);
   }
 }

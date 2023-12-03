@@ -1,4 +1,6 @@
+
 import { Phone } from "src/phones/domain/phone";
+
 export class User {
   id: string;
   name: string;

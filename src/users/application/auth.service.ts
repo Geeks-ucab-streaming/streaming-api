@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { UsersService } from "./services/users.service";
 import { CreateUserDto } from "./dtos/create-user.dto";
-import { PhonesNumber } from "../../phones/domain/value-objects/phoneNumber";
 import { User } from "../domain/user";
 import { v4 as uuidv4 } from 'uuid';
 import { PhonesService } from "src/phones/application/services/phones.service";
