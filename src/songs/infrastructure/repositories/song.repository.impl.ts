@@ -2,8 +2,6 @@ import { DataSource, EntityRepository, Repository } from 'typeorm';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
-import { SongFactory } from '../songFactory';
-import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { SongsMapper } from '../mappers/Song.mapper';
 
 export class OrmSongRepository
