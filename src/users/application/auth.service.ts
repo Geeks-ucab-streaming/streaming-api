@@ -28,12 +28,11 @@ export class AuthService{
     let usuario = User.create(
       new userId(uuidv4()),
       new userName(users.name),
-      new UserBirthDate(users.birth_date,2000),
+      new UserBirthDate(new Date (users.birth_date),2000),
       new UserGender(users.genero)  ,
       new userSuscriptionState(users.suscriptionState) ,
       phone,
     );
-    throw new NotFoundException ("User not found");
 
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);

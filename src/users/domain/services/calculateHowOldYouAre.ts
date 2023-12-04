@@ -1,7 +1,7 @@
 export class calculateHowOldYouAre {
 
-     ValidateYear(birthDate: Date): number {
-      return 2023 - birthDate.getFullYear() ;
+    static ValidateYear(birthDate: Date): Date {
+      return new Date(2023 - birthDate.getFullYear(),1,1);
     }
 
 }
