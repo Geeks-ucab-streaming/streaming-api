@@ -4,9 +4,12 @@
 // import { FindOneArtistService } from 'src/artists/application/services/FindOneArtist.service';
 // import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByArtistId.service';
 // import { Artist } from 'src/artists/domain/artist';
-// import { OrmArtistRepository } from '../repositories/artist.repository.impl';
-// @Controller('artists')
-// export class ArtistController {
+
+import { Controller } from "@nestjs/common";
+import { OrmArtistRepository } from "../repositories/artist.repository.impl";
+@Controller('artists')
+export class ArtistController {
+    private readonly ormArtistRepository: OrmArtistRepository;
 //   private findOneArtistService: FindOneArtistService;
 //   private findAllArtistService: FindAllArtistService;
 //   private findSongsByArtistIdService: GetSongByArtistId;

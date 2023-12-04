@@ -1,27 +1,28 @@
-import { Repository, DataSource } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, QueryRunner, Repository } from 'typeorm';
 import { Artist } from 'src/artists/domain/artist';
 import { ArtistEntity } from '../entities/artist.entity';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
-import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
+import { IArtistRepository } from 'src/artists/application/repositories/artist.repository.interface';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 
-export class OrmArtistRepository
-  extends Repository<ArtistEntity>
-  implements IArtistsRepository
-{
-  constructor(dataSource: DataSource) {
-    super(ArtistEntity, dataSource.manager);
+export class OrmArtistRepository extends Repository<ArtistEntity> implements IArtistRepository {
+  // private readonly ormArtistMapper: OrmArtistMapper;
+  constructor(manager: EntityManager, queryRunner?: QueryRunner) {
+    super(ArtistEntity, manager, queryRunner);
+    // this.ormPatientMapper = new OrmPatientMapper();
   }
-  async findAllArtists(): Promise<Artist[]> {
-    const artists = await this.find();
+  findOneByTheId(id: ArtistID): Promise<Artist> {
     throw new Error('Method not implemented.');
   }
-  async findArtistById(id: string): Promise<Artist> {
-    const artist = await this.findOne({ where: { id: id } });
+  async saveAggregate(aggregate: Artist): Promise<void> {
+    // const ormArtist=await this.ormArtistMapper.fromDomainToOther(aggregate);
+    // await this.save(ormArtist);
+    throw new Error('Method not implemented.');
+  }
+  async findOneByIdOrFail(id: ArtistID): Promise<Artist> {
     throw new Error('Method not implemented.');
   }
 
-  // async findAll(): Promise<Artist[]> {
-  //   return this.repository.find();
-  // }
+  async findAssociatedArtists(): Promise<Artist[]> {
+    throw new Error('Method not implemented.');
+  }
 }
