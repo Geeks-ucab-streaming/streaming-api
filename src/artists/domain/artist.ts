@@ -20,13 +20,20 @@ export class Artist extends AggregateRoot<ArtistID> {
   get Image(): Buffer | null {
     return this.image;
   }
-  protected constructor( id: ArtistID, name: ArtistName, image_reference: ArtistImage) {
-    const artistCreated= ArtistCreatedEvent.create(id, name, image_reference);
+  public setImage(image: Buffer) {
+    this.image = image;
+  }
+  protected constructor(
+    id: ArtistID,
+    name: ArtistName,
+    image_reference: ArtistImage,
+  ) {
+    const artistCreated = ArtistCreatedEvent.create(id, name, image_reference);
     super(id, artistCreated);
   }
 
   //asignando estado
-  protected  when(event: DomainEvent): void {
+  protected when(event: DomainEvent): void {
     switch (event.constructor) {
       case ArtistCreatedEvent:
         const artistCreated = event as ArtistCreatedEvent;
@@ -40,7 +47,7 @@ export class Artist extends AggregateRoot<ArtistID> {
 
   //validando estado
   protected ensureValidState(): void {
-    if (!this.name || !this.Id || !this.image_reference ) {
+    if (!this.name || !this.Id || !this.image_reference) {
       throw new Error('InvalidArtistExcepcion'); //Aqui va la excepcion
     }
     //throw new Error('Method not implemented.');
@@ -53,5 +60,4 @@ export class Artist extends AggregateRoot<ArtistID> {
   ): Artist {
     return new Artist(id, name, image_reference);
   }
-
 }

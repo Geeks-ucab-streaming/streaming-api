@@ -23,7 +23,7 @@ export class OrmSongRepository
 
     console.log(songResponse);
 
-    const song: Song = await this.songMapper.ormToDomain(songResponse);
+    const song: Song = await this.songMapper.ToDomain(songResponse);
     return song;
   }
   async findByArtistId(artistId: string): Promise<Song[]> {
@@ -48,9 +48,7 @@ export class OrmSongRepository
       .getMany();
 
     const songs: Promise<Song>[] = [];
-    songsResponse.forEach((song) =>
-      songs.push(this.songMapper.ormToDomain(song)),
-    );
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
 
     return await Promise.all(songs);
   }
@@ -80,9 +78,7 @@ export class OrmSongRepository
     console.log(songsResponse);
 
     const songs: Promise<Song>[] = [];
-    songsResponse.forEach((song) =>
-      songs.push(this.songMapper.ormToDomain(song)),
-    );
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
     return await Promise.all(songs);
   }
 }

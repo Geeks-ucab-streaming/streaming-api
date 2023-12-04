@@ -12,10 +12,10 @@ export class SongsMapper implements Imapper<Song, SongEntity> {
     );
   }
 
-  domainToOrm(domainEntity: Song): Promise<SongEntity> {
+  domainTo(domainEntity: Song): Promise<SongEntity> {
     throw new Error('Method not implemented.');
   }
-  async ormToDomain(ormEntity: SongEntity): Promise<Song> {
+  async ToDomain(ormEntity: SongEntity): Promise<Song> {
     let song: Song = new Song(
       ormEntity.id,
       ormEntity.name,
