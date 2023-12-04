@@ -1,5 +1,5 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import { User } from 'src/users/domain/user';
+import { User } from 'src/users/domain/userAggregate/user';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
 import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
@@ -22,4 +22,4 @@ export class findByPhoneUserService implements IFindService<number, User> {
       throw new PhoneInvalidExceptions();
     return this.repo.finderCriteria({ phoneNumber: Number(value) });
   }
-}
+} 

@@ -14,6 +14,10 @@ export class CreateUserDto {
   @ApiProperty()
   genero: string;
 
+  @IsString()
+  @ApiProperty()
+  suscriptionState: string; 
+
   @IsNumber()
   @ApiProperty()
   phonesNumber: number;

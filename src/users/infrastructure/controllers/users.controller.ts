@@ -16,13 +16,14 @@ import { findByPhoneUserService } from '../../../phones/application/services/fin
 import { PhonesService } from 'src/phones/application/services/phones.service';
 import { CreatePhoneDto } from 'src/phones/application/dtos/create-phone.dto';
 import { Optional } from 'src/common/optional';
-import { User } from 'src/users/domain/user';
+import { User } from 'src/users/domain/userAggregate/user';
 import { Result } from 'src/common/domain/logic/Result';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { OrmUserRepository } from '../user.repository.impl';
 import { OrmPhoneRepository } from 'src/phones/infrastructure/repositories/phone.repository.imp';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefixes.repository.imp';
+import { JwtService } from '@nestjs/jwt';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -34,10 +35,13 @@ export class UsersController {
   private usersService: UsersService;
   private authService: AuthService;
   private phonesService: PhonesService;
+  private jwtService: JwtService
 
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
-
+    this.usersService = new UsersService(this.userRepository);
+    this.findByPhoneUserService = new findByPhoneUserService(this.userRepository);
+    this.authService = new AuthService(this.usersService,this.phonesService,this.findByPhoneUserService);
     
   }
 
@@ -67,9 +71,13 @@ export class UsersController {
   @ApiTags('Users')
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
-    const data = await this.authService.signin(body.phonesNumber);
 
-    return data;
+    const data = await this.authService.signin(body.phonesNumber);
+    const jwt = this.jwtService.sign(data);
+
+    return {
+      token: jwt
+    };
   }
 
   @UseGuards(JwtAuthGuard)

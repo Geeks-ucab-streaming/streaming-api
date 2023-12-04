@@ -1,6 +1,5 @@
 import { Phone } from 'src/phones/domain/value-objects/phone';
-import { User } from './user';
-
+import { User } from './userAggregate/user';
 export interface IUserRepository {
   findById(id: string): Promise<User>;
   findAll(): Promise<User[]>;

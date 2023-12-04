@@ -11,20 +11,6 @@ export class Phone {
     this.id = id;
     this.phoneNumber = phoneNumber;
     this.linePhone = line;
-    if (
-      this.isUsableOperator(this.phoneNumber) ||
-     !this.lineValid(this.linePhone)
-    ) {
-      throw new PhoneInvalidExceptions();
-    }
-  }
-
-  private isUsableOperator(phoneNumber: number): boolean {
-    return !Object.values(phoneOperatorsEnum).includes(
-      phoneNumber.toString().substring(0, 3) as phoneOperatorsEnum,
-    );
-  }
-  private lineValid(line: Line): boolean  {
-    return line != null;
+  
   }
 }
