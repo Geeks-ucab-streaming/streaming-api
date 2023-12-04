@@ -1,8 +1,7 @@
 import { Expose } from 'class-transformer';
-import { User } from 'src/users/domain/userAggregate/user';
 import { PhonesNumber } from 'src/users/domain/userAggregate/value-objects/phoneNumber';
 
-export class UserDto extends User {
+export class UserDto {
   @Expose()
   id: string;
 
@@ -11,6 +10,9 @@ export class UserDto extends User {
 
   @Expose()
   birth_date: Date;
+
+  @Expose()
+  suscriptionState: string;
 
   @Expose()
   genero: string;

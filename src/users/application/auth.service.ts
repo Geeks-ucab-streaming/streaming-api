@@ -18,11 +18,12 @@ export class AuthService{
 
   async signup(users: CreateUserDto){
     const phone = await this.phone.execute(new PhoneDto(uuidv4(), users.phonesNumber));
-    let usuario = new User(
+    /*let usuario = new User(
       uuidv4(),
       users.name,
       users.birth_date,
       users.genero,
+      users.suscriptionState,
       new PhonesNumber(users.phonesNumber),
       phone
     );
@@ -31,7 +32,7 @@ export class AuthService{
     const user = await this.usersService.create(usuario);
 
     //Retornar el usuario
-    return user;
+    return user;*/
   }
 
   async signin(phone: number){
