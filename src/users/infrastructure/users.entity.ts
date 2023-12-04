@@ -63,6 +63,3 @@ export class UserEntity {
     console.log('Remove User whit id ', this.id);
   }
 }
-function IN(arg0: string, arg1: string, arg2: string, arg3: string): string {
-  throw new Error('Function not implemented.');
-}

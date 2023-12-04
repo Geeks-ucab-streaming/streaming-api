@@ -3,14 +3,11 @@ import { PhoneDto } from "../dtos/phone.dto";
 import { IFindService } from 'src/common/domain/ifind.service';
 import { Phone } from 'src/phones/domain/value-objects/phone';
 import { ICreateRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
-import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
-import { User } from 'src/users/domain/user';
 //ESTO DEBERIA SER UNA INTERFAZ Y NO USAR LA LIBRERIA DIRECTAMENTE
 import {v4 as uuidv4} from 'uuid';
 import { LineEntity } from 'src/phones/infrastructure/lines.entity';
 import { CreatePhoneDto } from '../dtos/create-phone.dto';
 import { PrefixEntity } from 'src/phones/infrastructure/prefixes.entity';
-import { Line } from 'src/phones/domain/value-objects/line';
 import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
 import { ValidateIsUsableOperatorService } from 'src/phones/domain/services/validate-is-usable-operator.domain.service';
 import { ValidateIsLineValidService } from 'src/phones/domain/services/validate-line-valid.domain.service';
