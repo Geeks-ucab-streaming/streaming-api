@@ -24,7 +24,7 @@ export class AuthService{
   async signup(users: CreateUserDto){
     const phone = await this.phone.execute(new PhoneDto(uuidv4(), users.phonesNumber,null));
   //TODO: CREAR LOS CREATES DE CADA VO, NO INSTANCIAR, ENCAPSULAR CREACION DE OBJETOS
-  console.log(users,"aque llega algo")
+
     let usuario = User.create(
       new userId(uuidv4()),
       new userName(users.name),
@@ -33,8 +33,6 @@ export class AuthService{
       new userSuscriptionState(users.suscriptionState) ,
       phone,
     );
-    throw new NotFoundException ("User not found");
-
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);
 

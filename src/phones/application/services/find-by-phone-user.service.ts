@@ -11,7 +11,9 @@ import { Result } from 'src/common/domain/logic/Result';
 
 export class findByPhoneUserService implements IApplicationService<number, User> {
   private readonly repo: IUserRepository;
-  name: string = 'findByPhoneUserService';
+  get name(): string {
+    return this.constructor.name;
+  }
   constructor(repo: IUserRepository) {
     this.repo = repo;
   }
