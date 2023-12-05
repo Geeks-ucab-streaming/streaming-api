@@ -24,11 +24,11 @@ export class AuthService{
 
   async signup(usersDto: CreateUserDto){
     const phone = await this.phone.execute(new PhoneDto(uuidv4(), usersDto.phone,null));
-    
+    let year = new Date (usersDto.birth_date);
     let usuario = new User(
       new userId (uuidv4())
     , new userName(usersDto.name)
-    , new UserBirthDate(usersDto.birth_date, usersDto.birth_date.getFullYear())
+    , new UserBirthDate(year, year.getFullYear())
     , new UserGender(usersDto.gender)
     , new userSuscriptionState(usersDto.suscriptionState)
     , phone)
