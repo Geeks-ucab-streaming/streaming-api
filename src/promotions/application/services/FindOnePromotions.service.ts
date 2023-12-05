@@ -9,21 +9,21 @@ export class FindOnePromotionsService implements IFindService<string, Promotion>
     @Inject('IFindGenericRepository')
     private readonly promotionRepository: IFindGenericRepository<Promotion>,
     @Inject('getPromotionImageService')
-    private readonly getPromotionImageService: IFindService<string, Buffer>,
+    private readonly getFileService: IFindService<string, Buffer>,
   ) {}
 
-    async execute(id: string): Promise<Promotion> {
-        const promotion = await this.promotionRepository.findById(id);
-        const image = await this.getPromotionImageService.execute(
-            promotion.image_reference.toLowerCase(),
-        );
-    
-        const promotionWithImage: Promotion = Object.assign(promotion, {
-          image: image,
-          equals: (other: Promotion) => promotion.equals(other),
-        });
-    
-        return promotionWithImage;
-      }
-    }
+  async execute(id: string): Promise<Promotion> {
+    const promotion = await this.promotionRepository.findById(id);
+    const image = await this.getFileService.execute(
+        promotion.image_reference.toLowerCase(),
+    );
+
+    const promotionWithImage: Promotion = Object.assign(promotion, {
+      image: image,
+      equals: (other: Promotion) => promotion.equals(other),
+    });
+
+    return promotionWithImage;
+  }
+}
     

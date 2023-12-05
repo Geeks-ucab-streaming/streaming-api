@@ -17,4 +17,9 @@ export class PromotionRepository implements IFindGenericRepository<Promotion> {
     async findById(id: string): Promise<Promotion> {
         return this.repository.findOne({ where: { id: id } });
     }
+
+    async findr(): Promise<Promotion[]> {
+       // const promotions = await this.repository.find({ select: ['id'] });
+        return this.repository.find({ select: ['id'] });//promotions.map(promotion => promotion.id);
+      }
 }

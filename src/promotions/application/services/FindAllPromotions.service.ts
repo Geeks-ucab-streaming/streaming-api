@@ -3,15 +3,14 @@ import { IFindGenericRepository } from "src/common/domain/generic.repository";
 import { IFindService } from "src/common/domain/ifind.service";
 import { Promotion } from "src/promotions/domain/promotion";
 
-
 @Injectable()
 export class FindAllPromotionsService implements IFindService<void, Promotion[]> {
-    constructor(
-        @Inject('IFindGenericRepository')
-        private readonly promotionRepository: IFindGenericRepository<Promotion>,
-        @Inject('getPromotionImageService')
-        private readonly getFileService: IFindService<string, Buffer>,
-        ) {}
+  constructor(
+    @Inject('IFindGenericRepository')
+    private readonly promotionRepository: IFindGenericRepository<Promotion>,
+    @Inject('getPromotionImageService')
+    private readonly getFileService: IFindService<string, Buffer>,
+  ) {}
 
   async execute(): Promise<Promotion[]> {
     const promotions: Promotion[] = await this.promotionRepository.findAll();

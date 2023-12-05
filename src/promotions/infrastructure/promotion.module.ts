@@ -6,6 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { GetFileService } from "src/common/infrastructure/services/getFile.service";
 import { FindAllPromotionsService } from "../application/services/FindAllPromotions.service";
 import { FindOnePromotionsService } from "../application/services/FindOnePromotions.service";
+import { FindRandomPromotionsService } from "../application/services/FindRandomPromotions.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([PromotionEntity])],
@@ -17,6 +18,10 @@ import { FindOnePromotionsService } from "../application/services/FindOnePromoti
       {
         provide: 'FindOnePromotionsService',
         useClass: FindOnePromotionsService,
+      },
+      {
+        provide: 'FindRandomPromotionsService',
+        useClass: FindRandomPromotionsService,
       },
       {
         provide: 'FindAllPromotionsService',
