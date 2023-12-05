@@ -1,37 +1,71 @@
-export class Song {
-  id: string;
-  name: string;
-  duration: string;
-  creation_date: Date;
-  song_reference: string;
-  preview_reference: string;
-  image_reference: string;
-  reproductions: number;
-  genres: string[];
-  artists: string[];
-  songImage: Buffer | null;
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
+import { SongAudioReference } from './value-objects/SongAudioReference-valueobject';
+import { SongID } from './value-objects/SongID-valueobject';
+import { SongImageReference } from './value-objects/SongImageReference-valueobject';
+import { SongName } from './value-objects/SongName-valueobject';
+import { SongCreationDate } from './value-objects/SongCreationDate-valueobject';
+import { SongDuration } from './value-objects/SongDuration-valueobject';
+import { SongStreams } from './value-objects/SongStreams-valueobject';
 
-  constructor(
-    id: string,
-    name: string,
-    duration: string,
-    creation_date: Date,
-    song_reference: string,
-    preview_reference: string,
-    image_reference: string,
-    reproductions: number,
+export class Song {
+  public id: SongID; //vo
+  public name: SongName; //vo
+  public duration: SongDuration; //vo
+  public creation_date: SongCreationDate; //vo
+  public songAudio_reference: SongAudioReference; //vo
+  public image_reference: SongImageReference; //vo
+  public streams: SongStreams;
+  public genres: string[];
+  public artists: ArtistID[]; //ArtistID VO
+  public songImage: Buffer | null;
+
+  get Genres(): string[] {
+    return this.genres;
+  }
+
+  protected constructor(
+    id: SongID,
+    name: SongName,
+    duration: SongDuration,
+    creation_date: SongCreationDate,
+    songAudio_reference: SongAudioReference,
+    image_reference: SongImageReference,
+    streams: SongStreams,
     genres: string[],
-    artists: string[],
+    artists: ArtistID[],
   ) {
     this.id = id;
     this.name = name;
     this.duration = duration;
     this.creation_date = creation_date;
-    this.song_reference = song_reference;
-    this.preview_reference = preview_reference;
+    this.songAudio_reference = songAudio_reference;
     this.image_reference = image_reference;
-    this.reproductions = reproductions;
+    this.streams = streams;
     this.genres = genres;
     this.artists = artists;
+  }
+
+  public static create(
+    id: SongID,
+    name: SongName,
+    duration: SongDuration,
+    creation_date: SongCreationDate,
+    songAudio_reference: SongAudioReference,
+    image_reference: SongImageReference,
+    streams: SongStreams,
+    genres: string[],
+    artists: ArtistID[],
+  ): Song {
+    return new Song(
+      id,
+      name,
+      duration,
+      creation_date,
+      songAudio_reference,
+      image_reference,
+      streams,
+      genres,
+      artists,
+    );
   }
 }

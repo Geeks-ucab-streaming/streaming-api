@@ -1,4 +1,4 @@
-import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
+import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 const UUID_FORMAT =
   /([0-9]|[a-f]){8,8}-([0-9]|[a-f]){4,4}-([0-9]|[a-f]){4,4}-([0-9]|[a-f]){4,4}-([0-9]|[a-f]){12,12}/g;
 
