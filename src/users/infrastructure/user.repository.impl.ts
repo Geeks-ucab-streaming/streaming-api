@@ -19,8 +19,9 @@ extends Repository<UserEntity>
   }
 
   async createUser(user: User): Promise<User> {
-    const userOrm = await this.userMapper.domainToOrm(user);
-    return this.save(userOrm);
+    const userEntity = await this.userMapper.domainToOrm(user);
+    const createdUser = this.userMapper.ormToDomain(userEntity);
+    return createdUser;
   }
 
   findById(id: string): Promise<User> {
