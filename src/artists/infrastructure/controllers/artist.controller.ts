@@ -5,20 +5,23 @@
 // import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByArtistId.service';
 // import { Artist } from 'src/artists/domain/artist';
 
-import { Controller, Get, Param } from "@nestjs/common";
-import { OrmArtistRepository } from "../repositories/artist.repository.impl";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Result } from "src/common/domain/logic/Result";
-import { ArtistEntity } from "../entities/artist.entity";
-import { GetArtistProfilesApplicationService, GetArtistProfilesApplicationServiceDto } from "src/artists/application/services/get-artist-profile.application.service";
-import { GetArtistId } from "../get-artist-id.decorator";
-import { ResultMapper } from "src/common/Application/result-handler/result.mapper";
-import { Artist } from "src/artists/domain/artist";
-import { ArtistsMapper } from "../mappers/artist.mapper";
-import { ErrorApplicationServiceDecorator } from "src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator";
-import { LoggingApplicationServiceDecorator } from "src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator";
-import { NestLogger } from "src/common/infrastructure/logger/nest-logger";
-import { DataSourceSingleton } from "src/core/infrastructure/dataSourceSingleton";
+import { Controller, Get, Param } from '@nestjs/common';
+import { OrmArtistRepository } from '../repositories/artist.repository.impl';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Result } from 'src/common/domain/logic/Result';
+import { ArtistEntity } from '../entities/artist.entity';
+import {
+  GetArtistProfilesApplicationService,
+  GetArtistProfilesApplicationServiceDto,
+} from 'src/artists/application/services/get-artist-profile.application.service';
+import { GetArtistId } from '../get-artist-id.decorator';
+import { ResultMapper } from 'src/common/Application/result-handler/result.mapper';
+import { Artist } from 'src/artists/domain/artist';
+import { ArtistsMapper } from '../mappers/artist.mapper';
+import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
+import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
+import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
+import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 @Controller('artists')
 export class ArtistController {
   private readonly ormArtistMapper: ArtistsMapper;
@@ -47,39 +50,27 @@ export class ArtistController {
     );
     const result = await service.execute(dto);
     return result;
-    };
   }
+}
 
+//   private findOneArtistService: FindOneArtistService;
+//   private findAllArtistService: FindAllArtistService;
+//   private findSongsByArtistIdService: GetSongByArtistId;
+//   private readonly ormSongRepository: OrmArtistRepository;
+//   constructor() {}
 
-
-
-
-
-
-
-
-
-
-
-  
-  //   private findOneArtistService: FindOneArtistService;
-  //   private findAllArtistService: FindAllArtistService;
-  //   private findSongsByArtistIdService: GetSongByArtistId;
-  //   private readonly ormSongRepository: OrmArtistRepository;
-  //   constructor() {}
-
-  //   @Get()
-  //   async findAll(): Promise<Artist[]> {
-  //     return await this.findAllArtistService.execute();
-  //   }
-  //   @ApiTags('Artist')
-  //   @Get('/:id')
-  //   findById(@Param('id') id: string): Promise<Artist> {
-  //     return this.findOneArtistService.execute(id);
-  //   }
-  //   @ApiTags('Artist')
-  //   @Get('/ArtistsSongsByArtistId/:id')
-  //   findSongsById(@Param('id') id: string): Promise<any> {
-  //     return this.findSongsByArtistIdService.execute(id);
-  //   }
-  // }
+//   @Get()
+//   async findAll(): Promise<Artist[]> {
+//     return await this.findAllArtistService.execute();
+//   }
+//   @ApiTags('Artist')
+//   @Get('/:id')
+//   findById(@Param('id') id: string): Promise<Artist> {
+//     return this.findOneArtistService.execute(id);
+//   }
+//   @ApiTags('Artist')
+//   @Get('/ArtistsSongsByArtistId/:id')
+//   findSongsById(@Param('id') id: string): Promise<any> {
+//     return this.findSongsByArtistIdService.execute(id);
+//   }
+// }
