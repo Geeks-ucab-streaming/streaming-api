@@ -1,22 +1,30 @@
-import { DataSource, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../domain/userAggregate/user';
 import { UserEntity } from './users.entity';
-import { PhonesNumber } from '../domain/userAggregate/value-objects/phoneNumber';
-import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 import { Phone } from 'src/phones/domain/value-objects/phone';
 import { IUserRepository } from '../domain/IUserRepository';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { Imapper } from 'src/core/application/IMapper';
 
 export class OrmUserRepository
-  extends Repository<UserEntity>
+extends Repository<UserEntity>
   implements IUserRepository
 {
-  constructor() {
-    super(UserEntity, DataSourceSingleton.getInstance().manager);
+
+  userMapper: Imapper<User,UserEntity>
+
+  constructor(userMapper:Imapper<User,UserEntity>) {
+    super(UserEntity, DataSourceSingleton.getInstance().manager)
+    this.userMapper = userMapper;
   }
+
+  async createUser(user: User): Promise<User> {
+    const userOrm = await this.userMapper.domainToOrm(user);
+    return this.save(userOrm);
+  }
+
   findById(id: string): Promise<User> {
-    throw new Error('Method not implemented.');
+    return this.findById(id);
   }
 
   async findAll(): Promise<User[]> {

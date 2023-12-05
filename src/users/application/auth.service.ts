@@ -6,33 +6,32 @@ import { v4 as uuidv4 } from 'uuid';
 import { PhonesService } from "src/phones/application/services/phones.service";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { findByPhoneUserService } from "src/phones/application/services/find-by-phone-user.service";
-import { Phone } from "src/phones/domain/value-objects/phone";
+import { Imapper } from "src/core/application/IMapper";
+import { UserEntity } from "../infrastructure/users.entity";
 import { userName } from "../domain/userAggregate/value-objects/userName";
+import { userId } from "../domain/userAggregate/value-objects/userId";
 import { UserBirthDate } from "../domain/userAggregate/value-objects/userBirthDate";
 import { UserGender } from "../domain/userAggregate/value-objects/userGender";
-import { userSuscriptionState } from "../domain/userAggregate/value-objects/userSuscriptionState";
-import { userId } from "../domain/userAggregate/value-objects/userId";
-import { throws } from "assert";
+import { userSuscriptionState } from "../domain/userAggregate/entities/userSuscriptionState";
 
 @Injectable()
 export class AuthService{
   constructor(private usersService: UsersService, 
     private phone:PhonesService,
     private findByPhoneUserService: findByPhoneUserService,
+    private IMapper: Imapper<User,UserEntity>,
     ){}
 
-  async signup(users: CreateUserDto){
-    const phone = await this.phone.execute(new PhoneDto(uuidv4(), users.phonesNumber,null));
-  //TODO: CREAR LOS CREATES DE CADA VO, NO INSTANCIAR, ENCAPSULAR CREACION DE OBJETOS
-  console.log(users,"aque llega algo")
-    let usuario = User.create(
-      new userId(uuidv4()),
-      new userName(users.name),
-      new UserBirthDate(new Date (users.birth_date),2000),
-      new UserGender(users.genero)  ,
-      new userSuscriptionState(users.suscriptionState) ,
-      phone,
-    );
+  async signup(usersDto: CreateUserDto){
+    const phone = await this.phone.execute(new PhoneDto(uuidv4(), usersDto.phone,null));
+    
+    let usuario = new User(
+      new userId (uuidv4())
+    , new userName(usersDto.name)
+    , new UserBirthDate(usersDto.birth_date, usersDto.birth_date.getFullYear())
+    , new UserGender(usersDto.gender)
+    , new userSuscriptionState(usersDto.suscriptionState)
+    , phone)
 
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);

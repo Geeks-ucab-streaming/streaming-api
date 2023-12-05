@@ -24,24 +24,27 @@ import { OrmPhoneRepository } from 'src/phones/infrastructure/repositories/phone
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefixes.repository.imp';
 import { JwtService } from '@nestjs/jwt';
+import { UsersMapper } from '../mappers/User.mapper';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
 export class UsersController {
+
   private findByPhoneUserService: findByPhoneUserService;
-  private userRepository: OrmUserRepository = new OrmUserRepository();
+  private usersMapper: UsersMapper = new UsersMapper();
   private phoneRepository: OrmPhoneRepository = new OrmPhoneRepository(DataSourceSingleton.getInstance());
   private lineRepository: OrmLineRepository = new OrmLineRepository(DataSourceSingleton.getInstance());
   private usersService: UsersService;
   private authService: AuthService;
   private phonesService: PhonesService;
+  private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
   private jwtService: JwtService
 
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
     this.usersService = new UsersService(this.userRepository);
     this.findByPhoneUserService = new findByPhoneUserService(this.userRepository);
-    this.authService = new AuthService(this.usersService,this.phonesService,this.findByPhoneUserService);
+    this.authService = new AuthService(this.usersService,this.phonesService,this.findByPhoneUserService,this.usersMapper);
     
   }
 
@@ -53,7 +56,7 @@ export class UsersController {
     );
     try {
       const users = await this.findByPhoneUserService.execute(
-        body.phonesNumber,
+        body.phone,
       );
 
       if (users) {
@@ -72,7 +75,7 @@ export class UsersController {
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
 
-    const data = await this.authService.signin(body.phonesNumber);
+    const data = await this.authService.signin(body.phone);
     const jwt = this.jwtService.sign(data);
 
     return {

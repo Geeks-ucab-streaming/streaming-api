@@ -16,8 +16,8 @@ export class UserDto {
   suscriptionState: string;
 
   @Expose()
-  genero: string;
+  gender: string;
 
   @Expose()
-  phonesNumber: Phone;
+  phone: Phone;
 }
