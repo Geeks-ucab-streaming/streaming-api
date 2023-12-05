@@ -1,27 +1,43 @@
-import { Repository, DataSource } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, EntityManager, QueryRunner, Repository } from 'typeorm';
 import { Artist } from 'src/artists/domain/artist';
 import { ArtistEntity } from '../entities/artist.entity';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
-import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
+import { IArtistRepository } from 'src/artists/application/repositories/artist.repository.interface';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
+import { ArtistsMapper } from '../mappers/artist.mapper';
 
 export class OrmArtistRepository
   extends Repository<ArtistEntity>
-  implements IArtistsRepository
+  implements IArtistRepository
 {
+  private readonly ormArtistMapper: ArtistsMapper;
+  // constructor(manager: EntityManager, queryRunner?: QueryRunner) {
+  //   super(ArtistEntity, manager, queryRunner);
+  //   // this.ormPatientMapper = new OrmPatientMapper();
+  // }
+
   constructor(dataSource: DataSource) {
     super(ArtistEntity, dataSource.manager);
+    this.ormArtistMapper = new ArtistsMapper();
   }
-  async findAllArtists(): Promise<Artist[]> {
-    const artists = await this.find();
-    throw new Error('Method not implemented.');
+  async findOneByTheId(id: ArtistID): Promise<Artist> {
+    const ormArtist = await this.findOne({ where: { id: id.Id } });
+    return ormArtist ? await this.ormArtistMapper.ToDomain(ormArtist) : null;
   }
-  async findArtistById(id: string): Promise<Artist> {
-    const artist = await this.findOne({ where: { id: id } });
-    throw new Error('Method not implemented.');
+  async saveAggregate(aggregate: Artist): Promise<void> {
+    const ormArtist = await this.ormArtistMapper.domainTo(aggregate);
+    await this.save(ormArtist);
+    //throw new Error('Method not implemented.');
+  }
+  async findOneByIdOrFail(id: ArtistID): Promise<Artist> {
+    const artist = await this.findOneByTheId(id);
+    if (!artist) {
+      // throw new InvalidPatientException();
+      throw new Error('Method not implemented.');
+    }
+    return artist;
   }
 
-  // async findAll(): Promise<Artist[]> {
-  //   return this.repository.find();
-  // }
+  async findAssociatedArtists(): Promise<Artist[]> {
+    throw new Error('Method not implemented.');
+  }
 }

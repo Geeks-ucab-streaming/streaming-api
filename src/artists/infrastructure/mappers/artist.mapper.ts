@@ -15,6 +15,7 @@ export class ArtistsMapper implements Imapper<Artist, ArtistEntity> {
     );
   }
   async ToDomain(ormEntity: ArtistEntity): Promise<Artist> {
+    if(!ormEntity) return null;
     let artist: Artist = Artist.create(
       ArtistID.create(ormEntity.id),
       ArtistName.create(ormEntity.name),
@@ -27,7 +28,14 @@ export class ArtistsMapper implements Imapper<Artist, ArtistEntity> {
     return artist;
   }
 
-  domainTo(domainEntity: Artist): Promise<ArtistEntity> {
-    throw new Error('Method not implemented.');
+  async domainTo(domainEntity: Artist): Promise<ArtistEntity> {
+    if(!domainEntity) return null;
+    let artistEntity: ArtistEntity = await ArtistEntity.create(
+      domainEntity.Id.Id,
+      domainEntity.Name.Name,
+      domainEntity.ImageReference.Image,
+    );
+    return artistEntity;
+
   }
 }
