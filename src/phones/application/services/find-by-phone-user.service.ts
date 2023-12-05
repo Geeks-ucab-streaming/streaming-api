@@ -6,20 +6,23 @@ import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 import { phoneOperatorsEnum } from 'src/phones/domain/value-objects/phoneOperators.enum';
 import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
 import { IUserRepository } from 'src/users/domain/IUserRepository';
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { Result } from 'src/common/domain/logic/Result';
 
-export class findByPhoneUserService implements IFindService<number, User> {
+export class findByPhoneUserService implements IApplicationService<number, User> {
   private readonly repo: IUserRepository;
+  name: string = 'findByPhoneUserService';
   constructor(repo: IUserRepository) {
     this.repo = repo;
   }
 
-  execute(value?: number): Promise<User> {
+  async execute(value?: number): Promise<Result<User>> {
     if (
       !Object.values(phoneOperatorsEnum).includes(
         value.toString().substring(0, 3) as phoneOperatorsEnum,
       )
     )
       throw new PhoneInvalidExceptions();
-    return this.repo.finderCriteria({ phoneNumber: Number(value) });
+    return Result.success<User>(await this.repo.finderCriteria({ phoneNumber: Number(value) }));
   }
 } 

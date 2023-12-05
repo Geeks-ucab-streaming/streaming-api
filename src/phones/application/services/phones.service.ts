@@ -12,10 +12,15 @@ import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-v
 import { ValidateIsUsableOperatorService } from 'src/phones/domain/services/validate-is-usable-operator.domain.service';
 import { ValidateIsLineValidService } from 'src/phones/domain/services/validate-line-valid.domain.service';
 import { LineInvalidExceptions } from 'src/phones/domain/exceptions/line-not-valid.exception';
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { Result } from 'src/common/domain/logic/Result';
 
 
 
-export class PhonesService implements IFindService<PhoneDto,Phone> {
+export class PhonesService implements IApplicationService<PhoneDto,Phone> {
+  get name(): string {
+    return this.constructor.name;
+  }
 
   constructor( 
   private readonly repo:ICreateRepository<Phone>,
@@ -23,7 +28,7 @@ export class PhonesService implements IFindService<PhoneDto,Phone> {
   private readonly valiateisUsableOperator: ValidateIsUsableOperatorService = new ValidateIsUsableOperatorService(),
   private readonly valiateisLineValid: ValidateIsLineValidService = new ValidateIsLineValidService(),
   ){}
-  async execute(value: CreatePhoneDto): Promise<Phone> {
+  async execute(value: CreatePhoneDto): Promise<Result<Phone>> {
     console.log(value)
     console.log(!this.valiateisUsableOperator.execute(value.phoneNumber))
     if(!this.valiateisUsableOperator.execute(value.phoneNumber)) throw new PhoneInvalidExceptions();
@@ -33,7 +38,7 @@ export class PhonesService implements IFindService<PhoneDto,Phone> {
     if(!this.valiateisLineValid.execute(line.linePhone)) throw new LineInvalidExceptions();
 
     const phone = new Phone(uuidv4(),value.phoneNumber,line.linePhone);
-    return this.repo.createPhone(phone);
+    return Result.success<Phone>(await this.repo.createPhone(phone));
   }
 
 }

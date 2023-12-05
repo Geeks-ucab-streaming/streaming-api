@@ -1,9 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../domain/userAggregate/user';
 import { UserEntity } from './users.entity';
-import { PhonesNumber } from '../domain/userAggregate/value-objects/phoneNumber';
-import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 import { Phone } from 'src/phones/domain/value-objects/phone';
 import { IUserRepository } from '../domain/IUserRepository';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
