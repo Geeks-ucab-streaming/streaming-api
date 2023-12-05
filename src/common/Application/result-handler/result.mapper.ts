@@ -6,11 +6,9 @@ export class ResultMapper {
    * @param result Resultado a mapear.
    * @param converter Función utilizada para mapear.
    * @returns Resultado con el nuevo valor mapeado.*/
-  static async map<R, E>(
-    result: Result<R>,
-    converter: (value: R) => Promise<E> | E,
-  ): Promise<Result<E>> {
-    if (result.IsSuccess) {
+  static async map<R, E>(result: Result<R>,converter: (value: R) => Promise<E> | E,): Promise<Result<E>> {
+    if (result.IsSuccess) 
+    {
       return Result.success(await converter(result.Value));
     }
     return Result.fail<E>(result.Error);
