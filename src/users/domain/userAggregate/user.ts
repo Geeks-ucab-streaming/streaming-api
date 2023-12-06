@@ -17,31 +17,33 @@ export class User {
 
 
   constructor(
-    id: userId,
-    name: userName,
-    birth_date: UserBirthDate,
-    gender: UserGender,
-    suscriptionState: userSuscriptionState,
+    id: string,
+    name: string,
+    birth_date: Date,
+    gender: string,
+    suscriptionState: string,
     phone:  Phone,
 
   ) {
-    this.id = id; 
-    this.name = name;
-    this.birth_date = birth_date;
-    this.gender = gender;
-    this.suscriptionState = suscriptionState;
+    this.id = new userId(id); 
+    this.name = new userName(name);
+    this.birth_date = new UserBirthDate(birth_date, birth_date.getFullYear());
+    this.gender = new UserGender(gender);
+    this.suscriptionState = new userSuscriptionState(suscriptionState);
     this.phone = phone;
 
   }
 
   static create(
-    id: userId,
-    name: userName,
-    birth_date: UserBirthDate,
-    gender: UserGender,
-    suscriptionState: userSuscriptionState,
+    id: string,
+    name: string,
+    birth_date: Date,
+    gender: string,
+    suscriptionState: string,
     phone:  Phone,
+
   ): User {
-    return new User(id, name, birth_date, gender, suscriptionState, phone);
+    return new User(
+      id, name, birth_date, gender, suscriptionState, phone);
   }
 }

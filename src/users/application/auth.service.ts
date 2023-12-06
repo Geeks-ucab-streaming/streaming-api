@@ -31,15 +31,15 @@ export class AuthService{
     if(users.Value){
       throw new NotFoundException ("User Alredy exists");
     }
-    const phone = await this.phone.execute(new Phone(uuidv4(),phoneNumber.create(usersDto.phone),Line.create(uuidv4(),usersDto.phone.toString())));
+    const phone = await this.phone.execute( Phone.create(uuidv4(),usersDto.phone,uuidv4(),usersDto.phone.toString().substring(0, 3) ));
     console.log(phone)
     let year = new Date (usersDto.birth_date);
     let usuario = new User(
-      userId.create(uuidv4())
-    , userName.create(usersDto.name)
-    , UserBirthDate.create(year, year.getFullYear())
-    ,  UserGender.create(usersDto.gender)
-    , userSuscriptionState.create(usersDto.suscriptionState)
+      uuidv4()
+    , usersDto.name
+    , year
+    ,  usersDto.gender
+    , usersDto.suscriptionState
     , phone.Value)
 
     //Crear nuevo usuario y guardarlo

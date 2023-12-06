@@ -15,6 +15,10 @@ export class Phone {
   
   }
 
+  static create(id: string, _phoneNumber:  number, id_line:string,line: string): Phone {
+    return new Phone(id, phoneNumber.create(_phoneNumber), Line.create(id_line,Object.keys(phoneOperatorsEnum).find(key => phoneOperatorsEnum[key] === line)));
+  }
+
 }
 
 export class phoneNumber {

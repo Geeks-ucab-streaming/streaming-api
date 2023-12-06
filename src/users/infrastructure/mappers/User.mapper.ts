@@ -25,11 +25,11 @@ export class UsersMapper implements Imapper<User, UserEntity> {
 
   async ToDomain(ormEntity: UserEntity): Promise<User> {
     let user: User =  User.create(
-      new userId(ormEntity.id),
-      new userName(ormEntity.name),
-      new UserBirthDate(new Date(ormEntity.birth_date), new Date(ormEntity.birth_date).getFullYear()),
-      new UserGender(ormEntity.gender),
-      new userSuscriptionState(ormEntity.suscriptionState),
+      ormEntity.id,
+      ormEntity.name,
+      new Date(ormEntity.birth_date),
+      ormEntity.gender,
+      ormEntity.suscriptionState,
       await this.mapperPhone.ToDomain(ormEntity.phone)
     );
 
