@@ -7,15 +7,11 @@
 
 import { Controller, Get, Param } from '@nestjs/common';
 import { OrmArtistRepository } from '../repositories/artist.repository.impl';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Result } from 'src/common/domain/logic/Result';
-import { ArtistEntity } from '../entities/artist.entity';
 import {
   GetArtistProfilesApplicationService,
   GetArtistProfilesApplicationServiceDto,
 } from 'src/artists/application/services/get-artist-profile.application.service';
-import { GetArtistId } from '../get-artist-id.decorator';
-import { ResultMapper } from 'src/common/Application/result-handler/result.mapper';
 import { Artist } from 'src/artists/domain/artist';
 import { ArtistsMapper } from '../mappers/artist.mapper';
 import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
