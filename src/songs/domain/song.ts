@@ -8,19 +8,56 @@ import { SongDuration } from './value-objects/SongDuration-valueobject';
 import { SongStreams } from './value-objects/SongStreams-valueobject';
 
 export class Song {
-  public id: SongID; //vo
-  public name: SongName; //vo
-  public duration: SongDuration; //vo
-  public creation_date: SongCreationDate; //vo
-  public songAudio_reference: SongAudioReference; //vo
-  public image_reference: SongImageReference; //vo
-  public streams: SongStreams;
-  public genres: string[];
-  public artists: ArtistID[]; //ArtistID VO
-  public songImage: Buffer | null;
+  private id: SongID; //vo
+  private name: SongName; //vo
+  private duration: SongDuration; //vo
+  private creation_date: SongCreationDate; //vo
+  private songAudio_reference: SongAudioReference; //vo
+  private image_reference: SongImageReference; //vo
+  private streams: SongStreams;
+  private genres: string[];
+  private artists: ArtistID[]; //ArtistID VO
+  private songImage: Buffer | null;
 
   get Genres(): string[] {
     return this.genres;
+  }
+
+  get Id(): string {
+    return this.id.Value;
+  }
+  get Name(): string {
+    return this.name.Value;
+  }
+  get Duration(): string {
+    return this.duration.Value;
+  }
+  get CreationDate(): Date {
+    return this.creation_date.Value;
+  }
+  get AudioReference(): string {
+    return this.songAudio_reference.Value;
+  }
+  get ImageReference(): string {
+    return this.image_reference.Value;
+  }
+  get Streams(): Number {
+    return this.streams.Value;
+  }
+  get Artists(): string[] {
+    let values: string[] = [];
+    for (const id of this.artists) {
+      values.push(id.Value);
+    }
+    return values;
+  }
+
+  get Image(): Buffer {
+    return this.songImage;
+  }
+
+  set Image(image: Buffer) {
+    this.songImage = image;
   }
 
   protected constructor(

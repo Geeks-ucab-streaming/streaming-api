@@ -17,14 +17,10 @@ export class GetSongByIdService
     let creators: Artist[];
     const song: Song = await this.songsRepository.findById(songId);
     let artistsID: string[] = [];
-    console.log('5555555555555555555555');
-    console.log(song);
 
-    console.log(song.artists[0].Id);
-
-    for (const artist of song.artists) {
+    for (const artist of song.Artists) {
       console.log(artist);
-      artistsID.push(artist.Id);
+      artistsID.push(artist);
     }
     console.log(artistsID);
     creators = await this.artistRepository.findArtistsInCollection(artistsID);

@@ -36,9 +36,9 @@ export class SongsMapper implements Imapper<Song, SongEntity> {
       this.operation(ormEntity),
     );
     const songImage = await this.getSongImageService.execute(
-      song.image_reference.get(),
+      song.ImageReference,
     );
-    song.songImage = songImage;
+    song.Image = songImage;
     return song;
   }
   private operation(songResponse: SongEntity): ArtistID[] {

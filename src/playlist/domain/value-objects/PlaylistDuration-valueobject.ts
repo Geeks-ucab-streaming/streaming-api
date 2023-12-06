@@ -1,29 +1,29 @@
 import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 
 export class PlaylistDuration implements IValueObject<PlaylistDuration> {
-  private readonly duration: string;
+  private readonly value: string;
 
-  public get(): string {
-    return this.duration;
+  get Value(): string {
+    return this.value;
   }
 
-  private constructor(duration: string) {
-    if (this.checkDuration(duration)) this.duration = duration;
+  private constructor(value: string) {
+    if (this.checkDuration(value)) this.value = value;
     else {
       throw new Error('la duración debe estar en formato hh:mm:ss');
     } //Aqui deberiamos crear una excepcion
   }
 
   public equals(other: PlaylistDuration): boolean {
-    return this.duration === other.duration;
+    return this.value === other.value;
   }
 
-  public static create(duration: string): PlaylistDuration {
-    return new PlaylistDuration(duration);
+  public static create(value: string): PlaylistDuration {
+    return new PlaylistDuration(value);
   }
 
-  private checkDuration(duration: string): boolean {
+  private checkDuration(value: string): boolean {
     const regex = /^[0-9]?[0-9]:[0-5]?[0-9]:[0-5][0-9]$/;
-    return regex.test(duration);
+    return regex.test(value);
   }
 }

@@ -1,28 +1,28 @@
 import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 
 export class SongStreams implements IValueObject<SongStreams> {
-  private streams: number;
+  private value: number;
 
-  public get(): number {
-    return this.streams;
+  get Value(): number {
+    return this.value;
   }
 
-  private constructor(streams: number) {
-    if (streams >= 0) this.streams = streams;
+  private constructor(value: number) {
+    if (value >= 0) this.value = value;
     else {
       throw new Error('las reproducciones no pueden ser negativas');
     } //Aqui deberiamos crear una excepcion
   }
 
   public equals(other: SongStreams): boolean {
-    return this.streams === other.streams;
+    return this.value === other.value;
   }
 
-  public static create(streams: number): SongStreams {
-    return new SongStreams(streams);
+  public static create(value: number): SongStreams {
+    return new SongStreams(value);
   }
 
   public addstreams(): void {
-    this.streams++;
+    this.value++;
   }
 }

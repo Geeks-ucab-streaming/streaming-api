@@ -20,7 +20,7 @@ export class OrmArtistRepository
     this.ormArtistMapper = new ArtistsMapper();
   }
   async findOneByTheId(id: ArtistID): Promise<Artist> {
-    const ormArtist = await this.findOne({ where: { id: id.Id } });
+    const ormArtist = await this.findOne({ where: { id: id.Value } });
     return ormArtist ? await this.ormArtistMapper.ToDomain(ormArtist) : null;
   }
   async saveAggregate(aggregate: Artist): Promise<void> {
