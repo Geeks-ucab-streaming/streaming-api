@@ -3,11 +3,11 @@ POST http://localhost:3000/api/auth/validate_operator
 content-type: application/json
 
 {
-  "name": "Alex Gamboa",
-  "birth_date": "2000-12-03",
-  "gender": "M",
-  "suscriptionState": "gratuito",
-  "phone": "4149375012"
+  "name":"Alejandro Gamboa",
+  "birth_date":"2000-12-03",
+  "gender":"M",
+  "suscriptionState":"gratuito",
+  "phone":4149375011
 }
 
 ### Iniciar Sesión 
