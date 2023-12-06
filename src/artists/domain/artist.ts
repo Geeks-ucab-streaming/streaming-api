@@ -50,8 +50,8 @@ export class Artist extends AggregateRoot<ArtistID> {
 
   //validando estado
   protected ensureValidState(): void {
-    if (!this.name) throw new InvalidArtistNameException(this);
-    if (!this.image_reference) throw new InvalidArtistImageException(this);
+    if (!this.name) throw new InvalidArtistNameException(this.name);
+    if (!this.image_reference) throw new InvalidArtistImageException(this.image_reference);
   }
 
   public static create(

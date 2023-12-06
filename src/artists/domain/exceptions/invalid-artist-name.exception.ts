@@ -1,8 +1,7 @@
-import { Artist } from "../artist";
+import { ArtistName } from "../value-objects/artistName-valueobject";
 
-export class InvalidArtistNameException extends DomainException<Artist> {
-    
-    constructor(artist: Artist) {
-        super(artist, 'Invalid Name', 'InvalidArtistNameException', 400);
-    }
+export class InvalidArtistNameException extends DomainException<ArtistName> {
+  constructor(artistName: ArtistName) {
+    super(artistName, 'Invalid Name', 'InvalidArtistNameException', 400);
+  }
 }
