@@ -13,4 +13,6 @@ export interface IArtistRepository extends IRepository<ArtistID, Artist> {
     asociated: SearchAssociatedArtistDomainDto,
     options: RepositoryPagingDto,
   ): Promise<Artist[]>;
+
+  findArtistsInCollection(ids: string[]): Promise<Artist[]>;
 }

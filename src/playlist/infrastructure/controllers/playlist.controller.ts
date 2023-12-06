@@ -21,7 +21,7 @@ export class PlaylistController {
   }
 
   @Get('/FindByArtistID/:id')
-  find(@Param('id') id: string): Promise<Playlist[]> {
+  findByArtistId(@Param('id') id: string): Promise<Playlist[]> {
     this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
       this.repository,
     );
@@ -29,7 +29,7 @@ export class PlaylistController {
   }
   @ApiTags('Playlist')
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Playlist> {
+  findById(@Param('id') id: string): Promise<Playlist> {
     this.findPlaylistByIdService = new FindAlbumByPlaylistIDService(
       this.repository,
     );

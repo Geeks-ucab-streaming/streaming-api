@@ -43,4 +43,17 @@ export class OrmArtistRepository
   async findAssociatedArtists(): Promise<Artist[]> {
     throw new Error('Method not implemented.');
   }
+
+  async findArtistsInCollection(ids: string[]): Promise<Artist[]> {
+    const artistsResponse = await this.createQueryBuilder('artist')
+      .where('artist.id IN (:...ids)', { ids })
+      .getMany();
+
+    const artists: Promise<Artist>[] = [];
+    artistsResponse.forEach((artist) =>
+      artists.push(this.ormArtistMapper.ToDomain(artist)),
+    );
+
+    return Promise.all(artists);
+  }
 }
