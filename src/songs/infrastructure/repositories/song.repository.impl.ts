@@ -81,4 +81,15 @@ export class OrmSongRepository
     songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
     return await Promise.all(songs);
   }
+
+  async findSongsInCollection(ids: string[]): Promise<Song[]> {
+    const songsResponse = await this.createQueryBuilder('song')
+      .where('song.id IN (:...ids)', { ids })
+      .getMany();
+
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
+
+    return Promise.all(songs);
+  }
 }

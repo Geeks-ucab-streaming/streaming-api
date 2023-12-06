@@ -4,6 +4,9 @@ import { AggregateRoot } from 'src/common/domain/aggregate-root';
 import { ArtistID } from './value-objects/artistID-valueobject';
 import { ArtistCreatedEvent } from './events/artist-created-event';
 import { DomainEvent } from 'src/common/domain/Event/domain-event';
+import { InvalidArtistImageException } from './exceptions/invalid-artist.exception';
+import { error } from 'console';
+import { InvalidArtistNameException } from './exceptions/invalid-artist-name.exception';
 
 export class Artist extends AggregateRoot<ArtistID> {
   private name: ArtistName;
@@ -47,10 +50,8 @@ export class Artist extends AggregateRoot<ArtistID> {
 
   //validando estado
   protected ensureValidState(): void {
-    if (!this.name || !this.Id || !this.image_reference) {
-      throw new Error('InvalidArtistExcepcion'); //Aqui va la excepcion
-    }
-    //throw new Error('Method not implemented.');
+    if (!this.name) throw new InvalidArtistNameException(this.name);
+    if (!this.image_reference) throw new InvalidArtistImageException(this.image_reference);
   }
 
   public static create(

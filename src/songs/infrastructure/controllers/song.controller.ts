@@ -8,6 +8,8 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
 import { GetSongBPlaylistIdService } from 'src/songs/application/services/getSongsByPlaylistId.service';
+import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
+import { SongWithArtistPO } from 'src/songs/application/ParameterObjects/songWithArtistPO';
 
 @Controller('songs')
 export class SongsController {
@@ -15,9 +17,13 @@ export class SongsController {
   private getSongBPlaylistIdService: GetSongBPlaylistIdService;
   private findSongsByArtistIdService: FindSongsByArtistIdService;
   private readonly ormSongRepository: OrmSongRepository;
+  private readonly ormArtistRepository: OrmArtistRepository;
   // private readonly findSongsByArtistIdService: FindSongsByPlaylistIdService;
   constructor() {
     this.ormSongRepository = new OrmSongRepository(
+      DataSourceSingleton.getInstance(),
+    );
+    this.ormArtistRepository = new OrmArtistRepository(
       DataSourceSingleton.getInstance(),
     );
   }
@@ -26,10 +32,14 @@ export class SongsController {
   // findAll(): Promise<Artist[]> {
   //   return this.findAllArtistService.execute();
   // }
+
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<Song> {
-    this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
+  async findById(@Param('id') id: string): Promise<SongWithArtistPO> {
+    this.getSongByIdService = new GetSongByIdService(
+      this.ormSongRepository,
+      this.ormArtistRepository,
+    );
     return await this.getSongByIdService.execute(id);
   }
 
