@@ -30,7 +30,7 @@ export class PhoneEntity  {
   phoneNumber: number;
 
   @ManyToOne(() => LineEntity, (linePhone) => linePhone.phones)
-  @JoinColumn({ name: 'line_id' })
+  @JoinColumn({ name: 'linePhoneId' })
   linePhone: LineEntity;
   @OneToOne(() => UserEntity, (user) => user.phone)
   user: UserEntity;

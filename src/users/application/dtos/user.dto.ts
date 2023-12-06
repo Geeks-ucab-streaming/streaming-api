@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { User } from 'src/users/domain/user';
+import { User } from 'src/users/domain/userAggregate/user';
 import { Phone } from 'src/phones/domain/value-objects/phone';
 
 export class UserDto {
@@ -16,8 +16,8 @@ export class UserDto {
   suscriptionState: string;
 
   @Expose()
-  genero: string;
+  gender: string;
 
   @Expose()
-  phonesNumber: Phone;
+  phone: Phone;
 }

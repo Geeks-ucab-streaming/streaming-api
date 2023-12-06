@@ -3,16 +3,19 @@ POST http://localhost:3000/api/auth/validate_operator
 content-type: application/json
 
 {
-  "phonesNumber":"4142930031"
+  "name": "Alex Gamboa",
+  "birth_date": "2000-12-03",
+  "gender": "M",
+  "suscriptionState": "gratuito",
+  "phone": "4149375012"
 }
-
 
 ### Iniciar Sesión 
 POST http://localhost:3000/api/auth/login
 content-type: application/json
 
 {
-  "phonesNumber":"4142930031"
+  "phone":"4142930031"
 }
 
 

@@ -3,5 +3,6 @@ import { User } from './userAggregate/user';
 export interface IUserRepository {
   findById(id: string): Promise<User>;
   findAll(): Promise<User[]>;
-    finderCriteria(criteria: Partial<Phone>): Promise<User | undefined>;
+  finderCriteria(criteria: Partial<Phone>): Promise<User | undefined>;
+  createUser(user: User): Promise<User>;
 }

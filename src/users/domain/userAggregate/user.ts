@@ -4,33 +4,33 @@ import { UserBirthDate } from "./value-objects/userBirthDate";
 import { userName } from "./value-objects/userName";
 import { UserGender } from "./value-objects/userGender";
 import { userId } from "./value-objects/userId";
-import { userSuscriptionState } from "./value-objects/userSuscriptionState";
+import { userSuscriptionState } from "./entities/userSuscriptionState";
 import { Phone } from "src/phones/domain/value-objects/phone";
 
 export class User {
   id: userId;
   name: userName;
   birth_date: UserBirthDate;
-  genero: UserGender;
+  gender: UserGender;
   suscriptionState: userSuscriptionState;
-  phonesNumber: Phone ;
+  phone: Phone ;
 
 
   constructor(
     id: userId,
     name: userName,
     birth_date: UserBirthDate,
-    genero: UserGender,
+    gender: UserGender,
     suscriptionState: userSuscriptionState,
-    phonesNumber:  Phone,
+    phone:  Phone,
 
   ) {
     this.id = id; 
     this.name = name;
     this.birth_date = birth_date;
-    this.genero = genero;
+    this.gender = gender;
     this.suscriptionState = suscriptionState;
-    this.phonesNumber = phonesNumber;
+    this.phone = phone;
 
   }
 
@@ -38,10 +38,10 @@ export class User {
     id: userId,
     name: userName,
     birth_date: UserBirthDate,
-    genero: UserGender,
+    gender: UserGender,
     suscriptionState: userSuscriptionState,
-    phonesNumber:  Phone,
+    phone:  Phone,
   ): User {
-    return new User(id, name, birth_date, genero, suscriptionState, phonesNumber);
+    return new User(id, name, birth_date, gender, suscriptionState, phone);
   }
 }
