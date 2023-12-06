@@ -5,6 +5,7 @@ import { Phone } from 'src/phones/domain/value-objects/phone';
 import { IUserRepository } from '../domain/IUserRepository';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { Imapper } from 'src/core/application/IMapper';
+import { Result } from 'src/common/domain/logic/Result';
 
 export class OrmUserRepository
 extends Repository<UserEntity>
@@ -18,10 +19,10 @@ extends Repository<UserEntity>
     this.userMapper = userMapper;
   }
 
-  async createUser(user: User): Promise<User> {
-    const userEntity = await this.userMapper.domainToOrm(user);
-    const createdUser = this.userMapper.ormToDomain(userEntity);
-    return createdUser;
+  async createUser(user: User): Promise<Result<void>> {  
+  const createdUser = await this.userMapper.domainToOrm(user);
+    await this.save(createdUser);
+    return Result.success<void>(void 0);
   }
 
   findById(id: string): Promise<User> {

@@ -30,6 +30,8 @@ export class UsersService {
     userEntity.phone =  PhoneEntity.create(user.phone.id,user.phone.phoneNumber,user.phone.linePhone.id) 
 
     const savedUser = await this.repo.createUser(user); //Guarda la instancia en la BD.
+    console.log("El savedUser esta aquí");
+    console.log(savedUser);
     return savedUser;
   }
 
