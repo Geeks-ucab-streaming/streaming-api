@@ -9,7 +9,7 @@ import { UserGender } from "src/users/domain/userAggregate/value-objects/userGen
 
 export class UsersMapper implements Imapper<User, UserEntity> {
 
-  async domainToOrm(domainEntity: User): Promise<UserEntity> {
+  async domainTo(domainEntity: User): Promise<UserEntity> {
       const ormEntity:UserEntity = new UserEntity();
       ormEntity.id = domainEntity.id.getValue();
       ormEntity.name = domainEntity.name.getValue();
@@ -19,7 +19,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       return ormEntity;
   }
 
-  ormToDomain(ormEntity: UserEntity): Promise<User> {
+  ToDomain(ormEntity: UserEntity): Promise<User> {
     let user: User =  User.create(
       new userId(ormEntity.id),
       new userName(ormEntity.name),

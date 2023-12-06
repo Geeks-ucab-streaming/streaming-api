@@ -3,7 +3,7 @@ import { Phone } from "src/phones/domain/value-objects/phone";
 import { PhoneEntity } from "../phones.entity";
 
 export class phoneMapper implements Imapper<Phone,PhoneEntity> {
-    async domainToOrm(domainEntity: Phone): Promise<PhoneEntity> {
+    async domainTo(domainEntity: Phone): Promise<PhoneEntity> {
         const ormEntity:PhoneEntity = PhoneEntity.create(
             domainEntity.id,
             domainEntity.phoneNumber,
@@ -12,7 +12,7 @@ export class phoneMapper implements Imapper<Phone,PhoneEntity> {
         return ormEntity;
       
     }
-    async ormToDomain(ormEntity: PhoneEntity): Promise<Phone> {
+    async ToDomain(ormEntity: PhoneEntity): Promise<Phone> {
         const phone:Phone = new Phone(
             ormEntity.id,
             ormEntity.phoneNumber,
