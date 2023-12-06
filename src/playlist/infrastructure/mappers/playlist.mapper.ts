@@ -22,11 +22,11 @@ export class PlaylistMapper implements Imapper<Playlist, PlaylistEntity> {
   async ToDomain(ormEntity: PlaylistEntity): Promise<Playlist> {
     console.log(ormEntity.duration);
     let playlist = Playlist.create(
-      PlaylistID.create(ormEntity.id),
-      PlaylistName.create(ormEntity.name),
-      PlaylistDuration.create(ormEntity.duration),
-      PlaylistImageReference.create(ormEntity.image_reference),
-      PlaylistStreams.create(ormEntity.reproductions),
+      ormEntity.id,
+      ormEntity.name,
+      ormEntity.duration,
+      ormEntity.image_reference,
+      ormEntity.reproductions,
       await this.getPlaylistImageService.execute(ormEntity.image_reference),
       this.getPlaylistArtists(ormEntity),
       this.getPlaylistSongs(ormEntity),

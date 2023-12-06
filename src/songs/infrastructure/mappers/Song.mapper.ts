@@ -25,13 +25,13 @@ export class SongsMapper implements Imapper<Song, SongEntity> {
   }
   async ToDomain(ormEntity: SongEntity): Promise<Song> {
     let song: Song = Song.create(
-      SongID.create(ormEntity.id),
-      SongName.create(ormEntity.name),
-      SongDuration.create(ormEntity.duration),
-      SongCreationDate.create(ormEntity.creation_date),
-      SongAudioReference.create(ormEntity.song_reference),
-      SongImageReference.create(ormEntity.image_reference),
-      SongStreams.create(ormEntity.reproductions),
+      ormEntity.id,
+      ormEntity.name,
+      ormEntity.duration,
+      ormEntity.creation_date,
+      ormEntity.song_reference,
+      ormEntity.image_reference,
+      ormEntity.reproductions,
       ormEntity.genres,
       this.operation(ormEntity),
     );

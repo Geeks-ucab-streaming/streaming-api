@@ -38,21 +38,21 @@ export class Playlist {
   }
 
   public static create(
-    id: PlaylistID,
-    name: PlaylistName,
-    duration: PlaylistDuration,
-    image_reference: PlaylistImageReference,
-    streams: PlaylistStreams,
+    id: string,
+    name: string,
+    duration: string,
+    image_reference: string,
+    streams: number,
     playlistImage: Buffer,
     playlistCreators?: ArtistID[],
     playlistSongs?: SongID[],
   ) {
     return new Playlist(
-      id,
-      name,
-      duration,
-      image_reference,
-      streams,
+      PlaylistID.create(id),
+      PlaylistName.create(name),
+      PlaylistDuration.create(duration),
+      PlaylistImageReference.create(image_reference),
+      PlaylistStreams.create(streams),
       playlistImage,
       playlistCreators,
       playlistSongs,

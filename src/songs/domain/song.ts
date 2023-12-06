@@ -46,24 +46,24 @@ export class Song {
   }
 
   public static create(
-    id: SongID,
-    name: SongName,
-    duration: SongDuration,
-    creation_date: SongCreationDate,
-    songAudio_reference: SongAudioReference,
-    image_reference: SongImageReference,
-    streams: SongStreams,
+    id: string,
+    name: string,
+    duration: string,
+    creation_date: Date,
+    songAudio_reference: string,
+    image_reference: string,
+    streams: number,
     genres: string[],
     artists: ArtistID[],
   ): Song {
     return new Song(
-      id,
-      name,
-      duration,
-      creation_date,
-      songAudio_reference,
-      image_reference,
-      streams,
+      SongID.create(id),
+      SongName.create(name),
+      SongDuration.create(duration),
+      SongCreationDate.create(creation_date),
+      SongAudioReference.create(songAudio_reference),
+      SongImageReference.create(image_reference),
+      SongStreams.create(streams),
       genres,
       artists,
     );
