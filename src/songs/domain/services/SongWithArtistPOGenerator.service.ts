@@ -5,7 +5,7 @@ import { ISongRepository } from '../ISongRepository';
 import { IArtistRepository } from 'src/artists/application/repositories/artist.repository.interface';
 
 export class SongWithArtistPOGeneratorService
-  implements IGenericDomainService<string, SongWithArtistPO>
+  implements IGenericDomainService<string, Promise<SongWithArtistPO>>
 {
   private readonly songRepository: ISongRepository;
   private readonly artistRepository: IArtistRepository;

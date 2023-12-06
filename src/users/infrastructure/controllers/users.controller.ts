@@ -60,7 +60,7 @@ export class UsersController {
       const users = await this.findByPhoneUserService.execute(
         body.phone,
       );
-
+        
       if (users) {
         throw new BadRequestException('Phone already exists!');
         //Manejar excepciones con Optional

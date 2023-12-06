@@ -48,7 +48,6 @@ export class AuthService{
       throw new NotFoundException ("User not found");
       //MANEJAR OPTIONAL
     }
-    
     //generar token
     const payload = {phone: users.value.id,id: users.value.id, name: users.value.name};    
     //permitir al usuario aplicar el login
