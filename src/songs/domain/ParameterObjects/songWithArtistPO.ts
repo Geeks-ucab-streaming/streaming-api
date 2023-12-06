@@ -1,13 +1,13 @@
-import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
-import { SongAudioReference } from './value-objects/SongAudioReference-valueobject';
-import { SongID } from './value-objects/SongID-valueobject';
-import { SongImageReference } from './value-objects/SongImageReference-valueobject';
-import { SongName } from './value-objects/SongName-valueobject';
-import { SongCreationDate } from './value-objects/SongCreationDate-valueobject';
-import { SongDuration } from './value-objects/SongDuration-valueobject';
-import { SongStreams } from './value-objects/SongStreams-valueobject';
+import { Artist } from 'src/artists/domain/artist';
+import { SongAudioReference } from '../value-objects/SongAudioReference-valueobject';
+import { SongCreationDate } from '../value-objects/SongCreationDate-valueobject';
+import { SongDuration } from '../value-objects/SongDuration-valueobject';
+import { SongID } from '../value-objects/SongID-valueobject';
+import { SongImageReference } from '../value-objects/SongImageReference-valueobject';
+import { SongName } from '../value-objects/SongName-valueobject';
+import { SongStreams } from '../value-objects/SongStreams-valueobject';
 
-export class Song {
+export class SongWithArtistPO {
   public id: SongID; //vo
   public name: SongName; //vo
   public duration: SongDuration; //vo
@@ -16,7 +16,7 @@ export class Song {
   public image_reference: SongImageReference; //vo
   public streams: SongStreams;
   public genres: string[];
-  public artists: ArtistID[]; //ArtistID VO
+  public artists: Artist[]; //ArtistID VO
   public songImage: Buffer | null;
 
   get Genres(): string[] {
@@ -32,7 +32,7 @@ export class Song {
     image_reference: SongImageReference,
     streams: SongStreams,
     genres: string[],
-    artists: ArtistID[],
+    artists: Artist[],
   ) {
     this.id = id;
     this.name = name;
@@ -54,9 +54,9 @@ export class Song {
     image_reference: SongImageReference,
     streams: SongStreams,
     genres: string[],
-    artists: ArtistID[],
-  ): Song {
-    return new Song(
+    artists: Artist[],
+  ): SongWithArtistPO {
+    return new SongWithArtistPO(
       id,
       name,
       duration,

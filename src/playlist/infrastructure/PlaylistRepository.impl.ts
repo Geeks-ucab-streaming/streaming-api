@@ -3,19 +3,19 @@ import { IPlaylistRepository } from '../domain/IPlaylistRepository';
 import { Playlist } from '../domain/playlist';
 import { PlaylistEntity } from './entities/playlist.entity';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
-import { PlaylistRequestMapper } from './mappers/playlistRequest.mapper';
+import { PlaylistMapper } from './mappers/playlist.mapper';
 
 export class PlaylistRepository
   extends Repository<PlaylistEntity>
   implements IPlaylistRepository
 {
   private readonly getFileService: GetFileService;
-  private readonly playlistMapper: PlaylistRequestMapper;
+  private readonly playlistMapper: PlaylistMapper;
 
   constructor(dataSource: DataSource, getFileService: GetFileService) {
     super(PlaylistEntity, dataSource.manager);
     this.getFileService = getFileService;
-    this.playlistMapper = new PlaylistRequestMapper();
+    this.playlistMapper = new PlaylistMapper();
   }
 
   async findPlaylistById(id: string): Promise<Playlist> {
