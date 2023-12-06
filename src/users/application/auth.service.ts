@@ -13,6 +13,9 @@ import { userId } from "../domain/userAggregate/value-objects/userId";
 import { UserBirthDate } from "../domain/userAggregate/value-objects/userBirthDate";
 import { UserGender } from "../domain/userAggregate/value-objects/userGender";
 import { userSuscriptionState } from "../domain/userAggregate/entities/userSuscriptionState";
+import { Phone, phoneNumber } from "src/phones/domain/value-objects/phone";
+import { Line } from "src/phones/domain/value-objects/line";
+
 
 @Injectable()
 export class AuthService{
@@ -23,14 +26,16 @@ export class AuthService{
     ){}
 
   async signup(usersDto: CreateUserDto){
-    const phone = await this.phone.execute(new PhoneDto(uuidv4(), usersDto.phone,null));
+    
+    const phone = await this.phone.execute(new Phone(uuidv4(),phoneNumber.create(usersDto.phone),Line.create(uuidv4(),usersDto.phone.toString())));
+    console.log(phone)
     let year = new Date (usersDto.birth_date);
     let usuario = new User(
-      new userId (uuidv4())
-    , new userName(usersDto.name)
-    , new UserBirthDate(year, year.getFullYear())
-    , new UserGender(usersDto.gender)
-    , new userSuscriptionState(usersDto.suscriptionState)
+      userId.create(uuidv4())
+    , userName.create(usersDto.name)
+    , UserBirthDate.create(year, year.getFullYear())
+    ,  UserGender.create(usersDto.gender)
+    , userSuscriptionState.create(usersDto.suscriptionState)
     , phone.Value)
 
     //Crear nuevo usuario y guardarlo

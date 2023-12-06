@@ -15,7 +15,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.service';
 import { PhonesService } from 'src/phones/application/services/phones.service';
 import { CreatePhoneDto } from 'src/phones/application/dtos/create-phone.dto';
-import { Optional } from 'src/common/optional';
 import { User } from 'src/users/domain/userAggregate/user';
 import { Result } from 'src/common/domain/logic/Result';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
@@ -26,6 +25,7 @@ import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefix
 import { JwtService } from '@nestjs/jwt';
 import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
 import { UsersMapper } from '../mappers/User.mapper';
+import { Phone } from 'src/phones/domain/value-objects/phone';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -60,8 +60,8 @@ export class UsersController {
       const users = await this.findByPhoneUserService.execute(
         body.phone,
       );
-        
-      if (users) {
+      console.log(users.value)
+      if (users.value) {
         throw new BadRequestException('Phone already exists!');
         //Manejar excepciones con Optional
       }
@@ -97,9 +97,8 @@ export class UsersController {
   }
   @ApiTags('Users')
   @Post('/users/prueba')
-  async pruebita(@Body() body: CreatePhoneDto) {
+  async pruebita(@Body() body: Phone) {
     const users = await this.phonesService.execute(body);
-    console.log(users)
     return users;
   }
 }

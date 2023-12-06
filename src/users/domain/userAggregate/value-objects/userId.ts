@@ -1,9 +1,13 @@
 import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
 
 export class userId implements IValueObject<userId> {
-
+ 
     private id: string;
-
+    
+    static create(id: string): userId {
+        return new userId(id);
+       }
+   
     constructor(id: string) {
         this.id = id;
     }

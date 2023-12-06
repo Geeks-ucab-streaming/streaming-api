@@ -1,6 +1,9 @@
 import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
 
 export class userName implements IValueObject<userName> {
+  static create(name: string): userName {
+    return new userName(name);
+  }
   private name: string;
 
   constructor(name: string) {

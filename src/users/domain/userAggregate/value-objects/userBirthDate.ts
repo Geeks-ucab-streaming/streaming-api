@@ -3,6 +3,9 @@ import { calculateHowOldYouAre } from "../../services/calculateHowOldYouAre";
 import { calculateHowYoungYouAre } from "../../services/calculateHowYoungYouAre";
 
 export class UserBirthDate implements IValueObject<UserBirthDate> {
+  static create(birth_date: Date, year_birth_date: number): UserBirthDate {
+    return new UserBirthDate(birth_date, year_birth_date);
+  }
 private birthDate: Date;
 
   constructor(birthDate: Date, birthYearUser:number) {  

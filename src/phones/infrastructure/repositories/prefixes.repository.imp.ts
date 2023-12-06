@@ -11,12 +11,12 @@ export class OrmLineRepository extends Repository<PrefixEntity> implements Igene
     
   }
   async finderCriteria(prefix:string): Promise<PrefixEntity> {
-   
-    const prefixito = await this.createQueryBuilder("prefix")
+    console.log(prefix)
+    const phone = await this.createQueryBuilder("prefix")
     .leftJoinAndSelect("prefix.linePhone", "linePhone")
     .where("prefix.prefix = :prefix", { prefix: prefix })
     .getOne();
-    return prefixito 
+    return phone 
   }
 
 }

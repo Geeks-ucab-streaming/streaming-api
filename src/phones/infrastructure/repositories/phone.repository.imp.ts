@@ -16,9 +16,7 @@ export class OrmPhoneRepository extends Repository<PhoneEntity> implements ICrea
   }
   async createPhone(phone: Phone): Promise<Phone> {
     const phoneToOrm = await this.phoneMapper.domainTo(phone);
-    //SE SUPONE QUE SE DEBE HACER UN MAPPER DE PHONE A PHONEENTITY
-    //Y LUEGO GUARDARLO
-    
-    return this.save(phoneToOrm);
+    const phoneCreated = await this.phoneMapper.ToDomain(await this.save(phoneToOrm));
+    return phoneCreated;
   }
 }

@@ -1,4 +1,7 @@
 export class Line {
+  static create(id:string,phone:string): Line {
+    return new Line(id,phone);
+  }
   id: string;
   name: string;
 
