@@ -26,7 +26,11 @@ export class AuthService{
     ){}
 
   async signup(usersDto: CreateUserDto){
-    
+    const users = await this.findByPhoneUserService.execute(usersDto.phone); 
+    console.log(users)
+    if(users.Value){
+      throw new NotFoundException ("User Alredy exists");
+    }
     const phone = await this.phone.execute(new Phone(uuidv4(),phoneNumber.create(usersDto.phone),Line.create(uuidv4(),usersDto.phone.toString())));
     console.log(phone)
     let year = new Date (usersDto.birth_date);

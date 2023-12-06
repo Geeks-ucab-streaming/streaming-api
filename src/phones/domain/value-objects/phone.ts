@@ -23,6 +23,7 @@ export class phoneNumber {
   }
   private _phoneNumber: number;
   constructor(phoneNumber: number) {
+    if(this.isValidOperator(phoneNumber))
     this._phoneNumber = phoneNumber;
   }
   public get phoneNumber(): number {
@@ -30,6 +31,15 @@ export class phoneNumber {
   }
   public async isValidPhoneNumber(phoneNumber: phoneNumber): Promise<boolean> {
     if(this._phoneNumber === phoneNumber._phoneNumber) throw new PhoneRegistedAlredyExceptions();
+    return true;
+  }
+  public async isValidOperator(phoneNumber: number): Promise<boolean> {
+     if (
+      !Object.values(phoneOperatorsEnum).includes(
+        phoneNumber.toString().substring(0, 3) as phoneOperatorsEnum,
+      )
+    )
+      throw new PhoneInvalidExceptions();
     return true;
   }
 }

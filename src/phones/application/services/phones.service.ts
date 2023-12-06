@@ -30,8 +30,6 @@ export class PhonesService implements IApplicationService<Phone,Phone> {
   private readonly valiateisLineValid: ValidateIsLineValidService = new ValidateIsLineValidService(),
   ){}
   async execute(value: Phone): Promise<Result<Phone>> {
-    console.log(value)
-    console.log(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber))
     if(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber)) throw new PhoneInvalidExceptions();
     
     const line = await this.repoLines.finderCriteria(value.phoneNumber.phoneNumber.toString().substring(0, 3));

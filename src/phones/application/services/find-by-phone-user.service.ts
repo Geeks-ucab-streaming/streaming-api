@@ -16,12 +16,7 @@ export class findByPhoneUserService implements IApplicationService<number, User>
   }
 
   async execute(value?: number): Promise<Result<User>> {
-    if (
-      !Object.values(phoneOperatorsEnum).includes(
-        value.toString().substring(0, 3) as phoneOperatorsEnum,
-      )
-    )
-      throw new PhoneInvalidExceptions();
+    
     return Result.success<User>(await this.repo.finderCriteria({ phoneNumber: phoneNumber.create(Number(value)) }));
   }
 } 
