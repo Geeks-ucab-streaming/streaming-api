@@ -19,7 +19,7 @@ export abstract class ApplicationServiceDecorator<D, R>
     this.applicationService = applicationService;
   }
 
-  async execute(dto: D): Promise<Result<R>> {
+  async execute(dto?: D): Promise<Result<R>> {
     return await this.applicationService.execute(dto);
   }
 }

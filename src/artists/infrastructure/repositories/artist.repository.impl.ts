@@ -15,8 +15,16 @@ export class OrmArtistRepository
     super(ArtistEntity, dataSource.manager);
     this.ormArtistMapper = new ArtistsMapper();
   }
-  findAllArtists(): Promise<Artist[]> {
-    throw new Error('Method not implemented.');
+  async findAllArtists(): Promise<Artist[]> {
+    const ormArtist = await this.find();
+    if(!ormArtist) throw new Error('Method not implemented.');
+      const artists: Artist[] = [];
+      for (const item of ormArtist) {
+        const artist = await this.ormArtistMapper.ToDomain(item);
+        artists.push(artist);
+      }
+
+      return artists;
   }
   async findArtistById(id: ArtistID): Promise<Artist> {
     const ormArtist = await this.findOne({ where: { id: id.Id } });
