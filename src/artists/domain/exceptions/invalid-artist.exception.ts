@@ -1,5 +1,5 @@
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 import { ArtistImage } from '../value-objects/artistImage-valueobject';
-
 export class InvalidArtistImageException extends DomainException<ArtistImage> {
   //   public readonly message = 'Invalid Image';
   //   public readonly errorCode: string = 'InvalidArtistImageException';

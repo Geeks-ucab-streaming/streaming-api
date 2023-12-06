@@ -3,14 +3,14 @@ import { Song } from 'src/songs/domain/song';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { SongWithArtistPO } from '../ParameterObjects/songWithArtistPO';
 import { Artist } from 'src/artists/domain/artist';
-import { IArtistRepository } from 'src/artists/application/repositories/artist.repository.interface';
+import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
 
 export class GetSongByIdService
   implements IFindService<String, SongWithArtistPO>
 {
   constructor(
     private readonly songsRepository: ISongRepository,
-    private readonly artistRepository: IArtistRepository,
+    private readonly artistRepository: IArtistsRepository,
   ) {}
 
   async execute(songId: string): Promise<SongWithArtistPO> {
