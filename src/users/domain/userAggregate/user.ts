@@ -1,5 +1,3 @@
-import { PhonesNumber } from "./value-objects/phoneNumber";
-import { PhoneEntity } from "src/phones/infrastructure/phones.entity";
 import { UserBirthDate } from "./value-objects/userBirthDate";
 import { userName } from "./value-objects/userName";
 import { UserGender } from "./value-objects/userGender";

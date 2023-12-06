@@ -26,6 +26,7 @@ import { JwtService } from '@nestjs/jwt';
 import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
 import { UsersMapper } from '../mappers/User.mapper';
 import { Phone } from 'src/phones/domain/value-objects/phone';
+import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -55,22 +56,13 @@ export class UsersController {
   async createUser(@Body() body: CreateUserDto) {
     this.findByPhoneUserService = new findByPhoneUserService(
       this.userRepository,
-    );
-    try {
-      const users = await this.findByPhoneUserService.execute(
-        body.phone,
-      );
-      console.log(users.value)
-      if (users.value) {
-        throw new BadRequestException('Phone already exists!');
-        //Manejar excepciones con Optional
-      }
-      const user = await this.authService.signup(body);
-      return Result.success<User>(users.Value);
-    } catch (error) {
-      console.log(error);
-      return Result.fail<User>(error);
-    }
+    )
+      const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
+      const service= new ErrorApplicationServiceDecorator(
+        new AuthService(this.usersService,this.phonesService,phoneService,this.usersMapper));
+        
+      const result = await service.execute(body);
+      return result; 
   }
 
   @ApiTags('Users')

@@ -26,9 +26,7 @@ export class UsersService {
     userEntity.birth_date = user.birth_date.getBirthDate();
     userEntity.gender = user.gender.getValue(); // Change property name to 'genero'
     userEntity.suscriptionState = user.suscriptionState.getValue(); // Change property name to 'suscriptionState'
-    console.log("El savedUser esta aquí");
     userEntity.phone =  PhoneEntity.create(user.phone.id,user.phone.phoneNumber.phoneNumber,user.phone.linePhone.id) 
-    console.log(userEntity.phone,"en create")
     const savedUser = await this.repo.createUser(user); //Guarda la instancia en la BD.
 
     console.log(savedUser);

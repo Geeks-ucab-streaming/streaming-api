@@ -27,23 +27,23 @@ export class phoneNumber {
   }
   private _phoneNumber: number;
   constructor(phoneNumber: number) {
-    if(this.isValidOperator(phoneNumber))
+    if(!this.isValidOperator(phoneNumber))throw new PhoneInvalidExceptions(this);
     this._phoneNumber = phoneNumber;
   }
   public get phoneNumber(): number {
     return this._phoneNumber;
   }
   public async isValidPhoneNumber(phoneNumber: phoneNumber): Promise<boolean> {
-    if(this._phoneNumber === phoneNumber._phoneNumber) throw new PhoneRegistedAlredyExceptions();
+    if(this._phoneNumber === phoneNumber._phoneNumber) throw new PhoneRegistedAlredyExceptions(this);
     return true;
   }
-  public async isValidOperator(phoneNumber: number): Promise<boolean> {
+  public isValidOperator(phoneNumber: number): boolean {
      if (
       !Object.values(phoneOperatorsEnum).includes(
         phoneNumber.toString().substring(0, 3) as phoneOperatorsEnum,
       )
     )
-      throw new PhoneInvalidExceptions();
+        return false;
     return true;
   }
 }

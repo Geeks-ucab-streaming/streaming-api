@@ -16,7 +16,7 @@ export class findByPhoneUserService implements IApplicationService<number, User>
   }
 
   async execute(value?: number): Promise<Result<User>> {
-    
-    return Result.success<User>(await this.repo.finderCriteria({ phoneNumber: phoneNumber.create(Number(value)) }));
+    const phone = phoneNumber.create(Number(value));
+    return Result.success<User>(await this.repo.finderCriteria({ phoneNumber:  phone  }));
   }
 } 

@@ -14,7 +14,6 @@ import { PrefixEntity } from './prefixes.entity';
 @Entity('Phones')
 export class PhoneEntity  {
   static create(id: string, phoneNumber: number, linePhone: string): PhoneEntity {
-    console.log(linePhone,phoneNumber,id, "en entity")
     const phoneEntity = new PhoneEntity();
     phoneEntity.id = id;
     phoneEntity.phoneNumber = phoneNumber;

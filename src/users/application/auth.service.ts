@@ -15,24 +15,28 @@ import { UserGender } from "../domain/userAggregate/value-objects/userGender";
 import { userSuscriptionState } from "../domain/userAggregate/entities/userSuscriptionState";
 import { Phone, phoneNumber } from "src/phones/domain/value-objects/phone";
 import { Line } from "src/phones/domain/value-objects/line";
+import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
+import { UserAlredyExistsExceptions } from "../domain/exceptions/user-alredy-exists.exception";
 
 
 @Injectable()
-export class AuthService{
+export class AuthService implements IApplicationService<CreateUserDto,void>{
   constructor(private usersService: UsersService, 
     private phone:PhonesService,
-    private findByPhoneUserService: findByPhoneUserService,
+    private findByPhoneUserService: IApplicationService<number, User>,
     private IMapper: Imapper<User,UserEntity>,
     ){}
 
-  async signup(usersDto: CreateUserDto){
+  get name(): string {
+    return this.constructor.name;
+  }
+
+  async execute(usersDto: CreateUserDto){
     const users = await this.findByPhoneUserService.execute(usersDto.phone); 
-    console.log(users)
     if(users.Value){
       throw new NotFoundException ("User Alredy exists");
     }
     const phone = await this.phone.execute( Phone.create(uuidv4(),usersDto.phone,uuidv4(),usersDto.phone.toString().substring(0, 3) ));
-    console.log(phone)
     let year = new Date (usersDto.birth_date);
     let usuario = new User(
       uuidv4()
