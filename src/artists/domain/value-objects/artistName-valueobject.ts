@@ -1,5 +1,6 @@
 import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 import { Result } from 'src/common/domain/logic/Result';
+import { InvalidArtistNameException } from '../exceptions/invalid-artist-name.exception';
 
 export class ArtistName implements IValueObject<ArtistName> {
   private readonly value: string;
@@ -10,7 +11,7 @@ export class ArtistName implements IValueObject<ArtistName> {
     if (value && value.length > 0) {
       this.value = value;
     } else {
-      throw new Error('Name no puede ser vacio');
+      throw new InvalidArtistNameException(this);
     } //Aqui deberiamos crear una excepcion
   }
   public equals(other: ArtistName): boolean {

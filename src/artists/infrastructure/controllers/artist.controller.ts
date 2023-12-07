@@ -18,6 +18,7 @@ import { ErrorApplicationServiceDecorator } from 'src/common/Application/applica
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
 @Controller('artists')
 export class ArtistController {
   private readonly ormArtistMapper: ArtistsMapper;
@@ -30,6 +31,18 @@ export class ArtistController {
     this.ormArtistMapper = new ArtistsMapper();
   }
 
+  @Get()
+  async findAll(): Promise<Result<Artist[]>> {
+    //Creamos el servicio de aplicación.
+    const service = new ErrorApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new GetAllArtistsApplicationService(this.ormArtistRepository),
+        new NestLogger(),
+      ),
+    );
+    const result = await service.execute();
+    return result;
+  }  
   @Get('/:ArtistId')
   async getArtist(@Param('ArtistId') id): Promise<Result<Artist>> {
     const dto: GetArtistProfilesApplicationServiceDto = { id };
