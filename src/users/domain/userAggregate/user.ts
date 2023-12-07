@@ -3,52 +3,58 @@ import { userName } from "./value-objects/userName";
 import { UserGender } from "./value-objects/userGender";
 import { userId } from "./value-objects/userId";
 import { userSuscriptionState } from "./entities/userSuscriptionState";
-import { Phone } from "src/phones/domain/value-objects/phone";
+import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { get } from "http";
 import { AggregateRoot } from "src/common/domain/aggregate-root";
 import { UserCreated } from "./events/user-created";
+import { DomainEvent } from "src/common/domain/Event/domain-event";
 
-export class User /*extends AggregateRoot<userId> */{
-  id: userId;
-  name: userName;
-  birth_date: UserBirthDate;
-  gender: UserGender;
-  suscriptionState: userSuscriptionState;
-  phone: Phone ;
+export class User extends AggregateRoot<userId> {
+  private name: userName;
+  private birth_date: UserBirthDate;
+  private gender: UserGender;
+  private suscriptionState: userSuscriptionState;
+  private phone: Phone ;
 
   //OJO: Evaluar el protected en la definición del constructor
    constructor(id: userId, name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState, phone: Phone) {
     const userCreated = UserCreated.create(id, name, birthDate, gender, suscriptionState, phone);
-    /*super(id, userCreated);*/
+    super(id, userCreated);
   } 
 
   static create(id: userId, name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState, phone: Phone): User {
     return new User(id, name, birthDate, gender, suscriptionState,phone);
   }
   
-  //Getters
-  getId(): userId  {
-    return this.id; 
-  }
-
-  getName(): userName {
+  get Name(): userName {
     return this.name;
   } 
 
-  getBirthDate(): UserBirthDate {
+  get BirthDate(): UserBirthDate {
     return this.birth_date;
   }   
 
-  getGender(): UserGender {
+  get Gender(): UserGender {
     return this.gender;
   }
 
-  getSuscriptionState():userSuscriptionState {
+  get SuscriptionState():userSuscriptionState {
     return this.suscriptionState;
   }
 
-  getPhone(): Phone {
+  get Phone(): Phone {
     return this.phone;
+  }
+
+  
+  //asignando estado
+  protected when(event: DomainEvent): void {
+   console.log(event);
+  }
+
+  //validando estado
+  protected ensureValidState(): void {
+    console.log("Falta este método por implementar");
   }
 
 }

@@ -25,7 +25,7 @@ import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefix
 import { JwtService } from '@nestjs/jwt';
 import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
 import { UsersMapper } from '../mappers/User.mapper';
-import { Phone } from 'src/phones/domain/value-objects/phone';
+import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
 
 @ApiBearerAuth()

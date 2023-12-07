@@ -12,7 +12,7 @@ export class userId implements IValueObject<userId> {
         return new userId(id);
     }
 
-    public getId(): string {
+    public get Id(): string {
         return this.id;
     }
 

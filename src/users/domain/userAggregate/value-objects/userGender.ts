@@ -7,7 +7,7 @@ export class UserGender implements IValueObject<UserGender> {
     this.userGender = userGender;
   }
 
-  public getGender(): string {
+  public get Gender(): string {
     return this.userGender;
   }
 

@@ -14,7 +14,7 @@ export class userName implements IValueObject<userName> {
     return new userName(name);
   }
 
-  public getValue(): string {
+  public get Name(): string {
     return this.name;
   }
 

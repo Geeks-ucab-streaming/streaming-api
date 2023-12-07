@@ -13,7 +13,7 @@ private birthDate: Date;
     this.birthDate = birthDate;
     }
 
-    getBirthDate() {
+    get BirthDate() {
         return this.birthDate;
     }
 

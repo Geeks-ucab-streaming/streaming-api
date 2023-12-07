@@ -2,7 +2,7 @@
 import { Repository } from 'typeorm';
 import { User } from '../domain/userAggregate/user';
 import { UserEntity } from './users.entity';
-import { Phone } from 'src/phones/domain/value-objects/phone';
+import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { IUserRepository } from '../domain/IUserRepository';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { Imapper } from 'src/core/application/IMapper';

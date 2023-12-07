@@ -1,6 +1,6 @@
 
 import { DomainException } from "src/common/domain/exceptions/domain-exception";
-import { Line } from "../value-objects/line";
+import { Line } from "../phoneAggregate/value-objects/line";
 
 export class LineInvalidExceptions extends DomainException<Line> {
     constructor(line: Line) {

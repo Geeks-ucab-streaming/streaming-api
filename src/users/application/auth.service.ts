@@ -13,8 +13,8 @@ import { userId } from "../domain/userAggregate/value-objects/userId";
 import { UserBirthDate } from "../domain/userAggregate/value-objects/userBirthDate";
 import { UserGender } from "../domain/userAggregate/value-objects/userGender";
 import { userSuscriptionState } from "../domain/userAggregate/entities/userSuscriptionState";
-import { Phone, phoneNumber } from "src/phones/domain/value-objects/phone";
-import { Line } from "src/phones/domain/value-objects/line";
+import { Phone, phoneNumber } from "src/phones/domain/phoneAggregate/phone";
+import { Line } from "src/phones/domain/phoneAggregate/value-objects/line";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { UserAlredyExistsExceptions } from "../domain/exceptions/user-alredy-exists.exception";
 
@@ -46,8 +46,6 @@ export class AuthService implements IApplicationService<CreateUserDto,void>{
     , userSuscriptionState.create(usersDto.suscriptionState)
     , phone.Value)
 
-    console.log(usuario);
-
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);
 
@@ -64,7 +62,7 @@ export class AuthService implements IApplicationService<CreateUserDto,void>{
       //MANEJAR OPTIONAL
     }
     //generar token
-    const payload = {phone: users.value.id,id: users.value.id, name: users.value.name};    
+    const payload = {phone: users.value.Id.Id,id: users.value.Id.Id, name: users.value.Name.Name};    
     //permitir al usuario aplicar el login
     return payload;
   }

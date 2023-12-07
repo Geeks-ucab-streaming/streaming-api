@@ -14,12 +14,12 @@ export class UsersMapper implements Imapper<User, UserEntity> {
 
   async domainTo(domainEntity: User): Promise<UserEntity> {
       const ormEntity:UserEntity = new UserEntity();
-      ormEntity.id = domainEntity.id.getId();
-      ormEntity.name = domainEntity.name.getValue();
-      ormEntity.birth_date = domainEntity.birth_date.getBirthDate();
-      ormEntity.gender= domainEntity.gender.getGender();
-      ormEntity.suscriptionState = domainEntity.suscriptionState.getSuscriptionState();
-      ormEntity.phone= await this.mapperPhone.domainTo(domainEntity.phone);
+      ormEntity.id = domainEntity.Id.Id;
+      ormEntity.name = domainEntity.Name.Name;
+      ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
+      ormEntity.gender= domainEntity.Gender.Gender;
+      ormEntity.suscriptionState = domainEntity.SuscriptionState.SuscriptionState
+      ormEntity.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
       return await ormEntity;
   }
 

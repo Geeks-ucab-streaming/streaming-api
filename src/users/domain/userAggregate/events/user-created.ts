@@ -4,7 +4,7 @@ import { userName } from "../value-objects/userName";
 import { UserBirthDate } from "../value-objects/userBirthDate";
 import { UserGender } from "../value-objects/userGender";
 import { userSuscriptionState } from "../entities/userSuscriptionState";
-import { Phone } from "src/phones/domain/value-objects/phone";
+import { Phone } from "src/phones/domain/phoneAggregate/phone";
 
 export class UserCreated extends DomainEvent {
   protected constructor(
