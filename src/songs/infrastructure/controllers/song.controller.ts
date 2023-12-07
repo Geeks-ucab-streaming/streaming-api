@@ -43,6 +43,8 @@ export class SongsController {
     return await this.getSongByIdService.execute(id);
   }
 
+
+  @ApiTags('Songs')  
   @Get('/artist/:artistId')
   findByArtistId(@Param('artistId') id: string): Promise<Song[]> {
     this.findSongsByArtistIdService = new FindSongsByArtistIdService(

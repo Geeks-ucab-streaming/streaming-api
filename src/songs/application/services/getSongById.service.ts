@@ -17,6 +17,7 @@ export class GetSongByIdService
     let creators: Artist[];
     const song: Song = await this.songsRepository.findById(songId);
     let artistsID: string[] = [];
+    console.log(song);
 
     for (const artist of song.Artists) {
       console.log(artist);

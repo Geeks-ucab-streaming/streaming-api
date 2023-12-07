@@ -1,4 +1,4 @@
-import { DataSource, EntityRepository, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { PromotionEntity } from '../entities/promotion.entity';
 import { IPromotionRepository } from '../../domain/IPromotionRepository';
 import { Promotion } from 'src/promotions/domain/promotion';

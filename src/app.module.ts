@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import config from 'ormconfig';
-import { UsersModule } from '../src/users/infrastructure/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PromotionsController } from './promotions/infrastructure/controllers/promotions.controller';
 import { SongsController } from './songs/infrastructure/controllers/song.controller';

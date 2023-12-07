@@ -15,7 +15,12 @@ export class UpdateUserDto{
   @ApiProperty()
   @IsOptional()
   @IsString()
-  genero: string;
+  gender: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  suscriptionState: string;
 
   @ApiProperty()
   @IsOptional()

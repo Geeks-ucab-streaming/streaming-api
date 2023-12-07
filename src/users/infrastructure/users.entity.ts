@@ -27,14 +27,12 @@ export class UserEntity {
   birth_date: Date;
 
   @Column({ type: 'text', nullable: true })
-  @Check(`gender IN ('M', 'F')`)
-  gender: string;
+  @Check(`"suscriptionState" IN ('gratuito', 'premium' ,'vencido' ,'eliminado')`)
+  suscriptionState: string;
 
   @Column({ type: 'text', nullable: true })
-  @Check(
-    `"suscriptionState" IN ('gratuito', 'premium' ,'vencido' ,'eliminado')`,
-  )
-  suscriptionState: string;
+  @Check(`gender IN ('M', 'F')`)
+  gender: string;
 
   @OneToOne(() => PhoneEntity, (phone) => phone.user)
   @JoinColumn()
@@ -62,7 +60,4 @@ export class UserEntity {
   logRemove() {
     console.log('Remove User whit id ', this.id);
   }
-}
-function IN(arg0: string, arg1: string, arg2: string, arg3: string): string {
-  throw new Error('Function not implemented.');
 }

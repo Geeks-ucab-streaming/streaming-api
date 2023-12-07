@@ -1,4 +1,4 @@
-import { DomainException } from "src/common/domain/domain.exceptions";
+import { DomainException } from "src/common/domain/exceptions/domain-exception";
 import { ApplicationServiceDecorator } from "./application.service.decorator";
 import { Result } from "src/common/domain/logic/Result";
 
@@ -6,10 +6,11 @@ import { Result } from "src/common/domain/logic/Result";
 export class ErrorApplicationServiceDecorator<D,R,> extends ApplicationServiceDecorator<D, R> {
   async execute(dto?: D): Promise<Result<R>> {
     try {
-      return await super.execute(dto);
+      const returning = await super.execute(dto);
+      return returning;
     } catch (error) {
-      if (error.constructor.name == 'DomainException') {
-        const domainError: DomainException = error as DomainException;
+      if (error.constructor.name) {
+        const domainError: DomainException<R> = error as DomainException<R>;
         const result = Result.fail<R>(domainError);
         return result;
       } else {

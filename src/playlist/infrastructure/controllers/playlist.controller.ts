@@ -19,7 +19,7 @@ export class PlaylistController {
       new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
     );
   }
-
+  @ApiTags('Playlist')
   @Get('/FindByArtistID/:id')
   findByArtistId(@Param('id') id: string): Promise<Playlist[]> {
     this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
