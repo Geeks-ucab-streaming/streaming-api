@@ -17,18 +17,8 @@ export class UsersService {
   ) {}
 
   async create(user: User) {
-    //Crea una instancia de UserEntity
-    const userEntity = new UserEntity();
-
     //Asigna los valores de la instancia de User a la instancia de UserEntity
-    userEntity.id = user.id.getValue();
-    userEntity.name = user.name.getValue();
-    userEntity.birth_date = user.birth_date.getBirthDate();
-    userEntity.gender = user.gender.getValue(); // Change property name to 'genero'
-    userEntity.suscriptionState = user.suscriptionState.getValue(); // Change property name to 'suscriptionState'
-    userEntity.phone =  PhoneEntity.create(user.phone.id,user.phone.phoneNumber.phoneNumber,user.phone.linePhone.id) 
     const savedUser = await this.repo.createUser(user); //Guarda la instancia en la BD.
-
     console.log(savedUser);
     return savedUser;
   }
