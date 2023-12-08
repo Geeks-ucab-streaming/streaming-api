@@ -31,9 +31,7 @@ export class PlaylistRepository
       .where('playlist.id = :playlistId', { playlistId: id })
       .getOne();
 
-    console.log(playlistResponse);
-
-    const playlist = this.playlistMapper.ToDomain(playlistResponse);
+    const playlist = await this.playlistMapper.ToDomain(playlistResponse);
     return playlist;
   }
   findPlaylistsByArtistId(id: string): Promise<Playlist[]> {

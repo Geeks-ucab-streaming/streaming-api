@@ -21,7 +21,6 @@ export class ArtistsMapper implements Imapper<Artist, ArtistEntity> {
       ArtistName.create(ormEntity.name),
       ArtistImage.create(ormEntity.image_reference),
     );
-    //!PREGUNTAR A DIEGO COMO ASIGNO IMAGEN
     artist.setImage(
       await this.getArtistImageService.execute(artist.ImageReference.Image),
     );

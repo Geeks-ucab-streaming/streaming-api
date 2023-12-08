@@ -43,6 +43,7 @@ export class SongsMapper implements Imapper<Song, SongEntity> {
   }
   private operation(songResponse: SongEntity): ArtistID[] {
     let artists: ArtistID[] = [];
+    console.log(songResponse);
     songResponse.song_artist.map((artist_song) => {
       artists.push(ArtistID.create(artist_song.artist.id));
     });

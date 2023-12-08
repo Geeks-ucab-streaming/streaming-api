@@ -20,7 +20,6 @@ export class PlaylistMapper implements Imapper<Playlist, PlaylistEntity> {
     );
   }
   async ToDomain(ormEntity: PlaylistEntity): Promise<Playlist> {
-    console.log(ormEntity.duration);
     let playlist = Playlist.create(
       ormEntity.id,
       ormEntity.name,

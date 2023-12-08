@@ -50,6 +50,9 @@ export class Playlist {
     }
     return values;
   }
+  public setDuration(duration: number) {
+    this.duration = PlaylistDuration.create(duration);
+  }
   protected constructor(
     id: PlaylistID,
     name: PlaylistName,

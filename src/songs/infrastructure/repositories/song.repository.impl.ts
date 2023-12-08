@@ -14,14 +14,11 @@ export class OrmSongRepository
     this.songMapper = new SongsMapper();
   }
   async findById(id: string): Promise<Song> {
-    console.log(id);
     const songResponse = await this.createQueryBuilder('song')
       .leftJoinAndSelect('song.song_artist', 'song_artist')
       .leftJoinAndSelect('song_artist.artist', 'artist')
       .where('song.id = :id', { id })
       .getOne();
-
-    console.log(songResponse);
 
     const song: Song = await this.songMapper.ToDomain(songResponse);
     return song;
@@ -67,15 +64,11 @@ export class OrmSongRepository
     let values = [];
     subquery.forEach((sub) => values.push(sub.id));
 
-    console.log(values);
-
     const songsResponse = await this.createQueryBuilder('song')
       .innerJoinAndSelect('song.song_artist', 'songArtist')
       .innerJoinAndSelect('songArtist.artist', 'artist')
       .where('song.id IN (:...values)', { values })
       .getMany();
-
-    console.log(songsResponse);
 
     const songs: Promise<Song>[] = [];
     songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
@@ -85,6 +78,8 @@ export class OrmSongRepository
   async findSongsInCollection(ids: string[]): Promise<Song[]> {
     const songsResponse = await this.createQueryBuilder('song')
       .where('song.id IN (:...ids)', { ids })
+      .leftJoinAndSelect('song.song_artist', 'song_artist')
+      .leftJoinAndSelect('song_artist.artist', 'artist')
       .getMany();
 
     const songs: Promise<Song>[] = [];
