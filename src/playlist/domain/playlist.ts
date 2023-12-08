@@ -24,7 +24,7 @@ export class Playlist {
   get Name(): string {
     return this.name.Value;
   }
-  get Duration(): string {
+  get Duration(): number {
     return this.duration.Value;
   }
   get Image_reference(): string {
@@ -73,7 +73,7 @@ export class Playlist {
   public static create(
     id: string,
     name: string,
-    duration: string,
+    duration: number,
     image_reference: string,
     streams: number,
     playlistImage: Buffer,

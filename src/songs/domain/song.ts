@@ -29,7 +29,7 @@ export class Song {
   get Name(): string {
     return this.name.Value;
   }
-  get Duration(): string {
+  get Duration(): number {
     return this.duration.Value;
   }
   get CreationDate(): Date {
@@ -85,7 +85,7 @@ export class Song {
   public static create(
     id: string,
     name: string,
-    duration: string,
+    duration: number,
     creation_date: Date,
     songAudio_reference: string,
     image_reference: string,
