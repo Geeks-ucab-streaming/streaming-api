@@ -1,98 +1,50 @@
-import { DomainException } from "../domain.exceptions";
+import { DomainException } from "../exceptions/domain-exception";
 
+/** Result: Es una clase genérica utilizada para encapsular los resultados obtenidos de los CU.
+ *  @typeParam `T` Tipo parametrizado del resultado encapsulado.*/
 export class Result<T> {
-  public statusCode: number;
-  public message: string;
-  public error: DomainException | string;
-  public value : T;
-  private _value: T;
+  public readonly value?: T;
+  public readonly statusCode?: number;
+  public readonly message?: string;
+  public readonly error?: string;
 
-  public constructor(isSuccess: boolean, error?: DomainException, value?: T) {
-
-      if (error) {
-        console.log(error.httpStatus);
-            this.statusCode = error.errorCode ? error.httpStatus : 500;
-            this.message = error?.message ? error?.message : "Unknown.";
-            this.error = "Internal Domain Error";
-        }
-        else {
-          this.statusCode = 200;
-          this.message = "OK";
-          this.value = value;
-        }
-
-    Object.freeze(this);
-  }
-
-  public getValue(): T {
-    if (this.statusCode !== 200) {
-      console.log(this.error);
-      throw new Error(
-        "No se puede obtener el valor de un resultado de error. Use 'errorValue' en su lugar.",
-      );
+  private constructor(value: T, error: DomainException<T>) {
+    if (error) {
+      console.log(error)
+      this.statusCode = Number(error.httpStatus) || 500;
+      this.message = error?.message ? error?.message : 'Unknown.';
+      this.error = 'Internal Domain Error';
+    } else {
+      this.value = value;
     }
-
-    return this._value;
   }
 
-  public errorValue(): T {
-    return this.error as T;
+  /** Retorna el valor del resultado encapsulado. */
+  get Value(): T {
+    return this.value;
   }
 
-  public static ok<U>(value?: U): Result<U> {
-    return new Result<U>(true, null, value);
+  /** Retorna el error encapsulado. */
+  get Error(): Error {
+    return new Error(this.message);
   }
 
-  public static fail<U>(error: any): Result<U> {
-    return new Result<U>(false, error);
+  /** Retorna `true` si el resultado fue exitoso, en caso contrario `false`. */
+  get IsSuccess(): boolean {
+    return !this.error;
   }
 
-  public static combine(results: Result<any>[]): Result<any> {
-    for (let result of results) {
-      if (result.error) return result;
-    }
-    return Result.ok();
-  }
-}
-
-export type Either<L, A> = Left<L, A> | Right<L, A>;
-
-export class Left<L, A> {
-  readonly value: L;
-
-  constructor(value: L) {
-    this.value = value;
+  /**Crea un objeto result exitoso con su valor.
+   * @param error Excepción encapsulada
+   * @returns Result */
+  static success<T>(value: T): Result<T> {
+    return new Result(value, null);
   }
 
-  isLeft(): this is Left<L, A> {
-    return true;
-  }
-
-  isRight(): this is Right<L, A> {
-    return false;
+  /**Crea un objeto result de falla.
+   * @param error Excepción encapsulada
+   * @returns Result */
+  static fail<T>(error: Error): Result<T> {
+    return new Result<T>(null, error as DomainException<T>);
   }
 }
-
-export class Right<L, A> {
-  readonly value: A;
-
-  constructor(value: A) {
-    this.value = value;
-  }
-
-  isLeft(): this is Left<L, A> {
-    return false;
-  }
-
-  isRight(): this is Right<L, A> {
-    return true;
-  }
-}
-
-export const left = <L, A>(l: L): Either<L, A> => {
-  return new Left(l);
-};
-
-export const right = <L, A>(a: A): Either<L, A> => {
-  return new Right<L, A>(a);
-};

@@ -1,5 +1,5 @@
 export interface IGenericDomainService<T,R> {
-    execute(dto:T): Promise<R>;
+    execute(dto:T): R;
 }
 
 // export class ValidateUserEmailDomainService

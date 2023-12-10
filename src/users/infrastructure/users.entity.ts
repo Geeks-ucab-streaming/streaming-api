@@ -16,7 +16,7 @@ import { StoredEdition } from './storedEdition.entity';
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
 
 @Entity('Users')
-export class UserEntity  {
+export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -25,6 +25,10 @@ export class UserEntity  {
 
   @Column({ type: 'date', nullable: true })
   birth_date: Date;
+
+  @Column({ type: 'text', nullable: true })
+  @Check(`"suscriptionState" IN ('gratuito', 'premium' ,'vencido' ,'eliminado')`)
+  suscriptionState: string;
 
   @Column({ type: 'text', nullable: true })
   @Check(`gender IN ('M', 'F')`)

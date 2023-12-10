@@ -1,30 +1,31 @@
-import { Inject } from '@nestjs/common';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { Song } from 'src/songs/domain/song';
+import { ISongRepository } from 'src/songs/domain/ISongRepository';
+import { SongWithArtistPO } from '../ParameterObjects/songWithArtistPO';
+import { Artist } from 'src/artists/domain/artist';
+import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
 
-export class GetSongByIdService implements IFindService<String, Song> {
+export class GetSongByIdService
+  implements IFindService<String, SongWithArtistPO>
+{
   constructor(
-    @Inject(' IFindGenericRepository')
-    private readonly songsRepository: IFindGenericRepository<Song>,
-    @Inject('GetSongImageService')
-    private readonly getSongImageService: IFindService<string, Buffer>,
+    private readonly songsRepository: ISongRepository,
+    private readonly artistRepository: IArtistsRepository,
   ) {}
 
-  async execute(songId: string): Promise<Song> {
-    // const result = await this.artistRepository.find(id);
-    // const artist = Array.isArray(result) ? result[0] : result;
-    // if (!artist) {
-    //   throw new Error('Artist not found');
-    // }
-    const result = await this.songsRepository.find(songId);
-    const song = Array.isArray(result) ? result[0] : result;
-    if (!song) {
-      throw new Error('Song not found');
+  async execute(songId: string): Promise<SongWithArtistPO> {
+    let creators: Artist[];
+    const song: Song = await this.songsRepository.findById(songId);
+    let artistsID: string[] = [];
+    console.log(song);
+
+    for (const artist of song.Artists) {
+      console.log(artist);
+      artistsID.push(artist);
     }
-    song.songImage = await this.getSongImageService.execute(
-      song.image_reference,
-    );
-    return song;
+    console.log(artistsID);
+    creators = await this.artistRepository.findArtistsInCollection(artistsID);
+
+    return new SongWithArtistPO(song, creators);
   }
 }

@@ -1,39 +1,51 @@
-import { UniqueEntityID } from "src/common/domain/unique-entity-id";
-import { Entity } from 'src/common/domain/Entity/entity';
-import { PromotionImage } from "./promotionImage-valueobject";
-import { Result } from "src/common/domain/logic/Result";
-import { Guard } from "src/common/domain/logic/Guard";
+// import { UniqueEntityID } from 'src/common/domain/unique-entity-id';
+// import { Entity } from 'src/common/domain/Entity/entity';
+// import { PromotionImage } from './promotionImage-valueobject';
+// import { Result } from 'src/common/domain/logic/Result';
+// import { Guard } from 'src/common/domain/logic/Guard';
 
-interface PromotionProps {
-    image_reference: PromotionImage;
-    image: Buffer | null;
-  }
-  export class Promotion extends Entity<PromotionProps> {
-    image_reference: string;
-    image: Buffer | null;
-  
-    get id(): UniqueEntityID {
-      return this._id;
-    }
-    private constructor(props: PromotionProps, id: UniqueEntityID) {
-      super(props, id);
-    }
+// interface PromotionProps {
+//   image_reference: PromotionImage;
+//   image: Buffer | null;
+// }
+// export class Promotion extends Entity<PromotionProps> {
+//   image_reference: string;
+//   image: Buffer | null;
 
-public static create(props: PromotionProps, id?: UniqueEntityID): Result<Promotion> {
-    const guardResult = Guard.againstNullOrUndefinedBulk([
-      { argument: props.image_reference, argumentName: 'image_reference' },
-    ]);
+//   get id(): UniqueEntityID {
+//     return this._id;
+//   }
+//   private constructor(props: PromotionProps, id: UniqueEntityID) {
+//     super(props, id);
+//   }
 
-    if (!guardResult.succeeded) {
-      return Result.fail<Promotion>(guardResult.message);
-    }
+//   public static create(
+//     props: PromotionProps,
+//     id?: UniqueEntityID,
+//   ): Result<Promotion> {
+//     const guardResult = Guard.againstNullOrUndefinedBulk([
+//       { argument: props.image_reference, argumentName: 'image_reference' },
+//     ]);
 
-    const defaultValues: PromotionProps = {
-      ...props,
-      image: props.image ? props.image : null,
-    };
+//     if (!guardResult.succeeded) {
+//       return Result.fail<Promotion>(guardResult.message);
+//     }
 
-    const promotion = new Promotion(defaultValues, id ? id : new UniqueEntityID());
-    return Result.ok<Promotion>(promotion);
-  }
-  }
+//     const defaultValues: PromotionProps = {
+//       ...props,
+//       image: props.image ? props.image : null,
+//     };
+
+//     const promotion = new Promotion(
+//       defaultValues,
+//       id ? id : new UniqueEntityID(),
+//     );
+//     return Result.ok<Promotion>(promotion);
+//   }
+// }
+
+export class Promotion {
+  id: string;
+  image: Buffer | null;
+  image_reference: string;
+}

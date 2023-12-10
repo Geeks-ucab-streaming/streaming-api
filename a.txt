@@ -1,0 +1,44 @@
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0001', 'Laptop HP Pavilion', 'Laptop con pantalla táctil, procesador Intel Core i5 y 8 GB de RAM.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0002', 'Smartphone Samsung Galaxy S21', 'Teléfono inteligente con cámara de alta resolución, pantalla AMOLED y 128 GB de almacenamiento.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0003', 'Cámara DSLR Canon EOS Rebel T7i', 'Cámara digital de alta calidad con sensor CMOS de 24.2 megapíxeles y grabación de video Full HD.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0004', 'Auriculares Inalámbricos Sony WH-1000XM4', 'Auriculares con cancelación de ruido, sonido de alta resolución y batería de larga duración.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0005', 'Tableta Apple iPad Pro', 'Tableta con pantalla Liquid Retina, chip M1 y capacidad de almacenamiento de hasta 1 TB.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0006', 'Monitor Gaming ASUS ROG Swift PG279Q', 'Monitor de juego con resolución QHD, frecuencia de actualización de 165 Hz y tecnología G-SYNC.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0007', 'Impresora 3D Creality Ender 3 V2', 'Impresora 3D de nivel de entrada con volumen de construcción grande y fácil montaje.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0008', 'Teclado Mecánico Corsair K95 RGB Platinum XT', 'Teclado mecánico para juegos con interruptores Cherry MX, retroiluminación RGB y teclas programables.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0009', 'Router Inalámbrico TP-Link Archer AX6000', 'Router de doble banda con Wi-Fi 6, 8 puertos Gigabit y procesador de triple núcleo.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0010', 'Altavoces Bluetooth Bose SoundLink Revolve+', 'Altavoces portátiles con sonido envolvente de 360 grados, resistencia al agua y batería de larga duración.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0011', 'SSD Samsung 970 EVO Plus', 'Unidad de estado sólido NVMe con velocidades de lectura/escritura ultrarrápidas y capacidad de almacenamiento de 1 TB.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0012', 'Tarjeta Gráfica NVIDIA GeForce RTX 3080', 'Tarjeta gráfica de última generación para juegos con trazado de rayos en tiempo real y 10 GB de memoria GDDR6X.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0013', 'Smartwatch Apple Watch Series 7', 'Reloj inteligente con pantalla siempre activa, seguimiento avanzado de la salud y compatibilidad con apps de fitness.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0014', 'Cámara de Seguridad Nest Cam Outdoor', 'Cámara de vigilancia resistente a la intemperie con grabación en 1080p y visión nocturna.');
+
+INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
+VALUES ('0015', 'Television LG OLED C1', 'Televisor OLED 4K con procesador α9 Gen4, Dolby Vision y sonido Dolby Atmos.');
