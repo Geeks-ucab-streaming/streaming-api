@@ -19,7 +19,6 @@ export class UsersService {
   async create(user: User) {
     //Asigna los valores de la instancia de User a la instancia de UserEntity
     const savedUser = await this.repo.createUser(user); //Guarda la instancia en la BD.
-    console.log(savedUser);
     return savedUser;
   }
 

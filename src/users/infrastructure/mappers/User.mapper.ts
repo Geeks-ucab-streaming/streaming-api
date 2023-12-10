@@ -27,11 +27,11 @@ export class UsersMapper implements Imapper<User, UserEntity> {
     let usersDate = new Date(ormEntity.birth_date);
     let user: User =  User.create(
       userId.create(ormEntity.id),
+      await this.mapperPhone.ToDomain(ormEntity.phone),
       userName.create(ormEntity.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
       UserGender.create(ormEntity.gender),
-      userSuscriptionState.create(ormEntity.suscriptionState),
-      await this.mapperPhone.ToDomain(ormEntity.phone)
+      userSuscriptionState.create(ormEntity.suscriptionState)
     );
 
     return Promise.resolve(user);

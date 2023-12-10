@@ -8,12 +8,12 @@ import { Phone } from "src/phones/domain/phoneAggregate/phone";
 
 export class UserCreated extends DomainEvent {
   protected constructor(
-    id: userId,
-    name: userName,
-    birth_date: UserBirthDate,
-    gender: UserGender,
-    suscriptionState: userSuscriptionState,
-    phone: Phone
+    public id: userId,
+    public name: userName,
+    public birth_date: UserBirthDate,
+    public gender: UserGender,
+    public suscriptionState: userSuscriptionState,
+    public phone: Phone
     ) {
     super();
     }

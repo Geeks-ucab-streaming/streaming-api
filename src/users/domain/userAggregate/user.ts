@@ -23,13 +23,12 @@ export class User extends AggregateRoot<userId> {
     super(id, userCreated);
   } 
 
-  static create(id: userId, name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState, phone: Phone): User {
-    return new User(id
-      ,phone
-      ,name
-      ,this.validateRangeBirthDate(birthDate,birthDate.BirthDate.getFullYear())
-      ,gender
-      ,suscriptionState);
+  static create(id: userId, phone: Phone ,name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState): User {
+    return new User(id, phone ,name, birthDate, gender, suscriptionState);
+  }
+
+  public createUser(id: userId, phone: Phone ,name?: userName, birthDate?: UserBirthDate, gender?: UserGender, suscriptionState?: userSuscriptionState) {
+    this.apply(UserCreated.create(id, phone ,name, birthDate, gender, suscriptionState));
   }
   
   get Name(): userName {
@@ -63,10 +62,20 @@ export class User extends AggregateRoot<userId> {
 
   //asignando estado
   protected when(event: DomainEvent): void {
-   console.log(event);
-  }
+    switch (event.constructor) {
+        case UserCreated:
+            const userCreated: UserCreated = event as UserCreated;
+            this.name = userCreated.name;
+            this.birth_date = userCreated.birth_date;
+            this.gender= userCreated.gender;
+            this.suscriptionState = userCreated.suscriptionState;
+            this.phone = userCreated.phone;
+            break;
+        default:
+          throw new Error("Event not implemented.");
+    }
+}
   
-
   //validando estado
   protected ensureValidState(): void {
     console.log("Falta este método por implementar");

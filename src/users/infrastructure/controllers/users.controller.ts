@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   NotFoundException,
-  BadRequestException,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
@@ -14,9 +13,6 @@ import { AuthService } from '../../application/auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.service';
 import { PhonesService } from 'src/phones/application/services/phones.service';
-import { CreatePhoneDto } from 'src/phones/application/dtos/create-phone.dto';
-import { User } from 'src/users/domain/userAggregate/user';
-import { Result } from 'src/common/domain/logic/Result';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { OrmUserRepository } from '../user.repository.impl';
 import { OrmPhoneRepository } from 'src/phones/infrastructure/repositories/phone.repository.imp';
@@ -87,6 +83,7 @@ export class UsersController {
     }
     return user;
   }
+  
   @ApiTags('Users')
   @Post('/users/prueba')
   async pruebita(@Body() body: Phone) {
