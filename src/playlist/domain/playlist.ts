@@ -9,14 +9,50 @@ import { PlaylistStreams } from './value-objects/PlaylistStreams-valueobject';
 import { PlaylistDuration } from './value-objects/PlaylistDuration-valueobject';
 
 export class Playlist {
-  public id: PlaylistID;
-  public name: PlaylistName;
-  public duration: PlaylistDuration;
-  public image_reference: PlaylistImageReference;
-  public playlist_Image: Buffer | null;
-  public streams: PlaylistStreams;
-  public playlistCreator?: ArtistID[];
-  public playlistSong?: SongID[];
+  private id: PlaylistID;
+  private name: PlaylistName;
+  private duration: PlaylistDuration;
+  private image_reference: PlaylistImageReference;
+  private playlist_Image: Buffer | null;
+  private streams: PlaylistStreams;
+  private playlistCreator?: ArtistID[];
+  private playlistSong?: SongID[];
+
+  get Id(): string {
+    return this.id.Value;
+  }
+  get Name(): string {
+    return this.name.Value;
+  }
+  get Duration(): number {
+    return this.duration.Value;
+  }
+  get Image_reference(): string {
+    return this.image_reference.Value;
+  }
+  get Playlist_Image(): Buffer {
+    return this.playlist_Image;
+  }
+  get Streams(): number {
+    return this.streams.Value;
+  }
+  get PlaylistCreator(): string[] {
+    let values: string[] = [];
+    for (const id of this.playlistCreator) {
+      values.push(id.Value);
+    }
+    return values;
+  }
+  get PlaylistSong(): string[] {
+    let values: string[] = [];
+    for (const id of this.playlistSong) {
+      values.push(id.Value);
+    }
+    return values;
+  }
+  public setDuration(duration: number) {
+    this.duration = PlaylistDuration.create(duration);
+  }
   protected constructor(
     id: PlaylistID,
     name: PlaylistName,
@@ -38,21 +74,21 @@ export class Playlist {
   }
 
   public static create(
-    id: PlaylistID,
-    name: PlaylistName,
-    duration: PlaylistDuration,
-    image_reference: PlaylistImageReference,
-    streams: PlaylistStreams,
+    id: string,
+    name: string,
+    duration: number,
+    image_reference: string,
+    streams: number,
     playlistImage: Buffer,
     playlistCreators?: ArtistID[],
     playlistSongs?: SongID[],
   ) {
     return new Playlist(
-      id,
-      name,
-      duration,
-      image_reference,
-      streams,
+      PlaylistID.create(id),
+      PlaylistName.create(name),
+      PlaylistDuration.create(duration),
+      PlaylistImageReference.create(image_reference),
+      PlaylistStreams.create(streams),
       playlistImage,
       playlistCreators,
       playlistSongs,

@@ -3,21 +3,21 @@ import { Result } from 'src/common/domain/logic/Result';
 import { InvalidArtistNameException } from '../exceptions/invalid-artist-name.exception';
 
 export class ArtistName implements IValueObject<ArtistName> {
-  private readonly name: string;
-  get Name(): string {
-    return this.name;
+  private readonly value: string;
+  get Value(): string {
+    return this.value;
   }
-  private constructor(name: string) {
-    if (name && name.length > 0) {
-      this.name = name;
+  private constructor(value: string) {
+    if (value && value.length > 0) {
+      this.value = value;
     } else {
       throw new InvalidArtistNameException(this);
     } //Aqui deberiamos crear una excepcion
   }
   public equals(other: ArtistName): boolean {
-    return this.Name === other.Name;
+    return this.Value === other.Value;
   }
-  public static create(name: string): ArtistName {
-    return new ArtistName(name);
+  public static create(value: string): ArtistName {
+    return new ArtistName(value);
   }
 }
