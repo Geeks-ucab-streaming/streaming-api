@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UsersService } from "./services/users.service";
-import { CreateUserDto } from "./dtos/create-user.dto";
-import { User } from "../domain/userAggregate/user";
+import { UsersService } from "./users.service";
+import { CreateUserDto } from "../dtos/create-user.dto";
+import { User } from "../../domain/userAggregate/user";
 import { v4 as uuidv4 } from 'uuid';
 import { PhonesService } from "src/phones/application/services/phones.service";
 import { Imapper } from "src/core/application/IMapper";
-import { UserEntity } from "../infrastructure/users.entity";
-import { userName } from "../domain/userAggregate/value-objects/userName";
-import { userId } from "../domain/userAggregate/value-objects/userId";
-import { UserBirthDate } from "../domain/userAggregate/value-objects/userBirthDate";
-import { UserGender } from "../domain/userAggregate/value-objects/userGender";
-import { userSuscriptionState } from "../domain/userAggregate/entities/userSuscriptionState";
+import { UserEntity } from "../../infrastructure/entities/users.entity";
+import { userName } from "../../domain/userAggregate/value-objects/userName";
+import { userId } from "../../domain/userAggregate/value-objects/userId";
+import { UserBirthDate } from "../../domain/userAggregate/value-objects/userBirthDate";
+import { UserGender } from "../../domain/userAggregate/value-objects/userGender";
+import { userSuscriptionState } from "../../domain/userAggregate/entities/userSuscriptionState";
 import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 

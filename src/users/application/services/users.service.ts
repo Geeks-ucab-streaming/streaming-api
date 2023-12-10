@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../../infrastructure/users.entity';
+import { UserEntity } from '../../infrastructure/entities/users.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from 'src/users/domain/userAggregate/user';
 import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';

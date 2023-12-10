@@ -1,5 +1,5 @@
 import { User } from "src/users/domain/userAggregate/user";
-import { UserEntity } from "../users.entity";
+import { UserEntity } from "../entities/users.entity";
 import { Imapper } from "src/core/application/IMapper";
 import { userId } from "src/users/domain/userAggregate/value-objects/userId";
 import { userName } from "src/users/domain/userAggregate/value-objects/userName";

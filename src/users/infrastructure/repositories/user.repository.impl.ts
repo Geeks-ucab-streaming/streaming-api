@@ -1,9 +1,9 @@
 
 import { Repository } from 'typeorm';
-import { User } from '../domain/userAggregate/user';
-import { UserEntity } from './users.entity';
+import { User } from '../../domain/userAggregate/user';
+import { UserEntity } from '../entities/users.entity';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
-import { IUserRepository } from '../domain/IUserRepository';
+import { IUserRepository } from '../../domain/IUserRepository';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { Imapper } from 'src/core/application/IMapper';
 import { Result } from 'src/common/domain/logic/Result';

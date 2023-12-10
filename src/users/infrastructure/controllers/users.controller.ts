@@ -9,12 +9,12 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { UsersService } from '../../application/services/users.service';
-import { AuthService } from '../../application/auth.service';
+import { AuthService } from '../../application/services/auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.service';
 import { PhonesService } from 'src/phones/application/services/phones.service';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
-import { OrmUserRepository } from '../user.repository.impl';
+import { OrmUserRepository } from '../repositories/user.repository.impl';
 import { OrmPhoneRepository } from 'src/phones/infrastructure/repositories/phone.repository.imp';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefixes.repository.imp';
