@@ -10,14 +10,16 @@ export class userName implements IValueObject<userName> {
     this.name = name;
   }
 
+  create(name: string): userName {
+    return new userName(name);
+  }
+
   public getValue(): string {
     return this.name;
   }
 
   public equals(username: userName): boolean {
-    return this.name === username.getValue();
+    return this.name === username.name;
   }
-
-  
 
 }

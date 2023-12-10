@@ -4,8 +4,11 @@ import { UserGender } from "./value-objects/userGender";
 import { userId } from "./value-objects/userId";
 import { userSuscriptionState } from "./entities/userSuscriptionState";
 import { Phone } from "src/phones/domain/value-objects/phone";
+import { get } from "http";
+import { AggregateRoot } from "src/common/domain/aggregate-root";
+import { UserCreated } from "./events/user-created";
 
-export class User {
+export class User /*extends AggregateRoot<userId> */{
   id: userId;
   name: userName;
   birth_date: UserBirthDate;
@@ -13,35 +16,39 @@ export class User {
   suscriptionState: userSuscriptionState;
   phone: Phone ;
 
+  //OJO: Evaluar el protected en la definición del constructor
+   constructor(id: userId, name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState, phone: Phone) {
+    const userCreated = UserCreated.create(id, name, birthDate, gender, suscriptionState, phone);
+    /*super(id, userCreated);*/
+  } 
 
-  constructor(
-    id: string,
-    name: string,
-    birth_date: Date,
-    gender: string,
-    suscriptionState: string,
-    phone:  Phone,
-
-  ) {
-    this.id = new userId(id); 
-    this.name = new userName(name);
-    this.birth_date = new UserBirthDate(birth_date, birth_date.getFullYear());
-    this.gender = new UserGender(gender);
-    this.suscriptionState = new userSuscriptionState(suscriptionState);
-    this.phone = phone;
-
+  static create(id: userId, name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState, phone: Phone): User {
+    return new User(id, name, birthDate, gender, suscriptionState,phone);
+  }
+  
+  //Getters
+  getId(): userId  {
+    return this.id; 
   }
 
-  static create(
-    id: string,
-    name: string,
-    birth_date: Date,
-    gender: string,
-    suscriptionState: string,
-    phone:  Phone,
+  getName(): userName {
+    return this.name;
+  } 
 
-  ): User {
-    return new User(
-      id, name, birth_date, gender, suscriptionState, phone);
+  getBirthDate(): UserBirthDate {
+    return this.birth_date;
+  }   
+
+  getGender(): UserGender {
+    return this.gender;
   }
+
+  getSuscriptionState():userSuscriptionState {
+    return this.suscriptionState;
+  }
+
+  getPhone(): Phone {
+    return this.phone;
+  }
+
 }

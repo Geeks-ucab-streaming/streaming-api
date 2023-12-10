@@ -39,12 +39,14 @@ export class AuthService implements IApplicationService<CreateUserDto,void>{
     const phone = await this.phone.execute( Phone.create(uuidv4(),usersDto.phone,uuidv4(),usersDto.phone.toString().substring(0, 3) ));
     let year = new Date (usersDto.birth_date);
     let usuario = new User(
-      uuidv4()
-    , usersDto.name
-    , year
-    ,  usersDto.gender
-    , usersDto.suscriptionState
+      userId.create(uuidv4())
+    , userName.create(usersDto.name)
+    , UserBirthDate.create(year, year.getFullYear())
+    , UserGender.create(usersDto.gender)
+    , userSuscriptionState.create(usersDto.suscriptionState)
     , phone.Value)
+
+    console.log(usuario);
 
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);
