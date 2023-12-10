@@ -17,19 +17,19 @@ export class OrmArtistRepository
   }
   async findAllArtists(): Promise<Artist[]> {
     const ormArtist = await this.find();
-    if(!ormArtist) throw new Error('Method not implemented.');
-      const artists: Artist[] = [];
-      for (const item of ormArtist) {
-        const artist = await this.ormArtistMapper.ToDomain(item);
-        artists.push(artist);
-      }
+    if (!ormArtist) throw new Error('Method not implemented.');
+    const artists: Artist[] = [];
+    for (const item of ormArtist) {
+      const artist = await this.ormArtistMapper.ToDomain(item);
+      artists.push(artist);
+    }
 
-      return artists;
+    return artists;
   }
   async findArtistById(id: ArtistID): Promise<Artist> {
-    const ormArtist = await this.findOne({ where: { id: id.Id } });
-    if(!ormArtist) throw new Error('Method not implemented.');
-    return await this.ormArtistMapper.ToDomain(ormArtist) as Artist;
+    const ormArtist = await this.findOne({ where: { id: id.Value } });
+    if (!ormArtist) throw new Error('Method not implemented.');
+    return (await this.ormArtistMapper.ToDomain(ormArtist)) as Artist;
   }
   async saveAggregate(aggregate: Artist): Promise<void> {
     const ormArtist = await this.ormArtistMapper.domainTo(aggregate);
