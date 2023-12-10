@@ -1,14 +1,14 @@
 import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 
 export class SongCreationDate implements IValueObject<SongCreationDate> {
-  private readonly creationDate: Date;
+  private readonly value: Date;
 
-  public get(): Date {
-    return this.creationDate;
+  get Value(): Date {
+    return this.value;
   }
 
-  private constructor(creationDate: Date) {
-    if (this.checkDate(this.creationDate)) this.creationDate = creationDate;
+  private constructor(value: Date) {
+    if (this.checkDate(this.value)) this.value = value;
     else {
       throw new Error(
         'la fecha de creación no puede ser despues de este momento',
@@ -17,11 +17,11 @@ export class SongCreationDate implements IValueObject<SongCreationDate> {
   }
 
   public equals(other: SongCreationDate): boolean {
-    return this.creationDate === other.creationDate;
+    return this.value === other.value;
   }
 
-  public static create(creationDate: Date): SongCreationDate {
-    return new SongCreationDate(creationDate);
+  public static create(value: Date): SongCreationDate {
+    return new SongCreationDate(value);
   }
 
   private checkDate(date: Date): boolean {

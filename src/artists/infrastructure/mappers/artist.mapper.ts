@@ -15,13 +15,12 @@ export class ArtistsMapper implements Imapper<Artist, ArtistEntity> {
     );
   }
   async ToDomain(ormEntity: ArtistEntity): Promise<Artist> {
-    if(!ormEntity) return null;
+    if (!ormEntity) return null;
     let artist: Artist = Artist.create(
       ArtistID.create(ormEntity.id),
       ArtistName.create(ormEntity.name),
       ArtistImage.create(ormEntity.image_reference),
     );
-    //!PREGUNTAR A DIEGO COMO ASIGNO IMAGEN
     artist.setImage(
       await this.getArtistImageService.execute(artist.ImageReference.Image),
     );
@@ -29,13 +28,12 @@ export class ArtistsMapper implements Imapper<Artist, ArtistEntity> {
   }
 
   async domainTo(domainEntity: Artist): Promise<ArtistEntity> {
-    if(!domainEntity) return null;
+    if (!domainEntity) return null;
     let artistEntity: ArtistEntity = await ArtistEntity.create(
-      domainEntity.Id.Id,
-      domainEntity.Name.Name,
+      domainEntity.Id.Value,
+      domainEntity.Name.Value,
       domainEntity.ImageReference.Image,
     );
     return artistEntity;
-
   }
 }

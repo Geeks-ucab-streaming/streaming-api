@@ -4,27 +4,27 @@ import { Result } from 'src/common/domain/logic/Result';
 export class PlaylistImageReference
   implements IValueObject<PlaylistImageReference>
 {
-  private readonly imageReference: string;
+  private readonly value: string;
 
-  public get(): string {
-    return this.imageReference;
+  get Value(): string {
+    return this.value;
   }
 
-  private constructor(imageReference: string) {
-    if (this.checkReference(imageReference))
-      if (imageReference && imageReference.length > 0) {
-        this.imageReference = imageReference.toLocaleLowerCase();
+  private constructor(value: string) {
+    if (this.checkReference(value))
+      if (value && value.length > 0) {
+        this.value = value.toLocaleLowerCase();
       } else {
         throw new Error('ImageReference no puede ser vacio');
       } //Aqui deberiamos crear una excepcion
   }
 
   public equals(other: PlaylistImageReference): boolean {
-    return this.imageReference === other.imageReference;
+    return this.value === other.value;
   }
 
-  public static create(imageReference: string): PlaylistImageReference {
-    return new PlaylistImageReference(imageReference);
+  public static create(value: string): PlaylistImageReference {
+    return new PlaylistImageReference(value);
   }
 
   private checkReference(reference: string): boolean {
