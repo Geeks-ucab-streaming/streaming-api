@@ -5,27 +5,23 @@ import {
   Get,
   Param,
   NotFoundException,
-  BadRequestException,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { UsersService } from '../../application/services/users.service';
-import { AuthService } from '../../application/auth.service';
+import { AuthService } from '../../application/services/auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.service';
 import { PhonesService } from 'src/phones/application/services/phones.service';
-import { CreatePhoneDto } from 'src/phones/application/dtos/create-phone.dto';
-import { User } from 'src/users/domain/userAggregate/user';
-import { Result } from 'src/common/domain/logic/Result';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
-import { OrmUserRepository } from '../user.repository.impl';
+import { OrmUserRepository } from '../repositories/user.repository.impl';
 import { OrmPhoneRepository } from 'src/phones/infrastructure/repositories/phone.repository.imp';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefixes.repository.imp';
 import { JwtService } from '@nestjs/jwt';
 import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
 import { UsersMapper } from '../mappers/User.mapper';
-import { Phone } from 'src/phones/domain/value-objects/phone';
+import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
 
 @ApiBearerAuth()
@@ -87,6 +83,7 @@ export class UsersController {
     }
     return user;
   }
+  
   @ApiTags('Users')
   @Post('/users/prueba')
   async pruebita(@Body() body: Phone) {

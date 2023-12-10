@@ -7,8 +7,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { LineEntity } from './lines.entity';
-import { UserEntity } from '../../users/infrastructure/users.entity';
-import { Line } from '../domain/value-objects/line';
+import { UserEntity } from '../../users/infrastructure/entities/users.entity';
+import { Line } from '../domain/phoneAggregate/value-objects/line';
 import { PrefixEntity } from './prefixes.entity';
 
 @Entity('Phones')

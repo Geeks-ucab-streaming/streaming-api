@@ -11,11 +11,11 @@ export class userSuscriptionState {
         this.suscriptionState = suscriptionState;
     }
 
-    public getSuscriptionState(): string {
+    public get SuscriptionState(): string {
         return this.suscriptionState;
     }
 
-    public setSuscriptionState(suscriptionState: string) { 
+    public set SuscriptionState(suscriptionState: string) { 
         this.suscriptionState = suscriptionState;
     }
 

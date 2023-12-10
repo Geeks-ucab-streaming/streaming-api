@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../../infrastructure/users.entity';
+import { UserEntity } from '../../infrastructure/entities/users.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from 'src/users/domain/userAggregate/user';
 import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
@@ -19,7 +19,6 @@ export class UsersService {
   async create(user: User) {
     //Asigna los valores de la instancia de User a la instancia de UserEntity
     const savedUser = await this.repo.createUser(user); //Guarda la instancia en la BD.
-    console.log(savedUser);
     return savedUser;
   }
 

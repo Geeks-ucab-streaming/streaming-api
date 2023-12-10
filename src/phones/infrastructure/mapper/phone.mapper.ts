@@ -1,5 +1,5 @@
 import { Imapper } from "src/core/application/IMapper";
-import { Phone, phoneNumber } from "src/phones/domain/value-objects/phone";
+import { Phone, phoneNumber } from "src/phones/domain/phoneAggregate/phone";
 import { PhoneEntity } from "../phones.entity";
 
 export class phoneMapper implements Imapper<Phone,PhoneEntity> {

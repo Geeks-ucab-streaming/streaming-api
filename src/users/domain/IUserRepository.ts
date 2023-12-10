@@ -1,4 +1,4 @@
-import { Phone } from 'src/phones/domain/value-objects/phone';
+import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { User } from './userAggregate/user';
 import { Result } from 'src/common/domain/logic/Result';
 export interface IUserRepository {
