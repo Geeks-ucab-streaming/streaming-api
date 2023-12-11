@@ -9,7 +9,6 @@ import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton
 import { ApiTags } from '@nestjs/swagger';
 import { GetSongBPlaylistIdService } from 'src/songs/application/services/getSongsByPlaylistId.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
-import { SongWithArtistPO } from 'src/songs/application/ParameterObjects/songWithArtistPO';
 
 @Controller('songs')
 export class SongsController {
@@ -35,16 +34,13 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<SongWithArtistPO> {
-    this.getSongByIdService = new GetSongByIdService(
-      this.ormSongRepository,
-      this.ormArtistRepository,
-    );
-    return await this.getSongByIdService.execute(id);
+  async findById(@Param('id') id: string): Promise<Song> {
+    this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
+    const song: Song = await this.getSongByIdService.execute(id);
+    return song;
   }
 
-
-  @ApiTags('Songs')  
+  @ApiTags('Songs')
   @Get('/artist/:artistId')
   findByArtistId(@Param('artistId') id: string): Promise<Song[]> {
     this.findSongsByArtistIdService = new FindSongsByArtistIdService(
