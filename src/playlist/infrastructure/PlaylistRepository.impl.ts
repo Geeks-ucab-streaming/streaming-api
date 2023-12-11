@@ -15,8 +15,23 @@ export class PlaylistRepository
     super(PlaylistEntity, dataSource.manager);
     this.playlistMapper = new PlaylistMapper();
   }
-  findTopPlaylists(): Promise<Playlist[]> {
-    throw new Error('Method not implemented.');
+  async findTopPlaylists(): Promise<Playlist[]> {
+    let playlists: Playlist[] = [];
+    const playlistsResponse: PlaylistEntity[] = await this.createQueryBuilder(
+      'playlist',
+    )
+      .leftJoinAndSelect('playlist.playlistSong', 'playlistSong')
+      .leftJoinAndSelect('playlistSong.song', 'song')
+      .where('playlist.isAlbum = :isAlbum', { isAlbum: false })
+      .orderBy('playlist.reproductions')
+      .getMany();
+
+    console.log(playlistsResponse);
+
+    for (const playlist of playlistsResponse) {
+      playlists.push(await this.playlistMapper.ToDomain(playlist));
+    }
+    return playlists;
   }
 
   async findPlaylistById(id: string): Promise<Playlist> {
@@ -31,8 +46,6 @@ export class PlaylistRepository
       .leftJoinAndSelect('songArtist.artist', 'artist2')
       .where('playlist.id = :playlistId', { playlistId: id })
       .getOne();
-
-    console.log(playlistResponse);
 
     const playlist = await this.playlistMapper.ToDomain(playlistResponse);
     return playlist;

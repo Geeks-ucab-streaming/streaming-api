@@ -15,7 +15,7 @@ export class PlaylistMapper implements Imapper<Playlist, PlaylistEntity> {
   }
   async ToDomain(ormEntity: PlaylistEntity): Promise<Playlist> {
     let artists: ArtistID[] = [];
-    if (!ormEntity.isAlbum) artists = await this.getPlaylistArtists(ormEntity);
+    if (ormEntity.isAlbum) artists = await this.getPlaylistArtists(ormEntity);
     let playlist = Playlist.create(
       ormEntity.id,
       ormEntity.name,
