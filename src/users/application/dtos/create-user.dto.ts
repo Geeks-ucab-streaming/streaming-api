@@ -12,9 +12,13 @@ export class CreateUserDto {
 
   @IsString()
   @ApiProperty()
-  genero: string;
+  gender: string;
+
+  @IsString()
+  @ApiProperty()
+  suscriptionState: string; 
 
   @IsNumber()
   @ApiProperty()
-  phonesNumber: number;
+  phone: number;
 }

@@ -1,33 +1,51 @@
+
 import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../domain/user'; 
-import { UserEntity } from './users.entity'; 
-import { PhonesNumber } from '../domain/value-objects/phoneNumber';
-import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
-import { Phone } from 'src/phones/domain/phone';
+import { User } from '../domain/userAggregate/user';
+import { UserEntity } from './users.entity';
+import { Phone } from 'src/phones/domain/value-objects/phone';
+import { IUserRepository } from '../domain/IUserRepository';
+import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { Imapper } from 'src/core/application/IMapper';
+import { Result } from 'src/common/domain/logic/Result';
 
-export class UserRepository implements  IgenericRepo<Phone,User> {
-    constructor(
-        @InjectRepository(UserEntity)
-        private readonly repository: Repository<User>,
-    ) {}    
-    findById(id: string): Promise<User> {
-        throw new Error('Method not implemented.');
-    }
+export class OrmUserRepository
+extends Repository<UserEntity>
+  implements IUserRepository
+{
 
-    async findAll(): Promise<User[]> {
-        return this.repository.find();
-    }
+  userMapper: Imapper<User,UserEntity>
 
-    async finderCriteria(criteria: Partial<Phone>): Promise<User | undefined> {
+  constructor(userMapper:Imapper<User,UserEntity>) {
+    super(UserEntity, DataSourceSingleton.getInstance().manager)
+    this.userMapper = userMapper;
+  }
 
-        const user = this.repository.createQueryBuilder('user')
-        .innerJoinAndSelect('user.phone', 'phone')
-        .where('phone.phoneNumber = :phoneNumber', { phoneNumber: criteria.phoneNumber })
-        .getOne(); 
-        //RECORDAR QUE SE DEBE TRASLADAR DE ALGUNA MANERA EL RESULTADO DE LA CONSULTA A LA ENTIDAD USER Y PHONENUMBER COMO VO 
+  async createUser(user: User): Promise<Result<void>> {  
+  const createdUser = await this.userMapper.domainTo(user);
+    await this.save(createdUser);
+    return Result.success<void>(void 0);
+  }
 
-        return user
-    }
-    
+  findById(id: string): Promise<User> {
+    return this.findById(id);
+  }
+
+  async findAll(): Promise<User[]> {
+    // return await this.find();
+    return;
+  }
+
+  async finderCriteria(criteria: Partial<Phone>): Promise<User | undefined> {
+    const user = await this.createQueryBuilder('user')
+      .innerJoinAndSelect('user.phone', 'phone')
+      .where('phone.phoneNumber = :phoneNumber', {
+        phoneNumber: criteria.phoneNumber.phoneNumber,
+      })
+      .getOne();
+    //! HAY QUE IMPLEMENTAR LOS MAPPERS PARA PASAR DE ENTITY A CLASE DE DOMINIO
+    //RECORDAR QUE SE DEBE TRASLADAR DE ALGUNA MANERA EL RESULTADO DE LA CONSULTA A LA ENTIDAD USER Y PHONENUMBER COMO VO
+
+    // return user;
+    return;
+  }
 }

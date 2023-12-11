@@ -1,24 +1,95 @@
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
+import { DataSource, EntityRepository, Repository } from 'typeorm';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
-import { Inject } from '@nestjs/common';
-import { Factory } from 'src/common/domain/icreator.interface';
+import { ISongRepository } from 'src/songs/domain/ISongRepository';
+import { SongsMapper } from '../mappers/Song.mapper';
 
-export class SongRepository implements IFindGenericRepository<Song> {
-  constructor(
-    @InjectRepository(SongEntity)
-    private readonly repository: Repository<SongEntity>,
-    @Inject('SongFactory')
-    private readonly songFactory: Factory<SongEntity, Song>,
-  ) {}
+export class OrmSongRepository
+  extends Repository<SongEntity>
+  implements ISongRepository
+{
+  private readonly songMapper: SongsMapper;
+  constructor(dataSource: DataSource) {
+    super(SongEntity, dataSource.manager);
+    this.songMapper = new SongsMapper();
+  }
+  async findById(id: string): Promise<Song> {
+    console.log(id);
+    const songResponse = await this.createQueryBuilder('song')
+      .leftJoinAndSelect('song.song_artist', 'song_artist')
+      .leftJoinAndSelect('song_artist.artist', 'artist')
+      .where('song.id = :id', { id })
+      .getOne();
 
-  async find(id: string): Promise<Song> {
-    const songResponse = await this.repository.findOne({
-      where: { id },
-      relations: ['song_artist.artist'],
-    });
-    return this.songFactory.factoryMethod(songResponse);
+    console.log(songResponse);
+
+    const song: Song = await this.songMapper.ToDomain(songResponse);
+    return song;
+  }
+  async findByArtistId(artistId: string): Promise<Song[]> {
+    const subquery = await this.createQueryBuilder('song')
+      .innerJoin(
+        'song.song_artist',
+        'songArtist',
+        'song.id = songArtist.songId',
+      )
+      .innerJoin('Artists', 'a', 'a.id = songArtist.artistId')
+      .where('a.id = :artistId', { artistId })
+      .select('song.id')
+      .getMany();
+
+    let values = [];
+    subquery.forEach((sub) => values.push(sub.id));
+
+    const songsResponse = await this.createQueryBuilder('song')
+      .innerJoinAndSelect('song.song_artist', 'songArtist')
+      .innerJoinAndSelect('songArtist.artist', 'artist')
+      .where('song.id IN (:...values)', { values })
+      .getMany();
+
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
+
+    return await Promise.all(songs);
+  }
+  async findByPlaylistId(playlistId: string): Promise<Song[]> {
+    const subquery = await this.createQueryBuilder('song')
+      .innerJoin(
+        'song.playlistSong',
+        'playlistSong',
+        'song.id = playlistSong.song',
+      )
+      .innerJoin('Playlists', 'p', 'p.id = playlistSong.playlist')
+      .where('p.id = :playlistId', { playlistId })
+      .select('song.id')
+      .getMany();
+
+    let values = [];
+    subquery.forEach((sub) => values.push(sub.id));
+
+    console.log(values);
+
+    const songsResponse = await this.createQueryBuilder('song')
+      .innerJoinAndSelect('song.song_artist', 'songArtist')
+      .innerJoinAndSelect('songArtist.artist', 'artist')
+      .where('song.id IN (:...values)', { values })
+      .getMany();
+
+    console.log(songsResponse);
+
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
+    return await Promise.all(songs);
+  }
+
+  async findSongsInCollection(ids: string[]): Promise<Song[]> {
+    const songsResponse = await this.createQueryBuilder('song')
+      .where('song.id IN (:...ids)', { ids })
+      .getMany();
+
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
+
+    return Promise.all(songs);
   }
 }
