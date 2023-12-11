@@ -12,7 +12,6 @@ export class Phone {
     this.id = id;
     this.phoneNumber = phoneNumber;
     this.linePhone = line;
-  
   }
 
   static create(id: string, _phoneNumber:  number, id_line:string,line: string): Phone {
