@@ -1,27 +1,25 @@
-import { Phone } from "src/phones/domain/phone";
-import { PhonesNumber } from "./value-objects/phoneNumber";
-import { PhoneEntity } from "src/phones/infrastructure/phones.entity";
+
+import { Phone } from "src/phones/domain/value-objects/phone";
+
 export class User {
   id: string;
   name: string;
   birth_date: Date;
   genero: string;
-  phonesNumber: PhonesNumber ;
-  phone: PhoneEntity;
+  phonesNumber: Phone ;
+
 
   constructor(
     id: string,
     name: string,
     birth_date: Date,
     genero: string,
-    phonesNumber:  PhonesNumber,
-    phone: PhoneEntity,
+    phonesNumber:  Phone,
   ) {
     this.id = id;
     this.name = name;
     this.birth_date = birth_date;
     this.genero = genero;
     this.phonesNumber = phonesNumber;
-    this.phone = phone;
   }
 }

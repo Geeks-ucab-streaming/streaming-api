@@ -1,4 +1,4 @@
-import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
+/*import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -28,4 +28,4 @@ export class ArtistEntity {
     artist.image_reference = image_reference;
     return artist;
   }
-}
+}*/

@@ -1,29 +1,46 @@
-import { Inject, Injectable } from '@nestjs/common';
+/*import { Inject, Injectable } from '@nestjs/common';
 import { PhoneDto } from "../dtos/phone.dto";
 import { IFindService } from 'src/common/domain/ifind.service';
-import { Phone } from 'src/phones/domain/phone';
-import { ICreateRepository } from 'src/phones/domain/generic-repo-phones';
-import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
-import { User } from 'src/users/domain/user';
+import { Phone } from 'src/phones/domain/value-objects/phone';
+import { ICreateRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
+//ESTO DEBERIA SER UNA INTERFAZ Y NO USAR LA LIBRERIA DIRECTAMENTE
 import {v4 as uuidv4} from 'uuid';
 import { LineEntity } from 'src/phones/infrastructure/lines.entity';
 import { CreatePhoneDto } from '../dtos/create-phone.dto';
+import { PrefixEntity } from 'src/phones/infrastructure/prefixes.entity';
+import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
+import { ValidateIsUsableOperatorService } from 'src/phones/domain/services/validate-is-usable-operator.domain.service';
+import { ValidateIsLineValidService } from 'src/phones/domain/services/validate-line-valid.domain.service';
+import { LineInvalidExceptions } from 'src/phones/domain/exceptions/line-not-valid.exception';
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { Result } from 'src/common/domain/logic/Result';
 
 
-@Injectable()
-export class PhonesService implements IFindService<PhoneDto,PhoneEntity> {
 
-  //InjectRepository(): Le decimos al sistema de DI que necesitamos usar el reporistorio de "Teléfono".
-  //DI usa esta notación (Repository<Phone>) para averiguar cuál instancia necesita "inyectar" a esta clase en tiempo de ejecución.
-  //Se usa el decorador porque Repository<PhoneDto> tiene un parámetro genérico
-  constructor( @Inject('ICreateRepository')
-  private readonly repo:ICreateRepository<Phone>
+export class PhonesService implements IApplicationService<PhoneDto,Phone> {
+  get name(): string {
+    return this.constructor.name;
+  }
+
+  constructor( 
+  private readonly repo:ICreateRepository<Phone>,
+  private readonly repoLines :IgenericRepo <string,PrefixEntity>,
+  private readonly valiateisUsableOperator: ValidateIsUsableOperatorService = new ValidateIsUsableOperatorService(),
+  private readonly valiateisLineValid: ValidateIsLineValidService = new ValidateIsLineValidService(),
   ){}
-  execute(value?: CreatePhoneDto): Promise<PhoneEntity> {
-    const phone = new Phone(uuidv4(),value.phoneNumber) as PhoneEntity;
-    phone.linePhone = new LineEntity();
-    return this.repo.create(phone) as Promise<PhoneEntity>;
+  async execute(value: CreatePhoneDto): Promise<Result<Phone>> {
+    console.log(value)
+    console.log(!this.valiateisUsableOperator.execute(value.phoneNumber))
+    if(!this.valiateisUsableOperator.execute(value.phoneNumber)) throw new PhoneInvalidExceptions();
+    
+    const line = await this.repoLines.finderCriteria(value.phoneNumber.toString().substring(0, 3));
+    
+    if(!this.valiateisLineValid.execute(line.linePhone)) throw new LineInvalidExceptions();
+
+    const phone = new Phone(uuidv4(),value.phoneNumber,line.linePhone);
+    return Result.success<Phone>(await this.repo.createPhone(phone));
   }
 
 }
 
+*/

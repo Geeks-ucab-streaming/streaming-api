@@ -1,2 +1,4 @@
 {
+    "vscode-postgres.defaultConnection": "bd-soundspace-desarrollo.postgres.database.azure.com",
+    "vscode-postgres.defaultDatabase": "geeks_admin"
 }

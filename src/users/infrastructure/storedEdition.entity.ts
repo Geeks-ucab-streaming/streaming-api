@@ -1,4 +1,4 @@
-//Decoradores
+/*//Decoradores
 import {
   Entity,
   Column,
@@ -29,3 +29,4 @@ export class StoredEdition {
   @ManyToOne(() => UserEntity, (user) => user.edition) //Se hace el cambio en la tabla de reportes por este decorador
   user: UserEntity;
 }
+*/

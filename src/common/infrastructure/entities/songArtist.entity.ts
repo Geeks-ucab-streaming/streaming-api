@@ -1,4 +1,4 @@
-import { ArtistEntity } from 'src/artists/infrastructure/entities/artist.entity';
+/*import { ArtistEntity } from 'src/artists/infrastructure/entities/artist.entity';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -13,3 +13,4 @@ export class SongArtist {
   @ManyToOne(() => ArtistEntity, (artist) => artist.song_artist)
   artist: ArtistEntity;
 }
+*/

@@ -1,4 +1,4 @@
-import {
+/*import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
@@ -22,3 +22,4 @@ export class PhoneEntity  {
   @OneToOne(() => UserEntity, (user) => user.phone)
   user: UserEntity;
 }
+*/

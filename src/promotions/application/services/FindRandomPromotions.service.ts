@@ -1,26 +1,21 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { IFindGenericRepository } from "src/common/domain/generic.repository";
-import { IFindService } from "src/common/domain/ifind.service";
-import { Promotion } from "src/promotions/domain/promotion";
+import { IPromotionRepository } from "src/promotions/domain/IPromotionRepository";
+import { Promotion } from "src/promotions/domain/promotionAqqregate/promotion";
 
-@Injectable()
 export class FindRandomPromotionsService {
     constructor(
-        @Inject('IFindGenericRepository')
-        private readonly promotionRepository: IFindGenericRepository<Promotion>,
-        @Inject('getPromotionImageService')
-        private readonly getFileService: IFindService<string, Buffer>,
+        private readonly promotionRepository: IPromotionRepository // Asegúrate de reemplazar FileService con el nombre real del servicio que estás utilizando
       ) {}
 
-    async execute(): Promise<string> {
-        const promotions = await this.promotionRepository.findr();
+    async execute(): Promise<Promotion> {
+        const allPromotions : Promotion[] = await this.promotionRepository.findAllpromotion();
 
-        if (promotions.length === 0) {
-            throw new Error('No hay promociones disponibles');
+        if (allPromotions.length === 0) {
+          throw new Error('No promotions found');
         }
-
-        const randomIndex = Math.floor(Math.random() * promotions.length);
-
-        return promotions[randomIndex].id.toString();
+      
+        const randomIndex = Math.floor(Math.random() * allPromotions.length);
+        const randomPromotion = allPromotions[randomIndex];
+      
+        return randomPromotion;
     }
 }
