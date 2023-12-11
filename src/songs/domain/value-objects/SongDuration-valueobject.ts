@@ -1,29 +1,29 @@
 import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 
 export class SongDuration implements IValueObject<SongDuration> {
-  private readonly duration: string;
+  private readonly value: number;
 
-  public get(): string {
-    return this.duration;
+  get Value(): number {
+    return this.value;
   }
 
-  private constructor(duration: string) {
-    if (this.checkDuration(duration)) this.duration = duration;
+  private constructor(value: number) {
+    if (this.checkDuration(value)) this.value = value;
     else {
       throw new Error('la duración no puede ser despues de este momento');
     } //Aqui deberiamos crear una excepcion
   }
 
   public equals(other: SongDuration): boolean {
-    return this.duration === other.duration;
+    return this.value === other.value;
   }
 
-  public static create(duration: string): SongDuration {
-    return new SongDuration(duration);
+  public static create(value: number): SongDuration {
+    return new SongDuration(value);
   }
 
-  private checkDuration(duration: string): boolean {
-    const regex = /^[0-5]?[0-9]:[0-5][0-9]$/;
-    return regex.test(duration);
+  private checkDuration(value: number): boolean {
+    console.log(value);
+    return value > 0;
   }
 }

@@ -1,22 +1,18 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UsersService } from "./services/users.service";
-import { CreateUserDto } from "./dtos/create-user.dto";
-import { User } from "../domain/userAggregate/user";
+import { UsersService } from "./users.service";
+import { CreateUserDto } from "../dtos/create-user.dto";
+import { User } from "../../domain/userAggregate/user";
 import { v4 as uuidv4 } from 'uuid';
 import { PhonesService } from "src/phones/application/services/phones.service";
-import { PhoneDto } from "src/phones/application/dtos/phone.dto";
-import { findByPhoneUserService } from "src/phones/application/services/find-by-phone-user.service";
 import { Imapper } from "src/core/application/IMapper";
-import { UserEntity } from "../infrastructure/users.entity";
-import { userName } from "../domain/userAggregate/value-objects/userName";
-import { userId } from "../domain/userAggregate/value-objects/userId";
-import { UserBirthDate } from "../domain/userAggregate/value-objects/userBirthDate";
-import { UserGender } from "../domain/userAggregate/value-objects/userGender";
-import { userSuscriptionState } from "../domain/userAggregate/entities/userSuscriptionState";
-import { Phone, phoneNumber } from "src/phones/domain/value-objects/phone";
-import { Line } from "src/phones/domain/value-objects/line";
+import { UserEntity } from "../../infrastructure/entities/users.entity";
+import { userName } from "../../domain/userAggregate/value-objects/userName";
+import { userId } from "../../domain/userAggregate/value-objects/userId";
+import { UserBirthDate } from "../../domain/userAggregate/value-objects/userBirthDate";
+import { UserGender } from "../../domain/userAggregate/value-objects/userGender";
+import { userSuscriptionState } from "../../domain/userAggregate/entities/userSuscriptionState";
+import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
-import { UserAlredyExistsExceptions } from "../domain/exceptions/user-alredy-exists.exception";
 
 
 @Injectable()
@@ -39,12 +35,13 @@ export class AuthService implements IApplicationService<CreateUserDto,void>{
     const phone = await this.phone.execute( Phone.create(uuidv4(),usersDto.phone,uuidv4(),usersDto.phone.toString().substring(0, 3) ));
     let year = new Date (usersDto.birth_date);
     let usuario = new User(
-      uuidv4()
-    , usersDto.name
-    , year
-    ,  usersDto.gender
-    , usersDto.suscriptionState
-    , phone.Value)
+      userId.create(uuidv4())
+    , phone.Value
+    , userName.create(usersDto.name)
+    , UserBirthDate.create(year, year.getFullYear())
+    , UserGender.create(usersDto.gender)
+    , userSuscriptionState.create(usersDto.suscriptionState)
+     )
 
     //Crear nuevo usuario y guardarlo
     const user = await this.usersService.create(usuario);
@@ -62,7 +59,7 @@ export class AuthService implements IApplicationService<CreateUserDto,void>{
       //MANEJAR OPTIONAL
     }
     //generar token
-    const payload = {phone: users.value.id,id: users.value.id, name: users.value.name};    
+    const payload = {phone: users.value.Id.Id,id: users.value.Id.Id, name: users.value.Name.Name};    
     //permitir al usuario aplicar el login
     return payload;
   }

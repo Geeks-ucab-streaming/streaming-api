@@ -1,27 +1,27 @@
 import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 
 export class SongAudioReference implements IValueObject<SongAudioReference> {
-  private readonly audioReference: string;
+  private readonly value: string;
 
-  public get(): string {
-    return this.audioReference;
+  get Value(): string {
+    return this.value;
   }
 
-  private constructor(audioReference: string) {
-    if (this.checkReference(audioReference))
-      if (audioReference && audioReference.length > 0) {
-        this.audioReference = audioReference.toLocaleLowerCase();
+  private constructor(value: string) {
+    if (this.checkReference(value))
+      if (value && value.length > 0) {
+        this.value = value.toLocaleLowerCase();
       } else {
         throw new Error('audioReference no puede ser vacio');
       } //Aqui deberiamos crear una excepcion
   }
 
   public equals(other: SongAudioReference): boolean {
-    return this.audioReference === other.audioReference;
+    return this.value === other.value;
   }
 
-  public static create(audioReference: string): SongAudioReference {
-    return new SongAudioReference(audioReference);
+  public static create(value: string): SongAudioReference {
+    return new SongAudioReference(value);
   }
 
   private checkReference(reference: string): boolean {

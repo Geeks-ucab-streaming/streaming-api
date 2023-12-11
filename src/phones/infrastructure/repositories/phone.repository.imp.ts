@@ -2,7 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhoneEntity } from '../phones.entity';
 import { ICreateRepository } from 'src/phones/domain/generic-repo-phones';
-import { Phone } from '../../domain/value-objects/phone';
+import { Phone } from '../../domain/phoneAggregate/phone';
 import { Imapper } from 'src/core/application/IMapper';
 import { PhoneRegistedAlredyExceptions } from 'src/phones/domain/exceptions/phone-already-registered.exception';
 

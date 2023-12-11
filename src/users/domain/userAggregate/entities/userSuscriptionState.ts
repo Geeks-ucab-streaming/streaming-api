@@ -11,16 +11,16 @@ export class userSuscriptionState {
         this.suscriptionState = suscriptionState;
     }
 
-    public getValue(): string {
+    public get SuscriptionState(): string {
         return this.suscriptionState;
     }
 
-    public setValue(suscriptionState: string) { 
+    public set SuscriptionState(suscriptionState: string) { 
         this.suscriptionState = suscriptionState;
     }
 
     public equals(userSuscriptionState: userSuscriptionState): boolean {
-        return this.suscriptionState === userSuscriptionState.getValue();
+        return this.suscriptionState === userSuscriptionState.suscriptionState;
     }
        
 }

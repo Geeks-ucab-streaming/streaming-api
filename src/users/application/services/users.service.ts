@@ -1,11 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../../infrastructure/users.entity';
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/users/domain/userAggregate/user';
-import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
 import { IUserRepository } from 'src/users/domain/IUserRepository';
+import { UserEntity } from 'src/users/infrastructure/entities/users.entity';
 
 @Injectable()
 export class UsersService {
@@ -17,20 +13,20 @@ export class UsersService {
   ) {}
 
   async create(user: User) {
-    //Crea una instancia de UserEntity
-    const userEntity = new UserEntity();
-
     //Asigna los valores de la instancia de User a la instancia de UserEntity
-    userEntity.id = user.id.getValue();
-    userEntity.name = user.name.getValue();
-    userEntity.birth_date = user.birth_date.getBirthDate();
-    userEntity.gender = user.gender.getValue(); // Change property name to 'genero'
-    userEntity.suscriptionState = user.suscriptionState.getValue(); // Change property name to 'suscriptionState'
-    userEntity.phone =  PhoneEntity.create(user.phone.id,user.phone.phoneNumber.phoneNumber,user.phone.linePhone.id) 
     const savedUser = await this.repo.createUser(user); //Guarda la instancia en la BD.
-
-    console.log(savedUser);
     return savedUser;
+  }
+
+  async update(id: string, attrs: Partial<UserEntity>){
+    //attrs: Partial<User> te permite colocar la cantidad de parámetros que quieras del objeto User, hacíendolo más flexible. 
+    //Puedes pasar un objeto vacío, con el nombre, la fecha de nacimiento o lo que sea: va a funcionar.
+    const user = await this.repo.findById(id);
+    if (!user){
+      throw new NotFoundException("user not found");
+    }
+    Object.assign(user, attrs);
+    return this.repo.updateUser(user);
   }
 
   find(id: string) {

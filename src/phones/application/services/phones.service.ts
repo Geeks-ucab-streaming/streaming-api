@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PhoneDto } from "../dtos/phone.dto";
 import { IFindService } from 'src/common/domain/ifind.service';
-import { Phone } from 'src/phones/domain/value-objects/phone';
+import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { ICreateRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 //ESTO DEBERIA SER UNA INTERFAZ Y NO USAR LA LIBRERIA DIRECTAMENTE
 import {v4 as uuidv4} from 'uuid';
@@ -14,7 +14,7 @@ import { ValidateIsLineValidService } from 'src/phones/domain/services/validate-
 import { LineInvalidExceptions } from 'src/phones/domain/exceptions/line-not-valid.exception';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
-import { phoneNumber } from 'src/phones/domain/value-objects/phone';
+import { phoneNumber } from 'src/phones/domain/phoneAggregate/phone';
 
 
 

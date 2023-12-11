@@ -1,9 +1,8 @@
-
 import { Repository } from 'typeorm';
-import { User } from '../domain/userAggregate/user';
-import { UserEntity } from './users.entity';
-import { Phone } from 'src/phones/domain/value-objects/phone';
-import { IUserRepository } from '../domain/IUserRepository';
+import { User } from '../../domain/userAggregate/user';
+import { UserEntity } from '../entities/users.entity';
+import { Phone } from 'src/phones/domain/phoneAggregate/phone';
+import { IUserRepository } from '../../domain/IUserRepository';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { Imapper } from 'src/core/application/IMapper';
 import { Result } from 'src/common/domain/logic/Result';
@@ -26,8 +25,14 @@ extends Repository<UserEntity>
     return Result.success<void>(void 0);
   }
 
-  findById(id: string): Promise<User> {
-    return this.findById(id);
+  async updateUser(user: User): Promise<UserEntity> {  
+    const updatedUser = await this.userMapper.domainTo(user);
+    return await this.save(updatedUser);
+    }
+
+  async findById(userId: string): Promise<User> {
+    const user = await this.findOne({ where: { id: userId} });
+    return this.userMapper.ToDomain(user);
   }
 
   async findAll(): Promise<User[]> {

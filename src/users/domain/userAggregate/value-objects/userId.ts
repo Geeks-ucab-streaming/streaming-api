@@ -4,20 +4,20 @@ export class userId implements IValueObject<userId> {
  
     private id: string;
     
-    static create(id: string): userId {
-        return new userId(id);
-       }
-   
     constructor(id: string) {
         this.id = id;
     }
 
-    public getValue(): string {
+    static create(id: string): userId {
+        return new userId(id);
+    }
+
+    public get Id(): string {
         return this.id;
     }
 
     public equals(userId: userId): boolean {
-        return this.id === userId.getValue();
+        return this.id === userId.id;
     }
        
 }
