@@ -7,6 +7,7 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
+import { FindTopPlaylistsService } from 'src/playlist/application/services/FindTopPlaylists.service';
 
 @Controller('playlists')
 export class PlaylistController {
@@ -14,12 +15,10 @@ export class PlaylistController {
   private songRepository: OrmSongRepository;
   private findPlaylistByIdService: FindAlbumByPlaylistIDService;
   private findPlaylistByArtistIdService: FindAlbumByArtistIDService;
+  private findTopPlaylistsService: FindTopPlaylistsService;
 
   constructor() {
-    this.repository = new PlaylistRepository(
-      DataSourceSingleton.getInstance(),
-      new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
-    );
+    this.repository = new PlaylistRepository(DataSourceSingleton.getInstance());
     this.songRepository = new OrmSongRepository(
       DataSourceSingleton.getInstance(),
     );
@@ -41,5 +40,15 @@ export class PlaylistController {
       this.songRepository,
     );
     return this.findPlaylistByIdService.execute(id);
+  }
+
+  @ApiTags('TopPlaylist')
+  @Get('/top_playlist')
+  async findTopPlaylists(): Promise<Playlist[]> {
+    this.findTopPlaylistsService = new FindTopPlaylistsService(
+      this.repository,
+      this.songRepository,
+    );
+    return this.findTopPlaylistsService.execute();
   }
 }

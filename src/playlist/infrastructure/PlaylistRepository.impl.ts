@@ -9,27 +9,30 @@ export class PlaylistRepository
   extends Repository<PlaylistEntity>
   implements IPlaylistRepository
 {
-  private readonly getFileService: GetFileService;
   private readonly playlistMapper: PlaylistMapper;
 
-  constructor(dataSource: DataSource, getFileService: GetFileService) {
+  constructor(dataSource: DataSource) {
     super(PlaylistEntity, dataSource.manager);
-    this.getFileService = getFileService;
     this.playlistMapper = new PlaylistMapper();
+  }
+  findTopPlaylists(): Promise<Playlist[]> {
+    throw new Error('Method not implemented.');
   }
 
   async findPlaylistById(id: string): Promise<Playlist> {
     const playlistResponse: PlaylistEntity = await this.createQueryBuilder(
       'playlist',
     )
-      .innerJoinAndSelect('playlist.playlistCreator', 'playlistCreator')
-      .innerJoinAndSelect('playlistCreator.artist', 'artist')
-      .innerJoinAndSelect('playlist.playlistSong', 'playlistSong')
-      .innerJoinAndSelect('playlistSong.song', 'song')
-      .innerJoinAndSelect('song.song_artist', 'songArtist')
-      .innerJoinAndSelect('songArtist.artist', 'artist2')
+      .leftJoinAndSelect('playlist.playlistCreator', 'playlistCreator')
+      .leftJoinAndSelect('playlistCreator.artist', 'artist')
+      .leftJoinAndSelect('playlist.playlistSong', 'playlistSong')
+      .leftJoinAndSelect('playlistSong.song', 'song')
+      .leftJoinAndSelect('song.song_artist', 'songArtist')
+      .leftJoinAndSelect('songArtist.artist', 'artist2')
       .where('playlist.id = :playlistId', { playlistId: id })
       .getOne();
+
+    console.log(playlistResponse);
 
     const playlist = await this.playlistMapper.ToDomain(playlistResponse);
     return playlist;
