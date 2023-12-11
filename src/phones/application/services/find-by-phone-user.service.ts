@@ -4,7 +4,7 @@ import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-v
 import { IUserRepository } from 'src/users/domain/IUserRepository';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
-import { phoneNumber } from 'src/phones/domain/phoneAggregate/phone';
+import { phoneNumber } from 'src/phones/domain/phoneAggregate/value-objects/phoneNumber';
 
 export class findByPhoneUserService implements IApplicationService<number, User> {
   private readonly repo: IUserRepository;
