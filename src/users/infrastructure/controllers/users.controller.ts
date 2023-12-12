@@ -25,6 +25,7 @@ import { UsersMapper } from '../mappers/User.mapper';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
 import { UpdateUserDto } from 'src/users/application/dtos/update-user.dto';
+import { User } from 'src/users/domain/userAggregate/user';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas

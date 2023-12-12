@@ -18,7 +18,7 @@ export class UsersService {
     return savedUser;
   }
 
-  async update(id: string, attrs: Partial<UserEntity>){
+  async update(id: string, attrs: Partial<User>){
     //attrs: Partial<User> te permite colocar la cantidad de parámetros que quieras del objeto User, hacíendolo más flexible. 
     //Puedes pasar un objeto vacío, con el nombre, la fecha de nacimiento o lo que sea: va a funcionar.
     const user = await this.repo.findById(id);
