@@ -16,6 +16,7 @@ export class phoneMapper implements Imapper<Phone,PhoneEntity> {
       
     }
     async ToDomain(ormEntity: PhoneEntity): Promise<Phone> {
+        console.log(ormEntity)
         const phone:Phone = new Phone(
             phoneId.create(ormEntity.id),
             phoneNumber.create(ormEntity.phoneNumber),

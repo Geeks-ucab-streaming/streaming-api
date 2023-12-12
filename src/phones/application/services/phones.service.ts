@@ -27,8 +27,8 @@ export class PhonesService implements IApplicationService<Phone,Phone> {
   async execute(value: Phone): Promise<Result<Phone>> {
     if(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber)) throw new PhoneInvalidExceptions(value.phoneNumber);
     
-    const lineEntity = await this.repoLines.finderCriteria(value.phoneNumber.phoneNumber.toString().substring(0, 3));
-    const line: Line = Line.create(lineEntity.id,lineEntity.linePhone.name);
+    const prefixEntity = await this.repoLines.finderCriteria(value.phoneNumber.phoneNumber.toString().substring(0, 3));
+    const line: Line = Line.create(prefixEntity .linePhone.id,prefixEntity .linePhone.name);
     if(!this.valiateisLineValid.execute(line)) throw new LineInvalidExceptions(line);
 
     const phone = new Phone(uuidv4(),phoneNumber.create(value.phoneNumber.phoneNumber),line);

@@ -13,6 +13,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
   private readonly mapperPhone = new phoneMapper();
 
   async domainTo(domainEntity: User): Promise<UserEntity> {
+    console.log(domainEntity,"el domain esntiut")
       const ormEntity:UserEntity = new UserEntity();
       ormEntity.id = domainEntity.Id.Id;
       ormEntity.name = domainEntity.Name.Name;
@@ -32,7 +33,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
       UserGender.create(ormEntity.gender),
       userSuscriptionState.create(ormEntity.suscriptionState)
-    );
+    );  
 
     return Promise.resolve(user);
   }
