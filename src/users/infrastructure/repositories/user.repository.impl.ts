@@ -28,7 +28,7 @@ extends Repository<UserEntity>
 
   async updateUser(user: User): Promise<UserEntity> {  
     const updatedUser = await this.userMapper.domainTo(user);
-    console.log(updatedUser)
+    console.log(updatedUser,"el usuario actualizado")
     return await this.save(updatedUser);
     }
 

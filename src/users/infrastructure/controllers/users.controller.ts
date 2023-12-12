@@ -96,12 +96,6 @@ export class UsersController {
     return this.usersService.update(id, body);
   }
 
-  @ApiTags('Users')
-  @Post('/users/prueba')
-  async pruebita(@Body() body: Phone) {
-    const users = await this.phonesService.execute(body);
-    return users;
-  }
 
 }
   
