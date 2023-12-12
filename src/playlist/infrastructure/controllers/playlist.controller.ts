@@ -50,7 +50,7 @@ export class PlaylistController {
 
     for (const playlist of playlistsResponse) {
       topPlaylistsInfo.playlists.push({
-        id: playlist.Id,
+        id: playlist.Id.Value,
         image: playlist.Playlist_Image,
       });
     }
@@ -130,7 +130,7 @@ export class PlaylistController {
     }
 
     const playlist: PlaylistDto = {
-      id: playlistResponse.Id,
+      id: playlistResponse.Id.Value,
       name: playlistResponse.Name,
       duration: playlistResponse.DurationString,
       image: playlistResponse.Playlist_Image,
