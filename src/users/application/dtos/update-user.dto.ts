@@ -22,8 +22,4 @@ export class UpdateUserDto{
   @IsString()
   suscriptionState: string;
 
-  @ApiProperty()
-  @IsOptional()
-  @IsNumber()
-  phonesNumber: number;
 }

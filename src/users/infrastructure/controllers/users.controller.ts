@@ -6,6 +6,7 @@ import {
   Param,
   NotFoundException,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { UsersService } from '../../application/services/users.service';
@@ -23,6 +24,7 @@ import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
 import { UsersMapper } from '../mappers/User.mapper';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
+import { UpdateUserDto } from 'src/users/application/dtos/update-user.dto';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -46,7 +48,7 @@ export class UsersController {
     this.authService = new AuthService(this.usersService,this.phonesService,this.findByPhoneUserService,this.usersMapper);
     
   }
-
+  //Registro de Usuario con su número de teléfono
   @ApiTags('Users')
   @Post('/auth/validate_operator')
   async createUser(@Body() body: CreateUserDto) {
@@ -61,6 +63,7 @@ export class UsersController {
       return result; 
   }
 
+  //Inicio de Sesión
   @ApiTags('Users')
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
@@ -73,6 +76,7 @@ export class UsersController {
     };
   }
 
+  //Obtener usuario en base a su ID
   @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Get('/user/:id')
@@ -83,11 +87,22 @@ export class UsersController {
     }
     return user;
   }
-  
+
+  //Actualizar usuario en base a su ID
+  @ApiTags('Users')
+  @Patch ("/user/:id")
+  updateUser(@Param("id") id: string, @Body() body: UpdateUserDto){
+    return this.usersService.update(id, body);
+  }
+
   @ApiTags('Users')
   @Post('/users/prueba')
   async pruebita(@Body() body: Phone) {
     const users = await this.phonesService.execute(body);
     return users;
   }
+
 }
+  
+
+

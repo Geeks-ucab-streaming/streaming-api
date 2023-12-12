@@ -2,8 +2,8 @@
 import { DomainException } from "src/common/domain/exceptions/domain-exception";
 import { User } from "../userAggregate/user";
 
-export class UserAlredyExistsExceptions extends DomainException<User> {
+export class UserAlreadyExistsExceptions extends DomainException<User> {
     constructor(user: User) {
-       super(user,"Invalid Line phone", "UserAlredyExistsExceptions", 400);
+       super(user,"Invalid Line phone", "UserAlreadyExistsExceptions", 400);
     }
 }

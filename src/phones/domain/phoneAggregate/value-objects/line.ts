@@ -1,7 +1,6 @@
-export class Line {
-  static create(id:string,phone:string): Line {
-    return new Line(id,phone);
-  }
+import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
+
+export class Line implements IValueObject<Line>{
   id: string;
   name: string;
 
@@ -9,4 +8,13 @@ export class Line {
     this.id = id;
     this.name = name;
   }
+
+  static create(id:string,phone:string): Line {
+    return new Line(id,phone);
+  }
+
+  public equals(phoneLine: Line): boolean {
+    return this.name === phoneLine.name;
+  }
+  
 }

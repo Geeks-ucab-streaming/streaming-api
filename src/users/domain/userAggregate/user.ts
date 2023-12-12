@@ -78,7 +78,7 @@ export class User extends AggregateRoot<userId> {
   
   //validando estado
   protected ensureValidState(): void {
-    console.log("Falta este método por implementar");
+    console.log("Falta este método por implementar (ensureValidState en user)");
   }
 
 }

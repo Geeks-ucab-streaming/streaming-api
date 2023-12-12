@@ -20,5 +20,5 @@ content-type: application/json
 
 
 ### Encontrar un usuario en particular
-GET http://localhost:3000/api/user/66e9e47e-c941-4cb2-83c1-b3fbdcce8b8e
+GET http://localhost:3000/api/user/3b29272f-cf0b-4e66-b9f9-cb6b6c53db02
 

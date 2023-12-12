@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
-import { ICreateRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
+import { IPhoneRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 import { PrefixEntity } from '../prefixes.entity';
 
 export class OrmLineRepository extends Repository<PrefixEntity> implements IgenericRepo<string,PrefixEntity> {
