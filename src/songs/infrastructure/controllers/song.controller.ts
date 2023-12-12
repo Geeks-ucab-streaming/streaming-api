@@ -36,6 +36,7 @@ export class SongsController {
   @ApiTags('Songs')
   @Get('/:id')
   async findById(@Param('id') id: string): Promise<SongWithArtistPO> {
+    console.log('id', id)
     this.getSongByIdService = new GetSongByIdService(
       this.ormSongRepository,
       this.ormArtistRepository,
