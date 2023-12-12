@@ -6,7 +6,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { LineEntity } from './lines.entity';
-import { UserEntity } from '../../../users/infrastructure/users.entity';
+import { UserEntity } from '../../../users/infrastructure/entities/users.entity';
 
 @Entity('Phones')
 export class PhoneEntity  {

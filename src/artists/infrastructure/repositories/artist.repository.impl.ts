@@ -1,7 +1,6 @@
 import { DataSource, EntityManager, QueryRunner, Repository } from 'typeorm';
 import { Artist } from 'src/artists/domain/artist';
 import { ArtistEntity } from '../entities/artist.entity';
-
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 import { ArtistsMapper } from '../mappers/artist.mapper';
 import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';

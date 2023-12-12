@@ -6,7 +6,7 @@ import {
   Check,
   ManyToOne,
 } from 'typeorm';
-import { UserEntity } from '../infrastructure/users.entity';
+import { UserEntity } from './users.entity';
 
 @Entity('StoredEdition')
 export class StoredEdition {
