@@ -7,6 +7,8 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
+import { FindTopPlaylistsService } from 'src/playlist/application/services/FindTopPlaylists.service';
+import { TopPlaylistDto } from 'src/dtos';
 
 @Controller('playlists')
 export class PlaylistController {
@@ -14,16 +16,38 @@ export class PlaylistController {
   private songRepository: OrmSongRepository;
   private findPlaylistByIdService: FindAlbumByPlaylistIDService;
   private findPlaylistByArtistIdService: FindAlbumByArtistIDService;
+  private findTopPlaylistsService: FindTopPlaylistsService;
 
   constructor() {
-    this.repository = new PlaylistRepository(
-      DataSourceSingleton.getInstance(),
-      new GetFileService(process.env.SONG_ALBUM_PLAYLIST_CONTAINER),
-    );
+    this.repository = new PlaylistRepository(DataSourceSingleton.getInstance());
     this.songRepository = new OrmSongRepository(
       DataSourceSingleton.getInstance(),
     );
   }
+
+  @ApiTags('TopPlaylist')
+  @Get('/top_playlist')
+  async findTopPlaylists(): Promise<TopPlaylistDto> {
+    this.findTopPlaylistsService = new FindTopPlaylistsService(
+      this.repository,
+      this.songRepository,
+    );
+    let topPlaylistsInfo: TopPlaylistDto = {
+      playlists: [],
+    };
+    const playlistsResponse: Playlist[] =
+      await this.findTopPlaylistsService.execute();
+
+    for (const playlist of playlistsResponse) {
+      topPlaylistsInfo.playlists.push({
+        id: playlist.Id,
+        image: playlist.Playlist_Image,
+      });
+    }
+
+    return topPlaylistsInfo;
+  }
+
   @ApiTags('Playlist')
   @Get('/FindByArtistID/:id')
   findByArtistId(@Param('id') id: string): Promise<Playlist[]> {

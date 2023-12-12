@@ -1,13 +1,7 @@
 import { Imapper } from 'src/core/application/IMapper';
-import { Song } from 'src/songs/domain/song';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistEntity } from '../entities/playlist.entity';
-import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
-import { PlaylistName } from 'src/playlist/domain/value-objects/PlaylistName-valueobject';
-import { PlaylistDuration } from 'src/playlist/domain/value-objects/PlaylistDuration-valueobject';
-import { PlaylistImageReference } from 'src/playlist/domain/value-objects/PlaylistImageReference-valueobject';
-import { PlaylistStreams } from 'src/playlist/domain/value-objects/PlaylistStreams-valueobject';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 
@@ -20,6 +14,8 @@ export class PlaylistMapper implements Imapper<Playlist, PlaylistEntity> {
     );
   }
   async ToDomain(ormEntity: PlaylistEntity): Promise<Playlist> {
+    let artists: ArtistID[] = [];
+    if (ormEntity.isAlbum) artists = await this.getPlaylistArtists(ormEntity);
     let playlist = Playlist.create(
       ormEntity.id,
       ormEntity.name,
@@ -27,7 +23,7 @@ export class PlaylistMapper implements Imapper<Playlist, PlaylistEntity> {
       ormEntity.image_reference,
       ormEntity.reproductions,
       await this.getPlaylistImageService.execute(ormEntity.image_reference),
-      this.getPlaylistArtists(ormEntity),
+      artists,
       this.getPlaylistSongs(ormEntity),
     );
     return playlist;
