@@ -23,6 +23,7 @@ export class PlaylistMapper implements Imapper<Playlist, PlaylistEntity> {
       ormEntity.image_reference,
       ormEntity.reproductions,
       await this.getPlaylistImageService.execute(ormEntity.image_reference),
+      ormEntity.isAlbum,
       artists,
       this.getPlaylistSongs(ormEntity),
     );

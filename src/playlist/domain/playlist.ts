@@ -15,17 +15,45 @@ export class Playlist {
   private image_reference: PlaylistImageReference;
   private playlist_Image: Buffer | null;
   private streams: PlaylistStreams;
+  private isAlbum: boolean;
   private playlistCreator?: ArtistID[];
   private playlistSong?: SongID[];
 
   get Id(): string {
     return this.id.Value;
   }
+  get IsAlbum(): boolean {
+    return this.isAlbum;
+  }
   get Name(): string {
     return this.name.Value;
   }
   get Duration(): number {
     return this.duration.Value;
+  }
+  get DurationString(): string {
+    let stringTime: string = '';
+    let mins: number = 0;
+    let hours: number = 0;
+    let seconds: number = this.duration.Value;
+
+    // Calcular horas
+    if (seconds >= 3600) {
+      hours = Math.floor(seconds / 3600);
+      seconds %= 3600;
+    }
+
+    // Calcular minutos
+    if (seconds >= 60) {
+      mins = Math.floor(seconds / 60);
+      seconds %= 60;
+    }
+
+    // Formatear el tiempo en una cadena
+    stringTime = `${hours.toString().padStart(2, '0')}:${mins
+      .toString()
+      .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return stringTime;
   }
   get Image_reference(): string {
     return this.image_reference.Value;
@@ -59,6 +87,7 @@ export class Playlist {
     duration: PlaylistDuration,
     image_reference: PlaylistImageReference,
     streams: PlaylistStreams,
+    isAlbum: boolean,
     playlist_Image: Buffer | null,
     playlistCreators?: ArtistID[],
     playlistSongs?: SongID[],
@@ -68,6 +97,7 @@ export class Playlist {
     this.duration = duration;
     this.image_reference = image_reference;
     this.streams = streams;
+    this.isAlbum = isAlbum;
     this.playlist_Image = playlist_Image;
     this.playlistCreator = playlistCreators || [];
     this.playlistSong = playlistSongs || [];
@@ -80,6 +110,7 @@ export class Playlist {
     image_reference: string,
     streams: number,
     playlistImage: Buffer,
+    isAlbum: boolean,
     playlistCreators?: ArtistID[],
     playlistSongs?: SongID[],
   ) {
@@ -89,6 +120,7 @@ export class Playlist {
       PlaylistDuration.create(duration),
       PlaylistImageReference.create(image_reference),
       PlaylistStreams.create(streams),
+      isAlbum,
       playlistImage,
       playlistCreators,
       playlistSongs,

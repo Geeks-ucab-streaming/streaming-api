@@ -36,14 +36,17 @@ export class PlaylistDto {
     creatorId: string;
     creatorName: string;
   }[];
-  songs: {
-    songId: string;
+  songs: SongDto[];
+}
+
+export class SongDto {
+  songId: string;
+  name: string;
+  duration: string;
+  image: Buffer;
+  artists: {
+    id: string;
     name: string;
-    duration: string;
-    artists: {
-      id: string;
-      name: string;
-    }[];
   }[];
 }
 

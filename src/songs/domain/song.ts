@@ -29,8 +29,32 @@ export class Song {
   get Name(): string {
     return this.name.Value;
   }
-  get Duration(): number {
+  get Duration() {
     return this.duration.Value;
+  }
+  get DurationString(): string {
+    let stringTime: string = '';
+    let mins: number = 0;
+    let hours: number = 0;
+    let seconds: number = this.duration.Value;
+
+    // Calcular horas
+    if (seconds >= 3600) {
+      hours = Math.floor(seconds / 3600);
+      seconds %= 3600;
+    }
+
+    // Calcular minutos
+    if (seconds >= 60) {
+      mins = Math.floor(seconds / 60);
+      seconds %= 60;
+    }
+
+    // Formatear el tiempo en una cadena
+    stringTime = `${hours.toString().padStart(2, '0')}:${mins
+      .toString()
+      .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return stringTime;
   }
   get CreationDate(): Date {
     return this.creation_date.Value;
