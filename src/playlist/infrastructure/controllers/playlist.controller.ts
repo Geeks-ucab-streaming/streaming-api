@@ -121,7 +121,7 @@ export class PlaylistController {
         });
       }
       playlistSongs.push({
-        songId: song.Id,
+        songId: song.Id.Value.toString(),
         name: song.Name,
         duration: song.DurationString,
         artists: artistsSong,
