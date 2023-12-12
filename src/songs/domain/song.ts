@@ -6,9 +6,42 @@ import { SongName } from './value-objects/SongName-valueobject';
 import { SongCreationDate } from './value-objects/SongCreationDate-valueobject';
 import { SongDuration } from './value-objects/SongDuration-valueobject';
 import { SongStreams } from './value-objects/SongStreams-valueobject';
+import { AggregateRoot } from 'src/common/domain/aggregate-root';
+import { DomainEvent } from 'src/common/domain/Event/domain-event';
+import { SongCreatedEvent } from './event/SongCreatedEvent';
 
-export class Song {
-  private id: SongID; //vo
+export class Song extends AggregateRoot<SongID> {
+  protected when(event: DomainEvent): void {
+    switch (event.constructor) {
+      case SongCreatedEvent:
+        const songCreated = event as SongCreatedEvent;
+        this.name = songCreated.name;
+        this.duration = songCreated.duration;
+        this.creation_date = songCreated.creation_date;
+        this.songAudio_reference = songCreated.songAudio_reference;
+        this.image_reference = songCreated.image_reference;
+        this.streams = songCreated.streams;
+        this.genres = songCreated.genres;
+        this.artists = songCreated.artists;
+        break;
+      default:
+        throw new Error('Event no fue implementado.');
+    }
+  }
+  protected ensureValidState(): void {
+    if (!this.name) throw new Error('Invalid Song Name');
+    if (!this.duration) throw new Error('Invalid Song Duration');
+    if (!this.creation_date) throw new Error('Invalid Song Creation Date');
+    if (!this.songAudio_reference)
+      throw new Error('Invalid Song Audio Reference');
+    if (!this.image_reference) throw new Error('Invalid Song Image Reference');
+    if (!this.streams) throw new Error('Invalid Song Streams');
+    if (!this.genres) throw new Error('Invalid Song Genres');
+    if (!this.artists) throw new Error('Invalid Song Artists');
+    //Aqui deberiamos crear una excepcion para cada vaina 
+    //pero me da ladill asi que lo puse asi
+  }
+  //private id: SongID; //vo
   private name: SongName; //vo
   private duration: SongDuration; //vo
   private creation_date: SongCreationDate; //vo
@@ -23,9 +56,9 @@ export class Song {
     return this.genres;
   }
 
-  get Id(): string {
-    return this.id.Value;
-  }
+  // get Id(): string {
+  //   return this.id.Value;
+  // }
   get Name(): string {
     return this.name.Value;
   }
@@ -95,15 +128,27 @@ export class Song {
     genres: string[],
     artists: ArtistID[],
   ) {
-    this.id = id;
-    this.name = name;
-    this.duration = duration;
-    this.creation_date = creation_date;
-    this.songAudio_reference = songAudio_reference;
-    this.image_reference = image_reference;
-    this.streams = streams;
-    this.genres = genres;
-    this.artists = artists;
+    const songCreated = SongCreatedEvent.create(
+      id,
+      name,
+      duration,
+      creation_date,
+      songAudio_reference,
+      image_reference,
+      streams,
+      genres,
+      artists,
+    );
+    super(id, songCreated);
+    // this.id = id;
+    // this.name = name;
+    // this.duration = duration;
+    // this.creation_date = creation_date;
+    // this.songAudio_reference = songAudio_reference;
+    // this.image_reference = image_reference;
+    // this.streams = streams;
+    // this.genres = genres;
+    // this.artists = artists;
   }
 
   public static create(
