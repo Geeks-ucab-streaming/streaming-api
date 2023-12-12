@@ -125,7 +125,6 @@ export class PlaylistController {
         name: song.Name,
         duration: song.DurationString,
         artists: artistsSong,
-        image: song.Image,
       });
     }
 
