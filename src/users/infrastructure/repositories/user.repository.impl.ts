@@ -6,7 +6,6 @@ import { IUserRepository } from '../../domain/IUserRepository';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { Imapper } from 'src/core/application/IMapper';
 import { Result } from 'src/common/domain/logic/Result';
-import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
 
 export class OrmUserRepository
 extends Repository<UserEntity>
@@ -28,7 +27,7 @@ extends Repository<UserEntity>
 
   async updateUser(user: User): Promise<UserEntity> {  
     const updatedUser = await this.userMapper.domainTo(user);
-    console.log(updatedUser)
+    console.log(updatedUser,"el usuario actualizado")
     return await this.save(updatedUser);
     }
 

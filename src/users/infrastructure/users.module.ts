@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './controllers/users.controller';
-import { UsersService } from '../application/services/users.service';
-import { AuthService } from '../application/services/auth.service';
 import { UserEntity } from './entities/users.entity';
 // import { UserRepository } from './user.repository.impl';
 import { findByPhoneUserService } from '../../phones/application/services/find-by-phone-user.service';
@@ -26,8 +24,6 @@ import { JwtStrategy } from '../application/jwtoken/jwt.strategies';
   ],
   providers: [
     PhonesService,
-    UsersService,
-    AuthService,
     JwtStrategy,
     findByPhoneUserService,
     // {

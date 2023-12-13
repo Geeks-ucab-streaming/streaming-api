@@ -34,10 +34,13 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<Song> {
-    this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
-    const song: Song = await this.getSongByIdService.execute(id);
-    return song;
+  async findById(@Param('id') id: string): Promise<SongWithArtistPO> {
+    console.log('id', id)
+    this.getSongByIdService = new GetSongByIdService(
+      this.ormSongRepository,
+      this.ormArtistRepository,
+    );
+    return await this.getSongByIdService.execute(id);
   }
 
   @ApiTags('Songs')
