@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
-import { ICreateRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
+import { IPhoneRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 import { PrefixEntity } from '../prefixes.entity';
 
 export class OrmLineRepository extends Repository<PrefixEntity> implements IgenericRepo<string,PrefixEntity> {
@@ -11,7 +11,6 @@ export class OrmLineRepository extends Repository<PrefixEntity> implements Igene
     
   }
   async finderCriteria(prefix:string): Promise<PrefixEntity> {
-    console.log(prefix)
     const phone = await this.createQueryBuilder("prefix")
     .leftJoinAndSelect("prefix.linePhone", "linePhone")
     .where("prefix.prefix = :prefix", { prefix: prefix })
