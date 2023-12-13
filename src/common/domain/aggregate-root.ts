@@ -39,5 +39,5 @@ export abstract class AggregateRoot<
   protected abstract when(event: DomainEvent): void;
 
   /**Valida que el nuevo estado del agregado sea válido.*/
-  protected abstract ensureValidState(): void;
+  protected abstract ensureValidState(event?: DomainEvent,event_future?: DomainEvent): void;
 }

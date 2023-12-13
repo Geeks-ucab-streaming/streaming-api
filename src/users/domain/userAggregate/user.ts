@@ -77,8 +77,14 @@ export class User extends AggregateRoot<userId> {
 }
   
   //validando estado
-  protected ensureValidState(): void {
-    console.log("Falta este método por implementar (ensureValidState en user)");
-  }
+  ensureValidState(event: DomainEvent,event_future: DomainEvent): void {
 
+
+    if(!(event === event_future)){
+    console.log("Hubo un cambio de estado");
+  }
+  else{
+    console.log("No hubo cambio de estado");
+  }
+}
 }
