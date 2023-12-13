@@ -90,6 +90,7 @@ export class PlaylistController {
       playlistCreators = await this.findArtistsInCollectionService.execute(
         playlistResponse.PlaylistCreator,
       );
+    console.log(playlistResponse.IsAlbum);
 
     let creators: { creatorId: string; creatorName: string }[] = [];
     for (const creator of playlistCreators) {
@@ -98,6 +99,8 @@ export class PlaylistController {
         creatorName: creator.Name.Value,
       });
     }
+    console.log('=========================');
+    console.log(creators);
 
     let songsId: string[] = [];
 
