@@ -21,23 +21,25 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
     throw new Error("Method not implemented.");
   }
 
-  async execute(userDto: UpdateUser): Promise<Result<User>>{
+  async execute(usuarioParametrizado: UpdateUser): Promise<Result<User>>{
     //attrs: Partial<User> te permite colocar la cantidad de parámetros que quieras del objeto User, hacíendolo más flexible. 
     //Puedes pasar un objeto vacío, con el nombre, la fecha de nacimiento o lo que sea: va a funcionar.
     //TODO: FALTA VALIDAR EL GENERO Y COLOCAR EMAIL
-    const user = await this.repo.findById(userDto.id);
+    const user = await this.repo.findById(usuarioParametrizado.id);
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userName.create(userDto.userToUpdate.name)|| user.Name,
-      UserBirthDate.create(new Date(userDto.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(userDto.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
-      UserGender.create(userDto.userToUpdate.gender || user.Gender.Gender),
-      userSuscriptionState.create(userDto.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState)
+      userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
+      UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
+      UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),
+      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState)
       )
     if (!user){
       throw new NotFoundException("user not found");
     }
-    return Result.success<User>(userUpdated);
+
+    const savedUser = await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.
+    return Result.success<User>(await usuarioParametrizado.mapper.ToDomain(savedUser));
   }
   
 }

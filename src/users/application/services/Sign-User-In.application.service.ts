@@ -7,7 +7,6 @@ export class SignUserIn implements IApplicationService<number, User>{
 
   constructor(
     private findByPhoneUserService: IApplicationService<number, User>){
-      
     }
 
     get name(): string {
