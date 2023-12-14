@@ -1,4 +1,3 @@
-/*
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './controllers/users.controller';
@@ -43,5 +42,3 @@ import { JwtStrategy } from '../application/jwtoken/jwt.strategies';
   controllers: [UsersController],
 })
 export class UsersModule {}
-
-*/

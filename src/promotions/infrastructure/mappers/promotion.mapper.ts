@@ -15,7 +15,7 @@ export class PromotionMapper implements Imapper<Promotion , PromotionEntity>{
     }
 
     // TODO: Implementar el metodo para convertir de orm a dominio
-    async ormToDomain(ormEntity: PromotionEntity): Promise<Promotion> {
+    async ToDomain(ormEntity: PromotionEntity): Promise<Promotion> {
         if(!ormEntity) 
             return null;
         let promotion: Promotion = Promotion.create(
@@ -28,7 +28,7 @@ export class PromotionMapper implements Imapper<Promotion , PromotionEntity>{
     }
 
     // TODO: Implementar el metodo para convertir de dominio a orm
-    async domainToOrm(ormEntity: Promotion): Promise<PromotionEntity> {
+    async domainTo(ormEntity: Promotion): Promise<PromotionEntity> {
         if(!ormEntity) 
             return null;
         let promotionEntity: PromotionEntity = await PromotionEntity.create(

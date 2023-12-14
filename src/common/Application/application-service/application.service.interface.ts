@@ -10,5 +10,5 @@ export interface IApplicationService<D, R> {
 
   /**Ejecuta el servicio de aplicación.
    * @param dto Datos de entrada del servicio de aplicación.*/
-  execute(dto: D): Promise<Result<R>>;
+  execute(dto?: D): Promise<Result<R>>;
 }

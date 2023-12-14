@@ -1,7 +1,9 @@
-import { DomainException } from "src/common/domain/domain.exceptions";
 
-export class LineInvalidExceptions extends DomainException {
-    constructor() {
-       super("Invalid Line phone", "LineInvalidExceptions", 400);
+import { DomainException } from "src/common/domain/exceptions/domain-exception";
+import { Line } from "../value-objects/line";
+
+export class LineInvalidExceptions extends DomainException<Line> {
+    constructor(line: Line) {
+       super(line,"Invalid Line phone", "LineInvalidExceptions", 400);
     }
 }

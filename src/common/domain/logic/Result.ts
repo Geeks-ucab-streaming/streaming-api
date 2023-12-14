@@ -1,3 +1,5 @@
+import { DomainException } from "../exceptions/domain-exception";
+
 /** Result: Es una clase genérica utilizada para encapsular los resultados obtenidos de los CU.
  *  @typeParam `T` Tipo parametrizado del resultado encapsulado.*/
 export class Result<T> {
@@ -6,9 +8,10 @@ export class Result<T> {
   public readonly message?: string;
   public readonly error?: string;
 
-  private constructor(value: T, error: Error) {
+  private constructor(value: T, error: DomainException<T>) {
     if (error) {
-      this.statusCode = 500;
+      console.log(error)
+      this.statusCode = Number(error.httpStatus) || 500;
       this.message = error?.message ? error?.message : 'Unknown.';
       this.error = 'Internal Domain Error';
     } else {
@@ -42,6 +45,6 @@ export class Result<T> {
    * @param error Excepción encapsulada
    * @returns Result */
   static fail<T>(error: Error): Result<T> {
-    return new Result<T>(null, error);
+    return new Result<T>(null, error as DomainException<T>);
   }
 }

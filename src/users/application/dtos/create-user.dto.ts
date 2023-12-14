@@ -12,7 +12,7 @@ export class CreateUserDto {
 
   @IsString()
   @ApiProperty()
-  genero: string;
+  gender: string;
 
   @IsString()
   @ApiProperty()
@@ -20,5 +20,5 @@ export class CreateUserDto {
 
   @IsNumber()
   @ApiProperty()
-  phonesNumber: number;
+  phone: number;
 }

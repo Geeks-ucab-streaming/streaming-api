@@ -3,7 +3,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'Promotions' })
 export class PromotionEntity {
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

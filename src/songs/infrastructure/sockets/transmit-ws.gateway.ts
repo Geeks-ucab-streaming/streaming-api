@@ -31,7 +31,7 @@ export class TransmitWsGateway
   async sendSong(client: Socket, songId: string) {
     console.log('hola');
     const song: Song = await this.getSongService.execute(songId);
-    const file = await this.getAudioService.execute(song.song_reference);
+    const file = await this.getAudioService.execute(song.AudioReference);
     console.log(file);
     const chunkSize = 1024;
 

@@ -11,7 +11,7 @@ private readonly value: number;
 constructor(value: number) {
     this.value = value;
     if (this.isUsableOperator(this.value)) {
-        throw new PhoneInvalidExceptions();
+        //throw new PhoneInvalidExceptions();
     }
 }
 

@@ -1,4 +1,4 @@
-/*import { PlaylistEntity } from 'src/playlist/infrastructure/entities/playlist.entity';
+import { PlaylistEntity } from 'src/playlist/infrastructure/entities/playlist.entity';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -15,4 +15,4 @@ export class PlaylistSongEntity {
 
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.playlistSong)
   playlist: PlaylistEntity;
-}*/
+}

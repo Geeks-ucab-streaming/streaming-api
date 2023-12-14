@@ -4,5 +4,5 @@ import { IsEmail, IsNumber, IsString, IsDate } from 'class-validator';
 export class loginPhoneDto {
   @IsNumber()
   @ApiProperty()
-  phonesNumber: number;
+  phone: number;
 }

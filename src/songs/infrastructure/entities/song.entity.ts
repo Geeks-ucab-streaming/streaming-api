@@ -1,4 +1,4 @@
-/*import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
+import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
 import { PlaylistSongEntity } from 'src/common/infrastructure/entities/playlistSong.entity';
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
@@ -11,8 +11,8 @@ export class SongEntity {
   @Column({ type: 'text', nullable: false })
   name: string;
 
-  @Column({ type: 'text', nullable: false })
-  duration: string;
+  @Column({ type: 'int', nullable: true })
+  duration: number;
 
   @Column({ type: 'date', nullable: false })
   creation_date: Date;
@@ -41,4 +41,3 @@ export class SongEntity {
   @OneToMany(() => ReproducedSong, (reproducedSong) => reproducedSong.song)
   reproducedSong: ReproducedSong[];
 }
-*/

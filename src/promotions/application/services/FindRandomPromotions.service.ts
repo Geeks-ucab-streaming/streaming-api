@@ -3,7 +3,7 @@ import { Promotion } from "src/promotions/domain/promotionAqqregate/promotion";
 
 export class FindRandomPromotionsService {
     constructor(
-        private readonly promotionRepository: IPromotionRepository // Asegúrate de reemplazar FileService con el nombre real del servicio que estás utilizando
+        private readonly promotionRepository: IPromotionRepository
       ) {}
 
     async execute(): Promise<Promotion> {

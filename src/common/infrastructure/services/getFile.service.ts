@@ -9,7 +9,6 @@ export class GetFileService implements IFindService<String, Buffer> {
     this.containerName = containerName;
   }
 
-
   private getBlobClient(filename: string): BlockBlobClient {
     try {
       const blobClientService = BlobServiceClient.fromConnectionString(

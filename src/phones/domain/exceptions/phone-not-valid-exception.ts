@@ -1,7 +1,8 @@
-import { DomainException } from "src/common/domain/domain.exceptions";
+import { DomainException } from "src/common/domain/exceptions/domain-exception";
+import { phoneNumber } from "../value-objects/phone";
 
-export class PhoneInvalidExceptions extends DomainException {
-    constructor() {
-       super("Invalid phone operator", "PhoneInvalidExceptions", 400);
+export class PhoneInvalidExceptions extends DomainException<phoneNumber> {
+    constructor(phone: phoneNumber) {
+       super(phone,"Invalid phone operator", "PhoneInvalidExceptions", 400);
     }
 }

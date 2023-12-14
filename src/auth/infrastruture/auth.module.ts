@@ -1,4 +1,3 @@
-/*
 import { Module } from '@nestjs/common';
 import { AppController } from '../../app.controller';
 import { PassportModule } from '@nestjs/passport';
@@ -30,4 +29,3 @@ import { JwtStrategy } from 'src/users/application/jwtoken/jwt.strategies';
   controllers: [AppController],
 })
 export class AuthModule {}
-*/

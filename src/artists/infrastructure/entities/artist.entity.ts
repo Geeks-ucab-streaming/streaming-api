@@ -1,4 +1,4 @@
-/*import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
+import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
 import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -20,12 +20,14 @@ export class ArtistEntity {
   playlistCreator: PlaylistCreator[];
 
   static async create(
+    id: string,
     name: string,
     image_reference: string,
   ): Promise<ArtistEntity> {
     const artist = new ArtistEntity();
+    artist.id = id;
     artist.name = name;
     artist.image_reference = image_reference;
     return artist;
   }
-}*/
+}

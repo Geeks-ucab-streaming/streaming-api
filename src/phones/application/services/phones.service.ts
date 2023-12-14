@@ -1,4 +1,4 @@
-/*import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PhoneDto } from "../dtos/phone.dto";
 import { IFindService } from 'src/common/domain/ifind.service';
 import { Phone } from 'src/phones/domain/value-objects/phone';
@@ -14,10 +14,11 @@ import { ValidateIsLineValidService } from 'src/phones/domain/services/validate-
 import { LineInvalidExceptions } from 'src/phones/domain/exceptions/line-not-valid.exception';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
+import { phoneNumber } from 'src/phones/domain/value-objects/phone';
 
 
 
-export class PhonesService implements IApplicationService<PhoneDto,Phone> {
+export class PhonesService implements IApplicationService<Phone,Phone> {
   get name(): string {
     return this.constructor.name;
   }
@@ -28,19 +29,15 @@ export class PhonesService implements IApplicationService<PhoneDto,Phone> {
   private readonly valiateisUsableOperator: ValidateIsUsableOperatorService = new ValidateIsUsableOperatorService(),
   private readonly valiateisLineValid: ValidateIsLineValidService = new ValidateIsLineValidService(),
   ){}
-  async execute(value: CreatePhoneDto): Promise<Result<Phone>> {
-    console.log(value)
-    console.log(!this.valiateisUsableOperator.execute(value.phoneNumber))
-    if(!this.valiateisUsableOperator.execute(value.phoneNumber)) throw new PhoneInvalidExceptions();
+  async execute(value: Phone): Promise<Result<Phone>> {
+    if(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber)) throw new PhoneInvalidExceptions(value.phoneNumber);
     
-    const line = await this.repoLines.finderCriteria(value.phoneNumber.toString().substring(0, 3));
+    const line = await this.repoLines.finderCriteria(value.phoneNumber.phoneNumber.toString().substring(0, 3));
     
-    if(!this.valiateisLineValid.execute(line.linePhone)) throw new LineInvalidExceptions();
+    if(!this.valiateisLineValid.execute(line.linePhone)) throw new LineInvalidExceptions(line.linePhone);
 
-    const phone = new Phone(uuidv4(),value.phoneNumber,line.linePhone);
-    return Result.success<Phone>(await this.repo.createPhone(phone));
+    const phone = new Phone(uuidv4(),phoneNumber.create(value.phoneNumber.phoneNumber),line.linePhone);
+    return Result.success<Phone>( await this.repo.createPhone(phone));
   }
 
 }
-
-*/

@@ -1,48 +1,54 @@
-/*import { PhonesNumber } from "./value-objects/phoneNumber";
-import { PhoneEntity } from "src/phones/infrastructure/phones.entity";
 import { UserBirthDate } from "./value-objects/userBirthDate";
 import { userName } from "./value-objects/userName";
 import { UserGender } from "./value-objects/userGender";
 import { userId } from "./value-objects/userId";
-import { userSuscriptionState } from "./value-objects/userSuscriptionState";
+import { userSuscriptionState } from "./entities/userSuscriptionState";
 import { Phone } from "src/phones/domain/value-objects/phone";
+import { get } from "http";
+import { AggregateRoot } from "src/common/domain/aggregate-root";
+import { UserCreated } from "./events/user-created";
 
-export class User {
+export class User /*extends AggregateRoot<userId> */{
   id: userId;
   name: userName;
   birth_date: UserBirthDate;
-  genero: UserGender;
+  gender: UserGender;
   suscriptionState: userSuscriptionState;
-  phonesNumber: Phone ;
+  phone: Phone ;
 
+  //OJO: Evaluar el protected en la definición del constructor
+   constructor(id: userId, name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState, phone: Phone) {
+    const userCreated = UserCreated.create(id, name, birthDate, gender, suscriptionState, phone);
+    /*super(id, userCreated);*/
+  } 
 
-  constructor(
-    id: userId,
-    name: userName,
-    birth_date: UserBirthDate,
-    genero: UserGender,
-    suscriptionState: userSuscriptionState,
-    phonesNumber:  Phone,
-
-  ) {
-    this.id = id; 
-    this.name = name;
-    this.birth_date = birth_date;
-    this.genero = genero;
-    this.suscriptionState = suscriptionState;
-    this.phonesNumber = phonesNumber;
-
+  static create(id: userId, name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState, phone: Phone): User {
+    return new User(id, name, birthDate, gender, suscriptionState,phone);
+  }
+  
+  //Getters
+  getId(): userId  {
+    return this.id; 
   }
 
-  static create(
-    id: userId,
-    name: userName,
-    birth_date: UserBirthDate,
-    genero: UserGender,
-    suscriptionState: userSuscriptionState,
-    phonesNumber:  Phone,
-  ): User {
-    return new User(id, name, birth_date, genero, suscriptionState, phonesNumber);
+  getName(): userName {
+    return this.name;
+  } 
+
+  getBirthDate(): UserBirthDate {
+    return this.birth_date;
+  }   
+
+  getGender(): UserGender {
+    return this.gender;
   }
+
+  getSuscriptionState():userSuscriptionState {
+    return this.suscriptionState;
+  }
+
+  getPhone(): Phone {
+    return this.phone;
+  }
+
 }
-*/

@@ -1,4 +1,4 @@
-/*import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { LineEntity } from './lines.entity';
 import { Prefix } from '../domain/value-objects/prefix';
 
@@ -22,4 +22,3 @@ export class PrefixEntity{
     return prefixEntity;
   }
 }
-*/

@@ -2,16 +2,14 @@ import { DataSource, Repository } from 'typeorm';
 import { PromotionEntity } from '../entities/promotion.entity';
 import { IPromotionRepository } from '../../domain/IPromotionRepository';
 import { Promotion } from 'src/promotions/domain/promotionAqqregate/promotion';
-import { GetFileService } from '../../../common/infrastructure/services/getFile.service';
 import { PromotionMapper } from '../mappers/promotion.mapper';
-import { PromotionId } from 'src/promotions/domain/promotionAqqregate/value-objects/promotionid-valueobject';
 
 export class OrmPromotionRepository
   extends Repository<PromotionEntity>
   implements IPromotionRepository
 {
   private readonly promotionMapper: PromotionMapper;
- private readonly repository: Repository<Promotion>;
+  private readonly repository: Repository<Promotion>;
   
  constructor(dataSource: DataSource) {
     super(PromotionEntity, dataSource.manager);
@@ -20,7 +18,7 @@ export class OrmPromotionRepository
   }
 
   async createPromotion(promotion: Promotion): Promise<Promotion> {
-    const createPromotion = await this.promotionMapper.domainToOrm(promotion);
+    const createPromotion = await this.promotionMapper.domainTo(promotion);
     await this.save(createPromotion);
     return promotion;
   }
@@ -32,7 +30,7 @@ export class OrmPromotionRepository
     }
     const promotion : Promotion[] = [];
     for (const promotionEntity of promotionAll) {
-      promotion.push(await this.promotionMapper.ormToDomain(promotionEntity));
+      promotion.push(await this.promotionMapper.ToDomain(promotionEntity));
     }    
     return promotion; // Added return statement
   }
@@ -46,7 +44,7 @@ export class OrmPromotionRepository
     if (!promotionResponse) {
       throw new Error('Promotion not found');
     }
-    return await this.promotionMapper.ormToDomain(promotionResponse);
+    return await this.promotionMapper.ToDomain(promotionResponse);
   }
 
 }

@@ -10,5 +10,4 @@ const config: PostgresConnectionOptions = {
     rejectUnauthorized: false,
   },
 };
-
 export default config;

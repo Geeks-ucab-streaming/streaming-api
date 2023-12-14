@@ -1,4 +1,4 @@
-/*import {
+import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
@@ -14,7 +14,6 @@ import { PrefixEntity } from './prefixes.entity';
 @Entity('Phones')
 export class PhoneEntity  {
   static create(id: string, phoneNumber: number, linePhone: string): PhoneEntity {
-    console.log(linePhone,phoneNumber,id, "en entity")
     const phoneEntity = new PhoneEntity();
     phoneEntity.id = id;
     phoneEntity.phoneNumber = phoneNumber;
@@ -30,9 +29,8 @@ export class PhoneEntity  {
   phoneNumber: number;
 
   @ManyToOne(() => LineEntity, (linePhone) => linePhone.phones)
-  @JoinColumn({ name: 'line_id' })
+  @JoinColumn({ name: 'linePhoneId' })
   linePhone: LineEntity;
   @OneToOne(() => UserEntity, (user) => user.phone)
   user: UserEntity;
 }
-*/

@@ -1,5 +1,4 @@
 //Decoradores
-/*
 import {
   AfterInsert,
   AfterUpdate,
@@ -61,4 +60,4 @@ export class UserEntity {
   logRemove() {
     console.log('Remove User whit id ', this.id);
   }
-}*/
+}

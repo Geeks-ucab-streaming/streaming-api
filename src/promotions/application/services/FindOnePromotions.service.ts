@@ -1,7 +1,6 @@
 import { IFindService } from 'src/common/domain/ifind.service';
 import { Promotion } from 'src/promotions/domain/promotionAqqregate/promotion';
 import { IPromotionRepository } from 'src/promotions/domain/IPromotionRepository';
-import { PromotionId } from 'src/promotions/domain/promotionAqqregate/value-objects/promotionid-valueobject';
 
 export class FindOnePromotionsService implements IFindService<string, Promotion>
 {

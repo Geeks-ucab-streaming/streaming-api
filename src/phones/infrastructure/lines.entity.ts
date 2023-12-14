@@ -1,4 +1,4 @@
-/*import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { PhoneEntity } from './phones.entity';
 import { PrefixEntity } from './prefixes.entity';
 
@@ -15,4 +15,4 @@ export class LineEntity {
 
   @OneToMany(() => PrefixEntity, (prefixes) => prefixes)
   prefixes: PrefixEntity[];
-}*/
+}

@@ -1,4 +1,4 @@
-/*import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
+import { SongArtist } from 'src/common/infrastructure/entities/songArtist.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
@@ -18,8 +18,8 @@ export class PlaylistEntity {
   @Column({ type: 'int', default: 0 })
   reproductions: number;
 
-  @Column({ type: 'text', default: 0 })
-  duration: string;
+  @Column({ type: 'int', default: 0 })
+  duration: number;
 
   // @Column({ type: 'bool', default: 0 })
   // isAlbum: boolean;
@@ -32,4 +32,4 @@ export class PlaylistEntity {
 
   @OneToMany(() => PlaylistSongEntity, (playlistSong) => playlistSong.playlist)
   playlistSong: PlaylistSongEntity[];
-}*/
+}

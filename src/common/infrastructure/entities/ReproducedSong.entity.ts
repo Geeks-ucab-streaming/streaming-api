@@ -1,4 +1,4 @@
-/*import { ArtistEntity } from 'src/artists/infrastructure/entities/artist.entity';
+import { ArtistEntity } from 'src/artists/infrastructure/entities/artist.entity';
 import { PlaylistEntity } from 'src/playlist/infrastructure/entities/playlist.entity';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
 import { UserEntity } from '../../../users/infrastructure/users.entity';
@@ -18,4 +18,3 @@ export class ReproducedSong {
   @ManyToOne(() => UserEntity, (user) => user.reproducedSong)
   user: UserEntity;
 }
-*/

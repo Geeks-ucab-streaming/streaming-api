@@ -1,11 +1,11 @@
-import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
+import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 const UUID_FORMAT =
   /([0-9]|[a-f]){8,8}-([0-9]|[a-f]){4,4}-([0-9]|[a-f]){4,4}-([0-9]|[a-f]){4,4}-([0-9]|[a-f]){12,12}/g;
 
 export class ArtistID implements IValueObject<ArtistID> {
   private readonly id: string;
 
-  get Id(): string {
+  get Value(): string {
     return this.id;
   }
 
@@ -22,6 +22,6 @@ export class ArtistID implements IValueObject<ArtistID> {
   }
 
   public equals(other: ArtistID): boolean {
-    return this.Id === other.Id;
+    return this.Value === other.Value;
   }
 }
