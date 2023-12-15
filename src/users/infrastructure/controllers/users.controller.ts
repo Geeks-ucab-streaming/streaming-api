@@ -89,10 +89,9 @@ export class UsersController {
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.findUserById.execute(id);
-    if (!user) {
-      throw new NotFoundException('user not found!');
-    }
-    return user;
+    //EJEMPLO DE COMO SE DEBERIAN DEVOLVER LAS COSAS EN LOS CONTROLLERS 
+    if(user.Error) throw user.Error
+    return user.Value; //DEBERIA CONTRUIR UN DTO????????
   }
 
   //Actualizar usuario en base a su ID

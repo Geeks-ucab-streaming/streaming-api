@@ -32,11 +32,10 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
       userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
       UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
       UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),
-      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState)
-      )
-    if (!user){
-      throw new NotFoundException("user not found");
-    }
+      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState))
+      
+    if (!user) return Result.fail<User>(new NotFoundException('user not found')) //throw new NotFoundException("user not found");
+    
 
     const savedUser = await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.
     return Result.success<User>(await usuarioParametrizado.mapper.ToDomain(savedUser));
