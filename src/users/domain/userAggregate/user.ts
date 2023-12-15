@@ -84,7 +84,7 @@ export class User extends AggregateRoot<userId> {
     console.log("Hubo un cambio de estado");
   }
   else{
-    console.log("No hubo cambio de estado");
+    throw new InvalidUserException(this.events);
   }
 }
 }
