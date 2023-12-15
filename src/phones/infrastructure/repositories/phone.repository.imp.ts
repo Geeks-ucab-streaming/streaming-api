@@ -5,6 +5,7 @@ import { IPhoneRepository} from 'src/phones/domain/generic-repo-phones';
 import { Phone } from '../../domain/phoneAggregate/phone';
 import { Imapper } from 'src/core/application/IMapper';
 import { PhoneRegistedAlredyExceptions } from 'src/phones/domain/exceptions/phone-already-registered.exception';
+import { Result } from 'src/common/domain/logic/Result';
 
 export class OrmPhoneRepository extends Repository<PhoneEntity> implements IPhoneRepository<Phone> {
   phoneMapper: Imapper<Phone, PhoneEntity>;
@@ -15,15 +16,15 @@ export class OrmPhoneRepository extends Repository<PhoneEntity> implements IPhon
     super(PhoneEntity, dataSource.manager);
     this.phoneMapper = phoneMapper;
   }
-  async createPhone(phone: Phone): Promise<Phone> {
+  async createPhone(phone: Phone): Promise<Result< Phone>> {
     console.log(phone,'el phone ')
     const isExistPhone = await this.findOneBy({
       phoneNumber:phone.phoneNumber.phoneNumber
     });
-    if(isExistPhone) throw new PhoneRegistedAlredyExceptions(phone.phoneNumber);
+    if(isExistPhone) return Result.fail<Phone>(new PhoneRegistedAlredyExceptions(phone.phoneNumber));
     const phoneToOrm = await this.phoneMapper.domainTo(phone);
     console.log(phoneToOrm)
     const phoneCreated = await this.phoneMapper.ToDomain(await this.save(phoneToOrm));
-    return phoneCreated;
+    return Result.success<Phone>(phoneCreated);
   }
 }
