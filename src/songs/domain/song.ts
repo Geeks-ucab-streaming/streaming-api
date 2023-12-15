@@ -38,7 +38,7 @@ export class Song extends AggregateRoot<SongID> {
     if (!this.streams) throw new Error('Invalid Song Streams');
     if (!this.genres) throw new Error('Invalid Song Genres');
     if (!this.artists) throw new Error('Invalid Song Artists');
-    //Aqui deberiamos crear una excepcion para cada vaina 
+    //Aqui deberiamos crear una excepcion para cada vaina
     //pero me da ladill asi que lo puse asi
   }
   //private id: SongID; //vo
