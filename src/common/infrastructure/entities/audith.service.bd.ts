@@ -4,6 +4,7 @@ import { AudithServiceDecorator } from "src/common/Application/application-servi
 
 @Entity()
 export class Audith{
+  
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column() 
