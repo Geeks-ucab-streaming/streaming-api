@@ -126,6 +126,7 @@ export class PlaylistController {
       playlistSongs.push({
         songId: song.Id.Value.toString(),
         name: song.Name,
+        image: song.Image,
         duration: song.DurationString,
         artists: artistsSong,
       });
