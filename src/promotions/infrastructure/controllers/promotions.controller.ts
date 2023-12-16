@@ -7,11 +7,13 @@ import { GetFileService } from 'src/common/infrastructure/services/getFile.servi
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
 import { PromotionDto } from 'src/dtos';
+import { FindRandomPromotionsService } from 'src/promotions/application/services/FindRandomPromotion.service';
 
 @Controller('promotion')
 export class PromotionsController {
   private readonly findOnePromotionsService: FindOnePromotionsService;
   private readonly findAllPromotionsService: FindAllPromotionsService;
+  private readonly findRandomPromotionsService: FindRandomPromotionsService;
   private readonly ormPromotionRepository: OrmPromotionRepository;
   constructor() {
     this.ormPromotionRepository = new OrmPromotionRepository(
@@ -24,18 +26,26 @@ export class PromotionsController {
     this.findOnePromotionsService = new FindOnePromotionsService(
       this.ormPromotionRepository,
     );
+    this.findRandomPromotionsService = new FindRandomPromotionsService(
+      this.ormPromotionRepository,
+    );
   }
   @ApiTags('Promotions')
   @Get()
-  async findAll(): Promise<PromotionDto[]> {
-    let promos: PromotionDto[] = [];
-    const promotions: Promotion[] =
-      await this.findAllPromotionsService.execute();
-    for (const promo of promotions) {
-      promos.push({ id: promo.id, image: promo.image });
-    }
-    return promos;
+  async findRandomPromotion(): Promise<PromotionDto> {
+    const promotion: Promotion =
+      await this.findRandomPromotionsService.execute();
+    return promotion;
   }
+  // async findAll(): Promise<PromotionDto[]> {
+  //   let promos: PromotionDto[] = [];
+  //   const promotions: Promotion[] =
+  //     await this.findAllPromotionsService.execute();
+  //   for (const promo of promotions) {
+  //     promos.push({ id: promo.id, image: promo.image });
+  //   }
+  //   return promos;
+  // }
   @ApiTags('Promotions')
   @Get('/:id')
   async findById(@Param('id') id: string): Promise<PromotionDto> {

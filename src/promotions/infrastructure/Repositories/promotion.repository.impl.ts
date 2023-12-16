@@ -46,4 +46,15 @@ export class OrmPromotionRepository
       return Promise.all(promotionPromises);
     }
   }
+
+  async findRandomPromotion(): Promise<Promotion> {
+    let promotion = await this.createQueryBuilder('entity')
+      .orderBy('RANDOM()')
+      .getOne();
+    const image = await this.getPromoImageService.execute(
+      promotion.image_reference.toLowerCase(),
+    );
+    const promoWithImage: Promotion = { ...promotion, image: image };
+    return promoWithImage;
+  }
 }
