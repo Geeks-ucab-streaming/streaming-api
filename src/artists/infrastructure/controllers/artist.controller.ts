@@ -51,12 +51,10 @@ export class ArtistController {
 
     //Ejecutamos el caso de uso
     //Creamos el servicio de aplicación.
-    const service = new ErrorApplicationServiceDecorator(
-      new LoggingApplicationServiceDecorator(
+    const service = new LoggingApplicationServiceDecorator(
         new GetArtistProfilesApplicationService(this.ormArtistRepository),
         new NestLogger(),
-      ),
-    );
+      );
     const result = await service.execute(dto);
     return result;
   }
