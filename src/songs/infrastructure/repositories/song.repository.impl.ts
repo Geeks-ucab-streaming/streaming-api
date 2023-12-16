@@ -3,6 +3,7 @@ import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { SongsMapper } from '../mappers/Song.mapper';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 
 export class OrmSongRepository
   extends Repository<SongEntity>
@@ -13,14 +14,14 @@ export class OrmSongRepository
     super(SongEntity, dataSource.manager);
     this.songMapper = new SongsMapper();
   }
-  async findById(id: string): Promise<Song> {
+  async findById(id: SongID): Promise<Song> {
     const songResponse = await this.createQueryBuilder('song')
       .leftJoinAndSelect('song.song_artist', 'song_artist')
       .leftJoinAndSelect('song_artist.artist', 'artist')
-      .where('song.id = :id', { id })
+      .where('song.id = :id', { id: id.Value })
       .getOne();
 
-    const song: Song = await this.songMapper.ToDomain(songResponse);
+    const song: Song = await this.songMapper.ToDomain(songResponse) as Song;
     return song;
   }
   async findByArtistId(artistId: string): Promise<Song[]> {

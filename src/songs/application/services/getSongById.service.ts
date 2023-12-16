@@ -3,11 +3,21 @@ import { Song } from 'src/songs/domain/song';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { Artist } from 'src/artists/domain/artist';
 import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
-
-export class GetSongByIdService implements IFindService<String, Song> {
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { Result } from 'src/common/domain/logic/Result';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+export interface GetSongByIdServiceDto {
+  id?: string;
+}
+export class GetSongByIdService implements IApplicationService<GetSongByIdServiceDto, Song>
+{
+  get name(): string {
+    return this.constructor.name;
+  }
   constructor(private readonly songsRepository: ISongRepository) {}
 
-  async execute(songId: string): Promise<Song> {
-    return await this.songsRepository.findById(songId);
+  async execute(dto?: GetSongByIdServiceDto): Promise<Result<Song>> {
+    const song = await this.songsRepository.findById(SongID.create(dto.id));
+    return Result.success<Song>(song);
   }
 }
