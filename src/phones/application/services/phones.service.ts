@@ -25,7 +25,7 @@ export class PhonesService implements IApplicationService<Phone,Phone> {
   private readonly valiateisLineValid: ValidateIsLineValidService = new ValidateIsLineValidService(),
   ){}
   async execute(value: Phone): Promise<Result<Phone>> {
-    if(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber)) throw new PhoneInvalidExceptions(value.phoneNumber);
+    if(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber)) Result.fail<Phone>(new PhoneInvalidExceptions(value.phoneNumber));
     
     const prefixEntity = await this.repoLines.finderCriteria(value.phoneNumber.phoneNumber.toString().substring(0, 3));
     console.log(prefixEntity )

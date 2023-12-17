@@ -3,6 +3,7 @@ import { PhoneRegistedAlredyExceptions } from "../../exceptions/phone-already-re
 import { PhoneInvalidExceptions } from "../../exceptions/phone-not-valid-exception";
 import { phoneId } from "./phoneId";
 import { phoneOperatorsEnum } from "./phoneOperators.enum";
+import { Result } from "src/common/domain/logic/Result";
 
 export class phoneNumber implements IValueObject<phoneNumber>{
 
@@ -21,9 +22,9 @@ export class phoneNumber implements IValueObject<phoneNumber>{
     return this._phoneNumber;
   }
 
-  public async isValidPhoneNumber(phoneNumber: phoneNumber): Promise<boolean> {
-    if(this._phoneNumber === phoneNumber._phoneNumber) throw new PhoneRegistedAlredyExceptions(this);
-    return true;
+  public async isValidPhoneNumber(phoneNumber: phoneNumber): Promise<Result<boolean>> {
+    if(this._phoneNumber === phoneNumber._phoneNumber) return Result.fail<boolean>(new PhoneRegistedAlredyExceptions(phoneNumber));
+    return Result.success<boolean>(true);
   }
 
   public isValidOperator(phoneNumber: number): boolean {
