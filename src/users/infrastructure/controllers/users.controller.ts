@@ -57,11 +57,8 @@ export class UsersController {
   
   //Registro de Usuario con su número de teléfono
   @ApiTags('Users')
-  @Post('/auth/validate_operator')
+  @Post('/auth/signup')
   async createUser(@Body() body: CreateUserDto) {
-    this.findByPhoneUserService = new findByPhoneUserService(
-      this.userRepository,
-    )
       const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
       const service= new ErrorApplicationServiceDecorator(
       new SignUserUp(this.phonesService,phoneService,this.usersMapper,this.userRepository));

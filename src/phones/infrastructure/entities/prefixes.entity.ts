@@ -11,4 +11,13 @@ export class PrefixEntity{
 
   @ManyToOne(() => LineEntity, (linePhone) => linePhone.prefixes)
   linePhone: LineEntity;
+
+  static create(id: string, prefix: number, linePhone: LineEntity): PrefixEntity {
+    const prefixEntity = new PrefixEntity();
+    prefixEntity.id = id;
+    prefixEntity.prefix = prefix;
+    prefixEntity.linePhone = linePhone
+
+    return prefixEntity;
+  }
 }

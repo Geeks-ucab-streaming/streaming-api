@@ -9,8 +9,6 @@ async function bootstrap() {
   app.enableCors();
   swagger(app);
 
-  app.setGlobalPrefix('api');
-
   await app.listen(3000);
 }
 bootstrap();
