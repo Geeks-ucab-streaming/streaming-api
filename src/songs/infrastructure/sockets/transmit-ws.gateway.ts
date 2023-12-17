@@ -7,18 +7,14 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { IFindService } from 'src/common/domain/ifind.service';
+import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { Song } from 'src/songs/domain/song';
 
 @WebSocketGateway({ cors: true })
 export class TransmitWsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(
-    @Inject('GetSongById')
-    private readonly getSongService: IFindService<String, Song>,
-    @Inject('GetAudioService')
-    private readonly getAudioService: IFindService<string, Buffer>,
-  ) {}
+  constructor() {}
   handleConnection(client: Socket) {
     console.log('cliente conectado: ', client.id);
   }
@@ -28,11 +24,17 @@ export class TransmitWsGateway
   }
 
   @SubscribeMessage('message-from-client')
-  async sendSong(client: Socket, songId: string) {
+  async sendSong(
+    client: Socket,
+    payload: { preview: boolean; fileName: string },
+  ) {
+    const getFileService: GetFileService = new GetFileService(
+      payload.preview
+        ? process.env.PREVIEWS_CONTAINER
+        : process.env.SONGS_CONTAINER,
+    );
+    const file: Buffer = await getFileService.execute(payload.fileName);
     console.log('hola');
-    const song: Song = await this.getSongService.execute(songId);
-    const file = await this.getAudioService.execute(song.AudioReference);
-    console.log(file);
     const chunkSize = 1024;
 
     try {
@@ -41,8 +43,8 @@ export class TransmitWsGateway
         client.emit('message-from-server', {
           chunk: chunkData,
         });
-        client.emit('song-transfer-complete');
       }
+      client.emit('song-transfer-complete');
     } catch (error) {
       console.error('Error al enviar el archivo por WebSocket:', error);
     }
