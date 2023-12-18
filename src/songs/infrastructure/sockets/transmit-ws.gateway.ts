@@ -10,7 +10,7 @@ import { IFindService } from 'src/common/domain/ifind.service';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { Song } from 'src/songs/domain/song';
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway({ cors: true }) // RUTA: http://localhost:3000/socket.io/socket.io.js
 export class TransmitWsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -43,7 +43,9 @@ export class TransmitWsGateway
         client.emit('message-from-server', {
           chunk: chunkData,
         });
+        console.log('mandando');
       }
+      console.log('acabó la transmision');
       client.emit('song-transfer-complete');
     } catch (error) {
       console.error('Error al enviar el archivo por WebSocket:', error);

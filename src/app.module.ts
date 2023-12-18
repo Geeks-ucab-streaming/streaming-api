@@ -9,6 +9,7 @@ import { SongsController } from './songs/infrastructure/controllers/song.control
 import { PlaylistController } from './playlist/infrastructure/controllers/playlist.controller';
 import { UsersController } from './users/infrastructure/controllers/users.controller';
 import { ArtistController } from './artists/infrastructure/controllers/artist.controller';
+import { TransmitWsGateway } from './songs/infrastructure/sockets/transmit-ws.gateway';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -31,6 +32,6 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     UsersController,
     ArtistController,
   ],
-  providers: [AppService],
+  providers: [AppService, TransmitWsGateway],
 })
 export class AppModule {}
