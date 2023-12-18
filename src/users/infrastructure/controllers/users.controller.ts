@@ -49,8 +49,6 @@ export class UsersController {
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: UpdateUser;
-  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>( new FirebaseNotificationSender() ,this.userRepository);
-
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
     this.signUserUp = new SignUserUp(this.phonesService,this.findByPhoneUserService,this.usersMapper,this.userRepository);
@@ -111,15 +109,7 @@ export class UsersController {
   @Post('/user/notificacion')
   async notificacion(@Body() body: CreateUserDto) {
     
-    return await this.notifier.send({
-      //EXAMPLE FOR NOTIFICATION
-      notification: {
-        title: 'Hello',
-        body: 'World',
-      },
-   
-      token: ['dfhygzT0QZG8Qt2gavQIdI:APA91bHr1cGJCUK9cfW7UuYOqH-dfqfRxP1Gp61riytbvoS7Y3kjRCu2NMGxb44wp_ChfCWbxDgbJ7W-4yTewALy4frn54S9sMcK5cN-XiKln9OcZfdFgrFydyffvH2wFtk5kCw20Pst',],
-    })
+    
 }
 
 

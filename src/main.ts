@@ -3,19 +3,11 @@ dotenv.config({ path: `./deploy/.env.${process.env.NODE_ENV}` });
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { swagger } from './docs/swagger.docs';
-import { Cron, CronExpression } from '@nestjs/schedule';
-export class servicio {
-  @Cron(CronExpression.EVERY_30_SECONDS)
-  handleCron() {
-    console.log('Called when the current second is 45');
-  }
-}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   swagger(app);
-  const ser = new servicio();
-  ser.handleCron();
   //Cron job
   
   //firebaase configuration

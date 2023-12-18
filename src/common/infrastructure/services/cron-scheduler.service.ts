@@ -4,7 +4,9 @@ import { UsersMapper } from "src/users/infrastructure/mappers/User.mapper";
 import { OrmUserRepository } from "src/users/infrastructure/repositories/user.repository.impl";
 import { FirebaseNotificationSender } from "src/users/infrastructure/subscription-notifier/subscription-notifier";
 import * as admin from 'firebase-admin';
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class CronSchedulerService {
     private usersMapper: UsersMapper = new UsersMapper();
     private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
@@ -13,6 +15,7 @@ export class CronSchedulerService {
     constructor() { }
     @Cron('*/3 * * * * *')
     async notificationSubscriptionCron() {
+        console.log('Every 3 seconds')
         return await this.notifier.send({
             //EXAMPLE FOR NOTIFICATION
             notification: {
