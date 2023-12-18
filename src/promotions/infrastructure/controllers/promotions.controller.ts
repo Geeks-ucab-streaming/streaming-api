@@ -6,8 +6,9 @@ import { OrmPromotionRepository } from '../Repositories/promotion.repository.imp
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
+import { PromotionDto } from 'src/dtos';
 
-@Controller('promotion')
+@Controller('api/promotion')
 export class PromotionsController {
   private readonly findOnePromotionsService: FindOnePromotionsService;
   private readonly findAllPromotionsService: FindAllPromotionsService;
@@ -26,12 +27,21 @@ export class PromotionsController {
   }
   @ApiTags('Promotions')
   @Get()
-  async findAll(): Promise<Promotion[]> {
-    return await this.findAllPromotionsService.execute();
+  async findAll(): Promise<PromotionDto[]> {
+    let promos: PromotionDto[] = [];
+    const promotions: Promotion[] =
+      await this.findAllPromotionsService.execute();
+    for (const promo of promotions) {
+      promos.push({ id: promo.id, image: promo.image });
+    }
+    return promos;
   }
   @ApiTags('Promotions')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<Promotion> {
-    return await this.findOnePromotionsService.execute(id);
+  async findById(@Param('id') id: string): Promise<PromotionDto> {
+    const promotion: Promotion =
+      await this.findOnePromotionsService.execute(id);
+    let promo: PromotionDto = { id: promotion.id, image: promotion.image };
+    return promo;
   }
 }

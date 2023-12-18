@@ -9,6 +9,7 @@ import { SongsController } from './songs/infrastructure/controllers/song.control
 import { PlaylistController } from './playlist/infrastructure/controllers/playlist.controller';
 import { UsersController } from './users/infrastructure/controllers/users.controller';
 import { ArtistController } from './artists/infrastructure/controllers/artist.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -18,6 +19,7 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
       envFilePath: `./deploy/.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRoot(config),
+    ScheduleModule.forRoot()
     // ArtistModule,
     // SongModule,
     // PlaylistModule,

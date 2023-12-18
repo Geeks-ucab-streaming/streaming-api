@@ -27,6 +27,10 @@ import { SignUserIn } from 'src/users/application/services/Sign-User-In.applicat
 import { FindUserById } from 'src/users/application/services/Find-User-By-Id.application.service';
 import { UpdateUserById } from 'src/users/application/services/Update-User-By-id.application.service';
 import { UpdateUser } from 'src/users/application/ParameterObjects/updateUser';
+import { SubscriptionNotifier } from 'src/users/application/services/dummy-service-firebase';
+import * as admin from 'firebase-admin';
+import { FirebaseNotificationSender } from '../subscription-notifier/subscription-notifier';
+import { Cron } from '@nestjs/schedule';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -45,6 +49,7 @@ export class UsersController {
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: UpdateUser;
+  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>( new FirebaseNotificationSender() ,this.userRepository);
 
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
@@ -102,7 +107,20 @@ export class UsersController {
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
 
+  @ApiTags('Users')
+  @Post('/user/notificacion')
+  async notificacion(@Body() body: CreateUserDto) {
+    
+    return await this.notifier.send({
+      //EXAMPLE FOR NOTIFICATION
+      notification: {
+        title: 'Hello',
+        body: 'World',
+      },
+   
+      token: ['dfhygzT0QZG8Qt2gavQIdI:APA91bHr1cGJCUK9cfW7UuYOqH-dfqfRxP1Gp61riytbvoS7Y3kjRCu2NMGxb44wp_ChfCWbxDgbJ7W-4yTewALy4frn54S9sMcK5cN-XiKln9OcZfdFgrFydyffvH2wFtk5kCw20Pst',],
+    })
 }
-  
 
 
+}

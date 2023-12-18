@@ -1,31 +1,23 @@
 import { IFindService } from 'src/common/domain/ifind.service';
 import { Song } from 'src/songs/domain/song';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
-import { SongWithArtistPO } from '../ParameterObjects/songWithArtistPO';
 import { Artist } from 'src/artists/domain/artist';
 import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
-
-export class GetSongByIdService
-  implements IFindService<String, SongWithArtistPO>
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { Result } from 'src/common/domain/logic/Result';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+export interface GetSongByIdServiceDto {
+  id?: string;
+}
+export class GetSongByIdService implements IApplicationService<GetSongByIdServiceDto, Song>
 {
-  constructor(
-    private readonly songsRepository: ISongRepository,
-    private readonly artistRepository: IArtistsRepository,
-  ) {}
+  get name(): string {
+    return this.constructor.name;
+  }
+  constructor(private readonly songsRepository: ISongRepository) {}
 
-  async execute(songId: string): Promise<SongWithArtistPO> {
-    let creators: Artist[];
-    const song: Song = await this.songsRepository.findById(songId);
-    let artistsID: string[] = [];
-    console.log(song);
-
-    for (const artist of song.Artists) {
-      console.log(artist);
-      artistsID.push(artist);
-    }
-    console.log(artistsID);
-    creators = await this.artistRepository.findArtistsInCollection(artistsID);
-
-    return new SongWithArtistPO(song, creators);
+  async execute(dto?: GetSongByIdServiceDto): Promise<Result<Song>> {
+    const song = await this.songsRepository.findById(SongID.create(dto.id));
+    return Result.success<Song>(song);
   }
 }
