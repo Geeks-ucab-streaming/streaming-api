@@ -4,13 +4,16 @@ import { PhoneEntity } from "../../infrastructure/entities/phones.entity";
 import { phoneNumber } from "src/phones/domain/phoneAggregate/value-objects/phoneNumber";
 import { phoneId } from "src/phones/domain/phoneAggregate/value-objects/phoneId";
 import { Line } from "src/phones/domain/phoneAggregate/value-objects/line";
+import { LineEntity } from "../entities/lines.entity";
 
 export class phoneMapper implements Imapper<Phone,PhoneEntity> {
-    async domainTo(domainEntity: Phone): Promise<PhoneEntity> {
-        const ormEntity:PhoneEntity = new PhoneEntity(); 
-        ormEntity.id=domainEntity.Id.Id,
-        ormEntity.phoneNumber=domainEntity.PhoneNumber.phoneNumber,
-        ormEntity.id=domainEntity.LinePhone.id  
+    async domainTo(phoneDomainEntity: Phone): Promise<PhoneEntity> {
+        const ormEntity:PhoneEntity = new PhoneEntity();
+        const lineEntity: LineEntity = new LineEntity(); 
+        ormEntity.id=phoneDomainEntity.Id.Id,
+        ormEntity.phoneNumber=phoneDomainEntity.PhoneNumber.phoneNumber,
+        lineEntity.id=phoneDomainEntity.LinePhone.id;
+        ormEntity.linePhone=lineEntity;
         return ormEntity; 
     }
 
