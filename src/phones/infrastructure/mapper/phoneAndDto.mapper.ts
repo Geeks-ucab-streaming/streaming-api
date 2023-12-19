@@ -11,6 +11,7 @@ export class PhoneAndDtoMapper implements Imapper<Phone,PhoneDto> {
         phoneDto.id = phoneDomainEntity.Id.Id;
         phoneDto.phoneNumber = phoneDomainEntity.PhoneNumber.phoneNumber;
         phoneDto.linePhoneId= phoneDomainEntity.LinePhone.id;
+        phoneDto.lineName= phoneDomainEntity.LinePhone.name;
         return phoneDto;
     }
 

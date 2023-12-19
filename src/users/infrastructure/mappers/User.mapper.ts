@@ -29,9 +29,9 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       userId.create(ormEntity.id),
       await this.mapperPhone.ToDomain(ormEntity.phone),
       userSuscriptionState.create(ormEntity.suscriptionState),
-      userName.create(ormEntity.name),
+      /*userName.create(ormEntity.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
-      UserGender.create(ormEntity.gender),
+      UserGender.create(ormEntity.gender),*/
     );  
 
     return Promise.resolve(user);

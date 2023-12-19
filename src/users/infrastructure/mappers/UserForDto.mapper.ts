@@ -17,9 +17,9 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
       userDto.id = userDomainEntity.Id.Id;
       userDto.suscriptionState = userDomainEntity.SuscriptionState.SuscriptionState
       userDto.phone= await this.mapperPhone.domainTo(userDomainEntity.Phone);
-      /*ormEntity.name = domainEntity.Name.Name;
-      ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
-      ormEntity.gender= domainEntity.Gender.Gender;*/
+      /*userDto.name = userDomainEntity.Name.Name;
+      userDto.birth_date = userDomainEntity.BirthDate.BirthDate;
+      userDto.gender= userDomainEntity.Gender.Gender;*/
       return await userDto;
   }
 
