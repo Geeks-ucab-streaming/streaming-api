@@ -1,21 +1,21 @@
 ### Crear un nuevo usuario
-POST http://localhost:3000/api/auth/validate_operator
+POST http://localhost:3000/api/auth/signup
 content-type: application/json
 
 {
-  "phonesNumber":"4142930031"
+  "suscriptionState":"gratuito",
+  "phone":4149869793
 }
-
 
 ### Iniciar Sesión 
 POST http://localhost:3000/api/auth/login
 content-type: application/json
 
 {
-  "phonesNumber":"4142930031"
+  "phone":"4142930031"
 }
 
 
 ### Encontrar un usuario en particular
-GET http://localhost:3000/api/user/66e9e47e-c941-4cb2-83c1-b3fbdcce8b8e
+GET http://localhost:3000/api/user/3b29272f-cf0b-4e66-b9f9-cb6b6c53db02
 

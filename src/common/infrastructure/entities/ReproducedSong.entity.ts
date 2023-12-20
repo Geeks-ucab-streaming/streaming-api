@@ -1,7 +1,7 @@
 import { ArtistEntity } from 'src/artists/infrastructure/entities/artist.entity';
 import { PlaylistEntity } from 'src/playlist/infrastructure/entities/playlist.entity';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
-import { UserEntity } from '../../../users/infrastructure/users.entity';
+import { UserEntity } from '../../../users/infrastructure/entities/users.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Reproduced_Song')

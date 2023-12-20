@@ -1,28 +1,8 @@
-import { shallowEqual } from 'shallow-equal-object';
-
-interface ValueObjectProps {
-  [index: string]: any;
-}
-
-/**
- * @desc ValueObjects are objects that we determine their
- * equality through their structrual property.
- */
-
-export abstract class ValueObject<T extends ValueObjectProps> {
-  public readonly props: T;
-
-  constructor(props: T) {
-    this.props = Object.freeze(props);
-  }
-
-  public equals(vo?: ValueObject<T>): boolean {
-    if (vo === null || vo === undefined) {
-      return false;
-    }
-    if (vo.props === undefined) {
-      return false;
-    }
-    return shallowEqual(this.props, vo.props);
-  }
+/** IValueObject: Es una interfaz genérica utilizada para implementar Value Objects.
+ *  @typeParam `T` Tipo del parametro del Value Object*/
+export interface IValueObject<T> {
+  /**Compara la igualdad de dos Value Objects
+   * @param other Value Object a comparar.
+   * @returns `boolean`*/
+  equals(other: T): boolean;
 }

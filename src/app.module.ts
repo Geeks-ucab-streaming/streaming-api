@@ -3,13 +3,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import config from 'ormconfig';
-import { UsersModule } from '../src/users/infrastructure/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ArtistModule } from './artists/infrastructure/artist.module';
-import { SongModule } from './songs/infrastructure/song.module';
-import { Playlist } from './playlist/domain/playlist';
-import { PlaylistModule } from './playlist/infrastructure/playlist.module';
-import { PromotionModule } from './promotions/infrastructure/promotion.module';
+import { PromotionsController } from './promotions/infrastructure/controllers/promotions.controller';
+import { SongsController } from './songs/infrastructure/controllers/song.controller';
+import { PlaylistController } from './playlist/infrastructure/controllers/playlist.controller';
+import { UsersController } from './users/infrastructure/controllers/users.controller';
+import { ArtistController } from './artists/infrastructure/controllers/artist.controller';
+import { TransmitWsGateway } from './songs/infrastructure/sockets/transmit-ws.gateway';
+import { CronSchedulerService } from './common/infrastructure/services/cron-scheduler.service';
+import { ScheduleModule } from '@nestjs/schedule';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -19,13 +21,20 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
       envFilePath: `./deploy/.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRoot(config),
-    UsersModule,
-    ArtistModule,
-    SongModule,
-    PlaylistModule,
-    PromotionModule,
+    ScheduleModule.forRoot(),
+    // ArtistModule,
+    // SongModule,
+    // PlaylistModule,
+    // PromotionModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [
+    AppController,
+    PromotionsController,
+    SongsController,
+    PlaylistController,
+    UsersController,
+    ArtistController,
+  ],
+  providers: [AppService, CronSchedulerService, TransmitWsGateway],
 })
 export class AppModule {}

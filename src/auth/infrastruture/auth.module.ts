@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from '../aplication/auth.service';
 import { AppController } from '../../app.controller';
-import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { LocalStrategy } from './local.strategy';
-// import { JwtStrategy } from './jwt.strategies';
-import { jwtcontanst } from './jwt.constansts';
+import { jwtcontanst } from 'src/users/application/constants/jwt.constansts';
+import { JwtStrategy } from 'src/users/application/jwtoken/jwt.strategies';
+// import { LocalStrategy } from './local.strategyy';
 
 @Module({
   imports: [
@@ -22,8 +20,10 @@ import { jwtcontanst } from './jwt.constansts';
       },
     }),
   ],
-  providers: [AuthService, LocalStrategy],
-  // JwtStrategy],
-  controllers: [AuthController],
+  providers: [
+    // LocalStrategy,
+    JwtStrategy,
+  ],
+  controllers: [AppController],
 })
 export class AuthModule {}

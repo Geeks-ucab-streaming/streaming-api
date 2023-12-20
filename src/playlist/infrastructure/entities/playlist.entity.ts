@@ -18,8 +18,11 @@ export class PlaylistEntity {
   @Column({ type: 'int', default: 0 })
   reproductions: number;
 
-  // @Column({ type: 'bool', default: 0 })
-  // isAlbum: boolean;
+  @Column({ type: 'int', default: 0 })
+  duration: number;
+
+  @Column({ type: 'boolean', default: false })
+  isAlbum: boolean;
 
   @OneToMany(
     () => PlaylistCreator,

@@ -1,22 +1,20 @@
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import { User } from 'src/users/domain/user';
-import { IFindService } from 'src/common/domain/ifind.service';
-import { PhoneEntity } from 'src/phones/infrastructure/phones.entity';
-import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
-import { phoneOperatorsEnum } from 'src/users/domain/value-objects/phoneOperators.enum';
+import { User } from 'src/users/domain/userAggregate/user';
+import { IUserRepository } from 'src/users/domain/IUserRepository';
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { Result } from 'src/common/domain/logic/Result';
+import { phoneNumber } from 'src/phones/domain/phoneAggregate/value-objects/phoneNumber';
 
-@Injectable()
-export class findByPhoneUserService implements IFindService<number, User> {
-
-  constructor(
-    @Inject('IgenericRepo')
-    private readonly repo:IgenericRepo<PhoneEntity,User>,
-  ){} 
-
-  execute(value?: number): Promise<User>  {
-      if (!Object.values(phoneOperatorsEnum).includes(value.toString().substring(0,3) as phoneOperatorsEnum)) throw new BadRequestException('Invalid phone operator');
-      return this.repo.finderCriteria({phoneNumber: Number(value)});
+export class findByPhoneUserService implements IApplicationService<number, User> {
+  private readonly repo: IUserRepository;
+  get name(): string {
+    return this.constructor.name;
+  }
+  constructor(repo: IUserRepository) {
+    this.repo = repo;
   }
 
-}
-
+  async execute(value?: number): Promise<Result<User>> {
+    const phone = phoneNumber.create(Number(value));
+    return Result.success<User>(await this.repo.finderCriteria({ PhoneNumber:  phone  }));
+  }
+} 

@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { Playlist } from 'src/playlist/domain/playlist';
 
-export class PlaylistDto extends Playlist {
+export class PlaylistDto {
   @Expose()
   id: string;
 

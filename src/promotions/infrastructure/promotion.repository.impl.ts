@@ -1,5 +1,5 @@
 import { Promotion } from '../domain/promotion';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
+import { IFindGenericRepository } from 'src/common/domain/generic.repository';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PromotionEntity } from './entities/promotion.entity';
@@ -10,11 +10,11 @@ export class PromotionRepository implements IFindGenericRepository<Promotion> {
     private readonly repository: Repository<Promotion>,
   ) {}
 
-  async find(id?: string): Promise<Promotion | Promotion[]> {
-    if (id) {
-      const artist = await this.repository.findOne({ where: { id: id } });
-      return artist ? artist : null;
-    }
+  async findAll(): Promise<Promotion[]> {
     return this.repository.find();
+  }
+
+  async findById(id: string): Promise<Promotion> {
+    return this.repository.findOne({ where: { id: id } });
   }
 }
