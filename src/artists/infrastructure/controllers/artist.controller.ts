@@ -19,7 +19,8 @@ import { LoggingApplicationServiceDecorator } from 'src/common/Application/appli
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
-@Controller('artists')
+import { ApiTags } from '@nestjs/swagger';
+@Controller('api/artists')
 export class ArtistController {
   private readonly ormArtistMapper: ArtistsMapper;
   private readonly ormArtistRepository: OrmArtistRepository;
@@ -30,7 +31,7 @@ export class ArtistController {
     );
     this.ormArtistMapper = new ArtistsMapper();
   }
-
+  @ApiTags('Artist')
   @Get()
   async findAll(): Promise<Result<Artist[]>> {
     //Creamos el servicio de aplicación.
@@ -43,6 +44,7 @@ export class ArtistController {
     const result = await service.execute();
     return result;
   }  
+  @ApiTags('Artist')
   @Get('/:ArtistId')
   async getArtist(@Param('ArtistId') id): Promise<Result<Artist>> {
     const dto: GetArtistProfilesApplicationServiceDto = { id };

@@ -27,6 +27,10 @@ import { SignUserIn } from 'src/users/application/services/Sign-User-In.applicat
 import { FindUserById } from 'src/users/application/services/Find-User-By-Id.application.service';
 import { UpdateUserById } from 'src/users/application/services/Update-User-By-id.application.service';
 import { UpdateUser } from 'src/users/application/ParameterObjects/updateUser';
+import { SubscriptionNotifier } from 'src/users/application/services/dummy-service-firebase';
+import * as admin from 'firebase-admin';
+import { FirebaseNotificationSender } from '../subscription-notifier/subscription-notifier';
+import { Cron } from '@nestjs/schedule';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -45,7 +49,6 @@ export class UsersController {
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: UpdateUser;
-
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
     this.signUserUp = new SignUserUp(this.phonesService,this.findByPhoneUserService,this.usersMapper,this.userRepository);
@@ -89,10 +92,9 @@ export class UsersController {
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.findUserById.execute(id);
-    if (!user) {
-      throw new NotFoundException('user not found!');
-    }
-    return user;
+    //EJEMPLO DE COMO SE DEBERIAN DEVOLVER LAS COSAS EN LOS CONTROLLERS 
+    if(user.Error) throw user.Error
+    return user.Value; //DEBERIA CONTRUIR UN DTO????????
   }
 
   //Actualizar usuario en base a su ID
@@ -103,7 +105,12 @@ export class UsersController {
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
 
+  @ApiTags('Users')
+  @Post('/user/notificacion')
+  async notificacion(@Body() body: CreateUserDto) {
+    
+    
 }
-  
 
 
+}

@@ -25,15 +25,16 @@ export class PhonesService implements IApplicationService<Phone,Phone> {
   private readonly valiateisLineValid: ValidateIsLineValidService = new ValidateIsLineValidService(),
   ){}
   async execute(value: Phone): Promise<Result<Phone>> {
-    if(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber)) throw new PhoneInvalidExceptions(value.phoneNumber);
+    if(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber)) Result.fail<Phone>(new PhoneInvalidExceptions(value.phoneNumber));
     
     const prefixEntity = await this.repoLines.finderCriteria(value.phoneNumber.phoneNumber.toString().substring(0, 3));
     console.log(prefixEntity )
     const line: Line = Line.create(prefixEntity.linePhone.id,prefixEntity .linePhone.name);
-    if(!this.valiateisLineValid.execute(line)) throw new LineInvalidExceptions(line);
+    if(!this.valiateisLineValid.execute(line)) Result.fail<Phone>(new LineInvalidExceptions(line));
 
     const phone = new Phone(uuidv4(),phoneNumber.create(value.phoneNumber.phoneNumber),line);
-    return Result.success<Phone>( await this.repo.createPhone(phone));
+    const createdPhone = (await this.repo.createPhone(phone)).Value;
+    return Result.success<Phone>( createdPhone);
   }
 
 }

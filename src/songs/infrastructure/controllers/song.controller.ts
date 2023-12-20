@@ -18,7 +18,7 @@ import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { TransmitWsGateway } from '../sockets/transmit-ws.gateway';
 import { Socket } from 'socket.io';
 
-@Controller('songs')
+@Controller('api/songs')
 export class SongsController {
   private getSongByIdService: GetSongByIdService;
   private getSongBPlaylistIdService: GetSongBPlaylistIdService;
@@ -63,7 +63,7 @@ export class SongsController {
     );
     return this.findSongsByArtistIdService.execute(id);
   }
-
+  @ApiTags('Songs')
   @Get('/playlist/:playlistId')
   findByPlaylistId(@Param('playlistId') id: string): Promise<Song[]> {
     this.getSongBPlaylistIdService = new GetSongBPlaylistIdService(
