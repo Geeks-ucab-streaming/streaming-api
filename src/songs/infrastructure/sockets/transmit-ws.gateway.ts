@@ -9,11 +9,21 @@ import { Socket } from 'socket.io';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { Song } from 'src/songs/domain/song';
+import { OrmSongRepository } from '../repositories/song.repository.impl';
+import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import {
+  GetSongByIdService,
+  GetSongByIdServiceDto,
+} from 'src/songs/application/services/getSongById.service';
 
 @WebSocketGateway({ cors: true }) // RUTA: http://localhost:3000/socket.io/socket.io.js
 export class TransmitWsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
+  private readonly getSongByIdService: GetSongByIdService =
+    new GetSongByIdService(
+      new OrmSongRepository(DataSourceSingleton.getInstance()),
+    );
   constructor() {}
   handleConnection(client: Socket) {
     console.log('cliente conectado: ', client.id);
@@ -26,14 +36,20 @@ export class TransmitWsGateway
   @SubscribeMessage('message-from-client')
   async sendSong(
     client: Socket,
-    payload: { preview: boolean; fileName: string },
+    payload: { preview: boolean; songId: string },
   ) {
     const getFileService: GetFileService = new GetFileService(
       payload.preview
         ? process.env.PREVIEWS_CONTAINER
         : process.env.SONGS_CONTAINER,
     );
-    const file: Buffer = await getFileService.execute(payload.fileName);
+    const getSongByIdServiceDto: GetSongByIdServiceDto = { id: payload.songId };
+    console.log(payload.songId);
+    console.log(getSongByIdServiceDto);
+    const song: Song = (
+      await this.getSongByIdService.execute(getSongByIdServiceDto)
+    ).value;
+    const file: Buffer = await getFileService.execute(song.AudioReference);
     console.log('hola');
     const chunkSize = 1024;
 
