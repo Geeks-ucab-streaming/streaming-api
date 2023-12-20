@@ -11,7 +11,7 @@ import {
   Check,
   JoinColumn,
 } from 'typeorm';
-import { PhoneEntity } from '../../../phones/infrastructure/phones.entity';
+import { PhoneEntity } from '../../../phones/infrastructure/entities/phones.entity';
 import { StoredEdition } from './storedEdition.entity';
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
 

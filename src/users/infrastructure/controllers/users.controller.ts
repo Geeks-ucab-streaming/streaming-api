@@ -27,10 +27,15 @@ import { SignUserIn } from 'src/users/application/services/Sign-User-In.applicat
 import { FindUserById } from 'src/users/application/services/Find-User-By-Id.application.service';
 import { UpdateUserById } from 'src/users/application/services/Update-User-By-id.application.service';
 import { UpdateUser } from 'src/users/application/ParameterObjects/updateUser';
+<<<<<<< HEAD
 import { SubscriptionNotifier } from 'src/users/application/services/dummy-service-firebase';
 import * as admin from 'firebase-admin';
 import { FirebaseNotificationSender } from '../subscription-notifier/subscription-notifier';
 import { Cron } from '@nestjs/schedule';
+=======
+import { UsersForDtoMapper } from '../mappers/UserForDto.mapper';
+import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
+>>>>>>> 62f7fd81609006de353f6b3fbc928dc075d59abe
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -49,6 +54,13 @@ export class UsersController {
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: UpdateUser;
+<<<<<<< HEAD
+=======
+  private userMapperForDomainAndDtos: UsersForDtoMapper;
+
+
+
+>>>>>>> 62f7fd81609006de353f6b3fbc928dc075d59abe
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
     this.signUserUp = new SignUserUp(this.phonesService,this.findByPhoneUserService,this.usersMapper,this.userRepository);
@@ -56,15 +68,13 @@ export class UsersController {
     this.findByPhoneUserService = new findByPhoneUserService(this.userRepository);
     this.findUserById = new FindUserById(this.userRepository);
     this.updateUserById = new UpdateUserById(this.userRepository);
+    this.userMapperForDomainAndDtos = new UsersForDtoMapper();
   }
   
   //Registro de Usuario con su número de teléfono
   @ApiTags('Users')
-  @Post('/auth/validate_operator')
+  @Post('/auth/signup')
   async createUser(@Body() body: CreateUserDto) {
-    this.findByPhoneUserService = new findByPhoneUserService(
-      this.userRepository,
-    )
       const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
       const service= new ErrorApplicationServiceDecorator(
       new SignUserUp(this.phonesService,phoneService,this.usersMapper,this.userRepository));
@@ -92,9 +102,9 @@ export class UsersController {
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.findUserById.execute(id);
-    //EJEMPLO DE COMO SE DEBERIAN DEVOLVER LAS COSAS EN LOS CONTROLLERS 
-    if(user.Error) throw user.Error
-    return user.Value; //DEBERIA CONTRUIR UN DTO????????
+    if(!user) throw user.Error
+    const userPayload= this.userMapperForDomainAndDtos.domainTo(user.Value);
+    return userPayload; 
   }
 
   //Actualizar usuario en base a su ID
@@ -102,6 +112,7 @@ export class UsersController {
   @Patch ("/user/:id")
   updateUser(@Param("id") id: string, @Body() body: UpdateUserDto){
     this.updateUserParameterObjetc = new UpdateUser(id,body,this.usersMapper);
+
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
 

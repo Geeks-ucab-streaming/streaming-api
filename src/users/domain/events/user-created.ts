@@ -9,17 +9,14 @@ import { Phone } from "src/phones/domain/phoneAggregate/phone";
 export class UserCreated extends DomainEvent {
   protected constructor(
     public id: userId,
-    public name: userName,
-    public birth_date: UserBirthDate,
-    public gender: UserGender,
+    public phone: Phone,
     public suscriptionState: userSuscriptionState,
-    public phone: Phone
     ) {
     super();
     }
 
-  static create(id: userId,  phone: Phone, name?: userName, birthDate?: UserBirthDate, gender?: UserGender, suscriptionState?: userSuscriptionState): UserCreated {
-      return new UserCreated(id, name, birthDate, gender, suscriptionState, phone);
+  static create(id: userId,  phone: Phone, suscriptionState: userSuscriptionState): UserCreated {
+      return new UserCreated(id, phone, suscriptionState);
   }
 }
 
