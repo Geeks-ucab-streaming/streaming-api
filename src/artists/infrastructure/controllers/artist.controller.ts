@@ -43,7 +43,7 @@ export class ArtistController {
     );
     const result = await service.execute();
     return result;
-  }  
+  }
   @ApiTags('Artist')
   @Get('/:ArtistId')
   async getArtist(@Param('ArtistId') id): Promise<Result<Artist>> {
@@ -54,9 +54,9 @@ export class ArtistController {
     //Ejecutamos el caso de uso
     //Creamos el servicio de aplicación.
     const service = new LoggingApplicationServiceDecorator(
-        new GetArtistProfilesApplicationService(this.ormArtistRepository),
-        new NestLogger(),
-      );
+      new GetArtistProfilesApplicationService(this.ormArtistRepository),
+      new NestLogger(),
+    );
     const result = await service.execute(dto);
     return result;
   }
