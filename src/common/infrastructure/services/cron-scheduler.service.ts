@@ -13,7 +13,7 @@ export class CronSchedulerService {
     private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>( new FirebaseNotificationSender() ,this.userRepository);
 
     constructor() { }
-    @Cron('*/3 * * * * *')
+    @Cron('* * 24 * * *')
     async notificationSubscriptionCron() {
         console.log('Every 3 seconds')
         return await this.notifier.send({
