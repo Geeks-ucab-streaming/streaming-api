@@ -24,7 +24,7 @@ export class SongsMapper implements Imapper<Song, SongEntity> {
     throw new Error('Method not implemented.');
   }
   async ToDomain(ormEntity: SongEntity): Promise<Song> {
-    console.log(ormEntity)
+    console.log(ormEntity);
     let song: Song = Song.create(
       ormEntity.id,
       ormEntity.name,

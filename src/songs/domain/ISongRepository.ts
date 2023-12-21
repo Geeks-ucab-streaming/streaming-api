@@ -1,4 +1,5 @@
 import { Song } from './song';
+import { SongID } from './value-objects/SongID-valueobject';
 
 export interface ISongRepository {
   findById(id: string): Promise<Song>;

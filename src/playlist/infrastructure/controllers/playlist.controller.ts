@@ -11,10 +11,10 @@ import { PlaylistDto, SongDto, TopPlaylistDto } from 'src/dtos';
 import { Artist } from 'src/artists/domain/artist';
 import { GetSongsInCollectionService } from 'src/songs/application/services/getSongsInCollection.service';
 import { Song } from 'src/songs/domain/song';
-import { FindArtistsInCollectionService } from 'src/artists/application/services/findArtistsInCollection.service';
+import { FindArtistsInCollectionService } from 'src/artists/application/services/FindArtistsInCollection.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 
-@Controller('playlists')
+@Controller('api/playlists')
 export class PlaylistController {
   private repository: PlaylistRepository;
   private songRepository: OrmSongRepository;
@@ -50,7 +50,7 @@ export class PlaylistController {
 
     for (const playlist of playlistsResponse) {
       topPlaylistsInfo.playlists.push({
-        id: playlist.Id,
+        id: playlist.Id.Value,
         image: playlist.Playlist_Image,
       });
     }
@@ -90,6 +90,7 @@ export class PlaylistController {
       playlistCreators = await this.findArtistsInCollectionService.execute(
         playlistResponse.PlaylistCreator,
       );
+    console.log(playlistResponse.IsAlbum);
 
     let creators: { creatorId: string; creatorName: string }[] = [];
     for (const creator of playlistCreators) {
@@ -98,6 +99,8 @@ export class PlaylistController {
         creatorName: creator.Name.Value,
       });
     }
+    console.log('=========================');
+    console.log(creators);
 
     let songsId: string[] = [];
 
@@ -123,14 +126,14 @@ export class PlaylistController {
       playlistSongs.push({
         songId: song.Id.Value.toString(),
         name: song.Name,
+        image: song.Image,
         duration: song.DurationString,
         artists: artistsSong,
-        image: song.Image,
       });
     }
 
     const playlist: PlaylistDto = {
-      id: playlistResponse.Id,
+      id: playlistResponse.Id.Value,
       name: playlistResponse.Name,
       duration: playlistResponse.DurationString,
       image: playlistResponse.Playlist_Image,

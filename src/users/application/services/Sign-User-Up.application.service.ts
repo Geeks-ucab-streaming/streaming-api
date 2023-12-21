@@ -7,9 +7,6 @@ import { UserEntity } from "src/users/infrastructure/entities/users.entity";
 import { NotFoundException } from "@nestjs/common";
 import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { userId } from "src/users/domain/userAggregate/value-objects/userId";
-import { userName } from "src/users/domain/userAggregate/value-objects/userName";
-import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
-import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/userBirthDate";
 import { userSuscriptionState } from "src/users/domain/userAggregate/entities/userSuscriptionState";
 import { IUserRepository } from "src/users/domain/IUserRepository";
 import { v4 as uuidv4 } from 'uuid';
@@ -31,13 +28,9 @@ export class SignUserUp implements IApplicationService<CreateUserDto,void>{
       throw new NotFoundException ("User Alredy exists");
     }
     const phone = await this.phone.execute(Phone.create(uuidv4(),usersDto.phone,uuidv4(),usersDto.phone.toString().substring(0, 3) ));
-    let year = new Date (usersDto.birth_date);
     let usuario = new User(
       userId.create(uuidv4())
     , phone.Value
-    , userName.create(usersDto.name)
-    , UserBirthDate.create(year, year.getFullYear())
-    , UserGender.create(usersDto.gender)
     , userSuscriptionState.create(usersDto.suscriptionState)
      )
 

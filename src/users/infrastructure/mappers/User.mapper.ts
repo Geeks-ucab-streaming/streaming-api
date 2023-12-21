@@ -13,14 +13,13 @@ export class UsersMapper implements Imapper<User, UserEntity> {
   private readonly mapperPhone = new phoneMapper();
 
   async domainTo(domainEntity: User): Promise<UserEntity> {
-    console.log(domainEntity,"el domain esntiut")
       const ormEntity:UserEntity = new UserEntity();
       ormEntity.id = domainEntity.Id.Id;
-      ormEntity.name = domainEntity.Name.Name;
-      ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
-      ormEntity.gender= domainEntity.Gender.Gender;
       ormEntity.suscriptionState = domainEntity.SuscriptionState.SuscriptionState
       ormEntity.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
+      /*ormEntity.name = domainEntity.Name.Name;
+      ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
+      ormEntity.gender= domainEntity.Gender.Gender;*/
       return await ormEntity;
   }
 
@@ -29,10 +28,10 @@ export class UsersMapper implements Imapper<User, UserEntity> {
     let user: User =  User.create(
       userId.create(ormEntity.id),
       await this.mapperPhone.ToDomain(ormEntity.phone),
-      userName.create(ormEntity.name),
+      userSuscriptionState.create(ormEntity.suscriptionState),
+      /*userName.create(ormEntity.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
-      UserGender.create(ormEntity.gender),
-      userSuscriptionState.create(ormEntity.suscriptionState)
+      UserGender.create(ormEntity.gender),*/
     );  
 
     return Promise.resolve(user);
