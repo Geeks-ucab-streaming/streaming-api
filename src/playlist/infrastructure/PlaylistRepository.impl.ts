@@ -34,6 +34,24 @@ export class PlaylistRepository
     return playlists;
   }
 
+  async findTopAlbums(): Promise<Playlist[]> {
+    let playlists: Playlist[] = [];
+    const playlistsResponse: PlaylistEntity[] = await this.createQueryBuilder(
+      'playlist',
+    )
+      .leftJoinAndSelect('playlist.playlistSong', 'playlistSong')
+      .leftJoinAndSelect('playlistSong.song', 'song')
+      .leftJoinAndSelect('playlist.playlistCreator', 'creators')
+      .where('playlist.isAlbum = :isAlbum', { isAlbum: true })
+      .orderBy('playlist.reproductions')
+      .getMany();
+
+    for (const playlist of playlistsResponse) {
+      playlists.push(await this.playlistMapper.ToDomain(playlist));
+    }
+    return playlists;
+  }
+
   async findPlaylistById(id: string): Promise<Playlist> {
     const playlistResponse: PlaylistEntity = await this.createQueryBuilder(
       'playlist',

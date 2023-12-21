@@ -14,7 +14,7 @@ import { Song } from 'src/songs/domain/song';
 import { FindArtistsInCollectionService } from 'src/artists/application/services/FindArtistsInCollection.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 
-@Controller('api/playlists')
+@Controller('api/playlist')
 export class PlaylistController {
   private repository: PlaylistRepository;
   private songRepository: OrmSongRepository;
