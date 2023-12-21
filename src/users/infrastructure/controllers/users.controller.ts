@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.service';
-import { PhonesService } from 'src/phones/application/services/phones.service';
+import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.application.service';
+import { PhonesService } from 'src/phones/application/services/register-users-phone.application.service';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { OrmUserRepository } from '../repositories/user.repository.impl';
 import { OrmPhoneRepository } from 'src/phones/infrastructure/repositories/phone.repository.imp';
@@ -22,13 +22,13 @@ import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
 import { UsersMapper } from '../mappers/User.mapper';
 import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
 import { UpdateUserDto } from 'src/users/application/dtos/update-user.dto';
-import { SignUserUp } from 'src/users/application/services/Sign-User-Up.application.service';
+import { SignUserUpMovistar } from 'src/users/application/services/Sign-User-Up-Movistar.application.service';
 import { SignUserIn } from 'src/users/application/services/Sign-User-In.application.service';
 import { FindUserById } from 'src/users/application/services/Find-User-By-Id.application.service';
 import { UpdateUserById } from 'src/users/application/services/Update-User-By-id.application.service';
 import { UpdateUser } from 'src/users/application/ParameterObjects/updateUser';
 import { UsersForDtoMapper } from '../mappers/UserForDto.mapper';
-import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
+import { SignUserUpDigitel } from 'src/users/application/services/Sign-User-Up-Digitel.application.service';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -42,18 +42,18 @@ export class UsersController {
   private lineRepository: OrmLineRepository = new OrmLineRepository(DataSourceSingleton.getInstance());
   private phonesService: PhonesService;
   private jwtService: JwtService
-  private signUserUp: SignUserUp;
+  private signUserUpMovistar: SignUserUpMovistar;
+  private signUserUpDigitel: SignUserUpDigitel;
   private signUserIn: SignUserIn;
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: UpdateUser;
   private userMapperForDomainAndDtos: UsersForDtoMapper;
 
-
-
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
-    this.signUserUp = new SignUserUp(this.phonesService,this.findByPhoneUserService,this.usersMapper,this.userRepository);
+    this.signUserUpMovistar = new SignUserUpMovistar(this.phonesService,this.findByPhoneUserService,this.usersMapper,this.userRepository);
+    this.signUserUpDigitel = new SignUserUpDigitel(this.phonesService,this.findByPhoneUserService,this.usersMapper,this.userRepository);
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findByPhoneUserService = new findByPhoneUserService(this.userRepository);
     this.findUserById = new FindUserById(this.userRepository);
@@ -63,12 +63,21 @@ export class UsersController {
   
   //Registro de Usuario con su número de teléfono
   @ApiTags('Users')
-  @Post('/auth/signup')
-  async createUser(@Body() body: CreateUserDto) {
+  @Post('/auth/sign-up/movistar')
+  async createUserMovistar(@Body() body: CreateUserDto) {
+      const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
+      const serviceMovistar= new ErrorApplicationServiceDecorator(
+      new SignUserUpMovistar(this.phonesService,phoneService,this.usersMapper,this.userRepository));
+      const result = await serviceMovistar.execute(body);
+      return result; 
+  }
+
+  @ApiTags('Users')
+  @Post('/auth/sign-up/digitel')
+  async createUserDigitel(@Body() body: CreateUserDto) {
       const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
       const service= new ErrorApplicationServiceDecorator(
-      new SignUserUp(this.phonesService,phoneService,this.usersMapper,this.userRepository));
-        
+      new SignUserUpDigitel(this.phonesService,phoneService,this.usersMapper,this.userRepository));  
       const result = await service.execute(body);
       return result; 
   }
