@@ -23,6 +23,7 @@ import { ConfigService } from '@nestjs/config';
 export class TransmitWsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
+  private cont = 0;
   private readonly getSongByIdService: GetSongByIdService =
     new GetSongByIdService(
       new OrmSongRepository(DataSourceSingleton.getInstance()),
@@ -60,47 +61,17 @@ export class TransmitWsGateway
       const response = await axios.get(filePath, { responseType: 'stream' });
 
       response.data.on('data', (chunk: Buffer) => {
+        this.cont++;
         client.emit('message-from-server', { chunk });
+        console.log(this.cont);
       });
 
       response.data.on('end', () => {
         console.log('Streaming complete');
+        console.log(this.cont);
       });
     } catch (error) {
       console.log('Error fetching data: ', error);
     }
   }
-  // async sendSong(
-  //   client: Socket,
-  //   payload: { preview: boolean; songId: string },
-  // ) {
-  //   const getFileService: GetFileService = new GetFileService(
-  //     payload.preview
-  //       ? process.env.PREVIEWS_CONTAINER
-  //       : process.env.SONGS_CONTAINER,
-  //   );
-  //   const getSongByIdServiceDto: GetSongByIdServiceDto = { id: payload.songId };
-  //   console.log(payload.songId);
-  //   console.log(getSongByIdServiceDto);
-  //   const song: Song = (
-  //     await this.getSongByIdService.execute(getSongByIdServiceDto)
-  //   ).value;
-  //   const file: Buffer = await getFileService.execute(song.AudioReference);
-  //   console.log('hola');
-  //   const chunkSize = 1024;
-
-  //   try {
-  //     for (let i = 0; i < file.length; i += chunkSize) {
-  //       const chunkData = file.slice(i, i + chunkSize);
-  //       client.emit('message-from-server', {
-  //         chunk: chunkData,
-  //       });
-  //       console.log('mandando');
-  //     }
-  //     console.log('acabó la transmision');
-  //     client.emit('song-transfer-complete');
-  //   } catch (error) {
-  //     console.error('Error al enviar el archivo por WebSocket:', error);
-  //   }
-  // }
 }
