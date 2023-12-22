@@ -29,6 +29,7 @@ import { UpdateUserById } from 'src/users/application/services/Update-User-By-id
 import { UpdateUser } from 'src/users/application/ParameterObjects/updateUser';
 import { UsersForDtoMapper } from '../mappers/UserForDto.mapper';
 import { SignUserUpDigitel } from 'src/users/application/services/Sign-User-Up-Digitel.application.service';
+import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -49,16 +50,16 @@ export class UsersController {
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: UpdateUser;
   private userMapperForDomainAndDtos: UsersForDtoMapper;
+  private phoneDtoMapper: PhoneAndDtoMapper;
 
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
-    this.signUserUpMovistar = new SignUserUpMovistar(this.phonesService,this.findByPhoneUserService,this.usersMapper,this.userRepository);
-    this.signUserUpDigitel = new SignUserUpDigitel(this.phonesService,this.findByPhoneUserService,this.usersMapper,this.userRepository);
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findByPhoneUserService = new findByPhoneUserService(this.userRepository);
     this.findUserById = new FindUserById(this.userRepository);
     this.updateUserById = new UpdateUserById(this.userRepository);
     this.userMapperForDomainAndDtos = new UsersForDtoMapper();
+    this.phoneDtoMapper = new PhoneAndDtoMapper();
   }
   
   //Registro de Usuario con su número de teléfono
@@ -67,7 +68,7 @@ export class UsersController {
   async createUserMovistar(@Body() body: CreateUserDto) {
       const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
       const serviceMovistar= new ErrorApplicationServiceDecorator(
-      new SignUserUpMovistar(this.phonesService,phoneService,this.usersMapper,this.userRepository));
+      new SignUserUpMovistar(this.phonesService,phoneService,this.usersMapper,this.phoneDtoMapper,this.userRepository));
       const result = await serviceMovistar.execute(body);
       return result; 
   }
@@ -77,7 +78,7 @@ export class UsersController {
   async createUserDigitel(@Body() body: CreateUserDto) {
       const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
       const service= new ErrorApplicationServiceDecorator(
-      new SignUserUpDigitel(this.phonesService,phoneService,this.usersMapper,this.userRepository));  
+      new SignUserUpDigitel(this.phonesService,phoneService,this.usersMapper,this.phoneDtoMapper,this.userRepository));  
       const result = await service.execute(body);
       return result; 
   }

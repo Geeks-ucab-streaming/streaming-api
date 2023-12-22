@@ -36,9 +36,9 @@ export class PhonesService implements IApplicationService<number,Phone> {
     
     if(!this.valiateisLineValid.execute(line)) 
       throw new LineInvalidExceptions(line);
-    
+
     let phoneFactory: UserPhoneFactory = new UserPhoneFactory(); 
-    const createdPhone = (await this.repo.createPhone(phoneFactory.factoryMethod(new PhoneParameterObject(uuidv4(),userPhone,uuidv4(),userPhone.toString().substring(0,3))))).value;
+    const createdPhone = (await this.repo.createPhone(phoneFactory.factoryMethod(new PhoneParameterObject(uuidv4(),userPhone,line.id,line.name)))).value;
     return Result.success<Phone>(createdPhone);
   }
 

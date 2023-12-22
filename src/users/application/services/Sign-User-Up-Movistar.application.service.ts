@@ -12,11 +12,13 @@ import { IUserRepository } from "src/users/domain/IUserRepository";
 import { phoneId } from "src/phones/domain/phoneAggregate/value-objects/phoneId";
 import { phoneNumber } from "src/phones/domain/phoneAggregate/value-objects/phoneNumber";
 import { UserFactory } from "src/users/domain/factories/user.factory";
+import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,void>{
   constructor(private phone:PhonesService,
     private findByPhoneUserService: IApplicationService<number, User>,
     private IMapper: Imapper<User,UserEntity>,
+    private IMapperPhone: Imapper<Phone,PhoneDto>,
     private readonly repo: IUserRepository,
     ){}
 
@@ -29,8 +31,10 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,voi
     if(users.Value){
       throw new NotFoundException ("User Alredy exists");
     }
-    const phoneMovistar = await this.phone.execute(usersDto.phone);
-    const userFactory: UserFactory = new UserFactory();
+    let phoneMovistar = await this.phone.execute(usersDto.phone);
+    let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
+    usersDto.phone = phoneMovistarDto.phoneNumber;
+    const userFactory: UserFactory = new UserFactory(phoneMovistar.Value);
     //Guardar usuario en la b/d
     const savedUser = await this.repo.createUser(userFactory.factoryMethod(usersDto)); //Guarda la instancia en la BD.
     return savedUser;

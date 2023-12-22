@@ -10,7 +10,7 @@ export class phoneNumber implements IValueObject<phoneNumber>{
   private _phoneNumber: number;
 
   constructor(phoneNumber: number) {
-    if(!this.isValidOperator(phoneNumber))throw new PhoneInvalidExceptions(this);
+    if(!this.isValidOperator(phoneNumber))throw new PhoneInvalidExceptions(phoneNumber);
     this._phoneNumber = phoneNumber;
   }
 
