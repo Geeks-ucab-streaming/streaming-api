@@ -32,13 +32,13 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState)
-      /*userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
+      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState),
+      userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
       UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
       UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),
-      */)
-
-      
+      )
+    
+    Object.assign(user, usuarioParametrizado.userToUpdate);
     const savedUser = await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.
     return Result.success<User>(await usuarioParametrizado.mapper.ToDomain(savedUser));
   }
