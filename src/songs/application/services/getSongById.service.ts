@@ -9,7 +9,8 @@ import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 export interface GetSongByIdServiceDto {
   id?: string;
 }
-export class GetSongByIdService implements IApplicationService<GetSongByIdServiceDto, Song>
+export class GetSongByIdService
+  implements IApplicationService<GetSongByIdServiceDto, Song>
 {
   get name(): string {
     return this.constructor.name;
@@ -17,7 +18,7 @@ export class GetSongByIdService implements IApplicationService<GetSongByIdServic
   constructor(private readonly songsRepository: ISongRepository) {}
 
   async execute(dto?: GetSongByIdServiceDto): Promise<Result<Song>> {
-    const song = await this.songsRepository.findById(SongID.create(dto.id));
+    const song = await this.songsRepository.findById(dto.id);
     return Result.success<Song>(song);
   }
 }

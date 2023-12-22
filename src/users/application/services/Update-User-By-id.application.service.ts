@@ -26,15 +26,15 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
     //Puedes pasar un objeto vacío, con el nombre, la fecha de nacimiento o lo que sea: va a funcionar.
     //TODO: FALTA VALIDAR EL GENERO Y COLOCAR EMAIL
     const user = await this.repo.findById(usuarioParametrizado.id);
+    if (!user) return Result.fail<User>(new NotFoundException('user not found'))
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
+      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState)
+      /*userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
       UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
       UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),
-      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState))
-      
-    if (!user) return Result.fail<User>(new NotFoundException('user not found')) //throw new NotFoundException("user not found");
+      */)
     
 
     const savedUser = await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.

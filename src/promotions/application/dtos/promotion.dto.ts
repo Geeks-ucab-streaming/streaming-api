@@ -1,5 +1,4 @@
-interface PromotionDTO {
-    id: string;
-    image_reference: string;
-  }
-  
+export class PromotionDto {
+  id: string;
+  image: Buffer;
+}

@@ -11,9 +11,8 @@ import { PlaylistDto, SongDto, TopPlaylistDto } from 'src/dtos';
 import { Artist } from 'src/artists/domain/artist';
 import { GetSongsInCollectionService } from 'src/songs/application/services/getSongsInCollection.service';
 import { Song } from 'src/songs/domain/song';
-import { FindArtistsInCollectionService } from 'src/artists/application/services/findArtistsInCollection.service';
+import { FindArtistsInCollectionService } from 'src/artists/application/services/FindArtistsInCollection.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
-
 
 @Controller('api/playlists')
 export class PlaylistController {
@@ -127,6 +126,7 @@ export class PlaylistController {
       playlistSongs.push({
         songId: song.Id.Value.toString(),
         name: song.Name,
+        image: song.Image,
         duration: song.DurationString,
         artists: artistsSong,
       });

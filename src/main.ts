@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors();
   swagger(app);
   //Cron job
-  
+
   //firebaase configuration
   /*await admin.messaging().send({
     notification: {

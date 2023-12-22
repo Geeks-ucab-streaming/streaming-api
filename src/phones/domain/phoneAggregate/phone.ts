@@ -7,9 +7,9 @@ import { PhoneCreated } from '../events/phone-created';
 import { AggregateRoot } from 'src/common/domain/aggregate-root';
 
 export class Phone extends AggregateRoot<phoneId> {
-  idPhone: phoneId;
-  phoneNumber: phoneNumber;
-  linePhone: Line;
+  private idPhone: phoneId;
+  private phoneNumber: phoneNumber;
+  private linePhone: Line;
 
   constructor(idPhone: phoneId, phoneNumber:  phoneNumber, line: Line) {
     const phoneCreated = PhoneCreated.create(idPhone, phoneNumber, line);
@@ -18,6 +18,18 @@ export class Phone extends AggregateRoot<phoneId> {
 
   static create(id: string, _phoneNumber:  number, id_line:string,line: string): Phone {
     return new Phone(phoneId.create(id), phoneNumber.create(_phoneNumber), Line.create(id_line,Object.keys(phoneOperatorsEnum).find(key => phoneOperatorsEnum[key] === line)));
+  }
+
+  get Id(): phoneId {
+    return this.idPhone;
+  } 
+
+  get PhoneNumber(): phoneNumber{
+    return this.phoneNumber;
+  }   
+
+  get LinePhone(): Line {
+    return this.linePhone;
   }
 
   //asignando estado

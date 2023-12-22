@@ -1,6 +1,4 @@
 import { User } from 'src/users/domain/userAggregate/user';
-import { phoneOperatorsEnum } from 'src/phones/domain/phoneAggregate/value-objects/phoneOperators.enum';
-import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
 import { IUserRepository } from 'src/users/domain/IUserRepository';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
@@ -17,6 +15,6 @@ export class findByPhoneUserService implements IApplicationService<number, User>
 
   async execute(value?: number): Promise<Result<User>> {
     const phone = phoneNumber.create(Number(value));
-    return Result.success<User>(await this.repo.finderCriteria({ phoneNumber:  phone  }));
+    return Result.success<User>(await this.repo.finderCriteria({ PhoneNumber:  phone  }));
   }
 } 
