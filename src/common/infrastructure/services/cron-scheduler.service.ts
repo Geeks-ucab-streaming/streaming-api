@@ -13,7 +13,7 @@ export class CronSchedulerService {
     private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>( new FirebaseNotificationSender() ,this.userRepository);
 
     constructor() { }
-    @Cron('*/3 * * * * *')
+    @Cron('*/5 * * * * *')
     async notificationSubscriptionCron() {
         console.log('Every 3 seconds')
         return await this.notifier.send({
@@ -23,7 +23,7 @@ export class CronSchedulerService {
               body: 'Su subscripcion esta en estatus talfin',
             },
          
-            token: ['dfhygzT0QZG8Qt2gavQIdI:APA91bHr1cGJCUK9cfW7UuYOqH-dfqfRxP1Gp61riytbvoS7Y3kjRCu2NMGxb44wp_ChfCWbxDgbJ7W-4yTewALy4frn54S9sMcK5cN-XiKln9OcZfdFgrFydyffvH2wFtk5kCw20Pst',],
+            token: ['eqTEL5-UQzyIsz7SVs9GsV:APA91bEaUpWImdVGNLu15vWyCOBdwspBu4-m1EcG8NX6MLQ1OR9gz7pmJOQigGzGhBS0ZlNcXi1rweozzzQa6lhD99SKEgyZ7Xx3yLJWS58nTk2fyZdtVID2Im83W7jZeZ4afgRQK2vH',],
           })
     }
 }
