@@ -9,6 +9,7 @@ import { NotFoundException } from "@nestjs/common";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { Result } from "src/common/domain/logic/Result";
 import { UpdateUser } from "../ParameterObjects/updateUser";
+import { UserCreated } from "src/users/domain/events/user-created";
 
 export class UpdateUserById implements IApplicationService<UpdateUser, User> {
 //InjectRepository(): Le decimos al sistema de DI que necesitamos usar el reporistorio de "User".
@@ -26,6 +27,7 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
     //Puedes pasar un objeto vacío, con el nombre, la fecha de nacimiento o lo que sea: va a funcionar.
     //TODO: FALTA VALIDAR EL GENERO Y COLOCAR EMAIL
     const user = await this.repo.findById(usuarioParametrizado.id);
+    
     if (!user) return Result.fail<User>(new NotFoundException('user not found'))
     const userUpdated = User.create(
       user.Id,
@@ -35,8 +37,8 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
       UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
       UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),
       */)
-    
 
+      
     const savedUser = await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.
     return Result.success<User>(await usuarioParametrizado.mapper.ToDomain(savedUser));
   }
