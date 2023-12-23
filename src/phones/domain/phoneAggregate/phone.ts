@@ -5,6 +5,7 @@ import { phoneId } from './value-objects/phoneId';
 import { DomainEvent } from 'src/common/domain/Event/domain-event';
 import { PhoneCreated } from '../events/phone-created';
 import { AggregateRoot } from 'src/common/domain/aggregate-root';
+import { Prefix } from './value-objects/prefix';
 
 export class Phone extends AggregateRoot<phoneId> {
   private idPhone: phoneId;
@@ -30,6 +31,20 @@ export class Phone extends AggregateRoot<phoneId> {
 
   get LinePhone(): Line {
     return this.linePhone;
+  }
+
+  public validatePrefixDigitel(prefix: Prefix): boolean {
+      if (prefix.Prefix === 412) {
+        return true;
+      }
+    return false; 
+  }
+
+  public validatePrefixMovistar(prefix: Prefix): boolean {
+    if (prefix.Prefix === 414 || prefix.Prefix === 424) {
+      return true;
+    }
+    return false; 
   }
 
   //asignando estado
