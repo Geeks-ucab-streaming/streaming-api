@@ -14,14 +14,17 @@ export class OrmSongRepository
     super(SongEntity, dataSource.manager);
     this.songMapper = new SongsMapper();
   }
-  async findById(id: SongID): Promise<Song> {
+  async findOrmEntityById(id: string): Promise<SongEntity> {
+    return this.findOneBy({ id });
+  }
+  async findById(id: string): Promise<Song> {
     const songResponse = await this.createQueryBuilder('song')
       .leftJoinAndSelect('song.song_artist', 'song_artist')
       .leftJoinAndSelect('song_artist.artist', 'artist')
-      .where('song.id = :id', { id: id.Value })
+      .where('song.id = :id', { id: id })
       .getOne();
 
-    const song: Song = await this.songMapper.ToDomain(songResponse) as Song;
+    const song: Song = (await this.songMapper.ToDomain(songResponse)) as Song;
     return song;
   }
   async findByArtistId(artistId: string): Promise<Song[]> {

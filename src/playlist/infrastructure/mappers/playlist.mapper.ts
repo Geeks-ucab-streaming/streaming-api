@@ -36,8 +36,9 @@ export class PlaylistMapper implements Imapper<Playlist, PlaylistEntity> {
 
   private getPlaylistArtists(ormEntity: PlaylistEntity): ArtistID[] {
     let artists: ArtistID[] = [];
+    console.log(ormEntity);
     for (const artist of ormEntity.playlistCreator) {
-      artists.push(ArtistID.create(artist.artist.id));
+      artists.push(ArtistID.create(artist.id));
     }
     return artists;
   }

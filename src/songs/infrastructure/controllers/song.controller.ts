@@ -1,5 +1,8 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { GetSongByIdService,GetSongByIdServiceDto } from '../../application/services/getSongById.service';
+import {
+  GetSongByIdService,
+  GetSongByIdServiceDto,
+} from '../../application/services/getSongById.service';
 import { Song } from 'src/songs/domain/song';
 import { FindSongsByArtistIdService } from '../../application/services/getSongsByArtist.service';
 import { EntityManager } from 'typeorm';
@@ -12,6 +15,8 @@ import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/art
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { Result } from 'src/common/domain/logic/Result';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
+import { TransmitWsGateway } from '../sockets/transmit-ws.gateway';
+import { Socket } from 'socket.io';
 
 @Controller('api/songs')
 export class SongsController {
@@ -37,10 +42,17 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<Song> {
-    this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
-    const song: Song = await this.getSongByIdService.execute(id);
-    return song;
+  async findById(@Param('id') id: string): Promise<Result<Song>> {
+    // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
+    // const song: Song = await this.getSongByIdService.execute(id);
+    // return song;
+    const dto: GetSongByIdServiceDto = { id };
+    const service = new LoggingApplicationServiceDecorator(
+      new GetSongByIdService(this.ormSongRepository),
+      new NestLogger(),
+    );
+    const result = await service.execute(dto);
+    return result;
   }
 
   @ApiTags('Songs')

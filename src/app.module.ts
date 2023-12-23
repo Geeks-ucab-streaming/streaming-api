@@ -9,8 +9,10 @@ import { SongsController } from './songs/infrastructure/controllers/song.control
 import { PlaylistController } from './playlist/infrastructure/controllers/playlist.controller';
 import { UsersController } from './users/infrastructure/controllers/users.controller';
 import { ArtistController } from './artists/infrastructure/controllers/artist.controller';
-import { ScheduleModule } from '@nestjs/schedule';
+import { TransmitWsGateway } from './songs/infrastructure/sockets/transmit-ws.gateway';
 import { CronSchedulerService } from './common/infrastructure/services/cron-scheduler.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { AlbumController } from './playlist/infrastructure/controllers/album.controller';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -20,7 +22,7 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
       envFilePath: `./deploy/.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRoot(config),
-    ScheduleModule.forRoot()
+    ScheduleModule.forRoot(),
     // ArtistModule,
     // SongModule,
     // PlaylistModule,
@@ -33,7 +35,8 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     PlaylistController,
     UsersController,
     ArtistController,
+    AlbumController,
   ],
-  providers: [AppService, CronSchedulerService],
+  providers: [AppService, CronSchedulerService, TransmitWsGateway],
 })
 export class AppModule {}
