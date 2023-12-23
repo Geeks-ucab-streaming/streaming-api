@@ -1,13 +1,10 @@
 ### Crear un nuevo usuario
-POST http://localhost:3000/api/auth/validate_operator
+POST http://localhost:3000/api/auth/signup
 content-type: application/json
 
 {
-  "name":"Alejandro Gamboa",
-  "birth_date":"2000-12-03",
-  "gender":"M",
   "suscriptionState":"gratuito",
-  "phone":4149375011
+  "phone":4149869793
 }
 
 ### Iniciar Sesión 

@@ -1,18 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsDate } from 'class-validator';
+import { PhoneDto } from 'src/phones/application/dtos/phone.dto';
 
 export class CreateUserDto {
-  @IsString()
-  @ApiProperty()
-  name: string;
-
-  @IsDate()
-  @ApiProperty()
-  birth_date: Date;
-
-  @IsString()
-  @ApiProperty()
-  gender: string;
 
   @IsString()
   @ApiProperty()
@@ -21,4 +11,5 @@ export class CreateUserDto {
   @IsNumber()
   @ApiProperty()
   phone: number;
+
 }

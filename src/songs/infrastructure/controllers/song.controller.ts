@@ -37,17 +37,10 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<Result<Song>> {
-    // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
-    // const song: Song = await this.getSongByIdService.execute(id);
-    // return song;
-    const dto : GetSongByIdServiceDto = { id };
-    const service = new LoggingApplicationServiceDecorator(
-      new GetSongByIdService(this.ormSongRepository),
-      new NestLogger(),
-    );
-    const result = await service.execute(dto);
-    return result;
+  async findById(@Param('id') id: string): Promise<Song> {
+    this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
+    const song: Song = await this.getSongByIdService.execute(id);
+    return song;
   }
 
   @ApiTags('Songs')

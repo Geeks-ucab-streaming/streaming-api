@@ -2,7 +2,7 @@ import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { IPhoneRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 //ESTO DEBERIA SER UNA INTERFAZ Y NO USAR LA LIBRERIA DIRECTAMENTE
 import {v4 as uuidv4} from 'uuid';
-import { PrefixEntity } from 'src/phones/infrastructure/prefixes.entity';
+import { PrefixEntity } from '../../infrastructure/entities/prefixes.entity';
 import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
 import { ValidateIsUsableOperatorService } from 'src/phones/domain/services/validate-is-usable-operator.domain.service';
 import { ValidateIsLineValidService } from 'src/phones/domain/services/validate-line-valid.domain.service';
@@ -11,9 +11,11 @@ import { IApplicationService } from 'src/common/Application/application-service/
 import { Result } from 'src/common/domain/logic/Result';
 import { phoneNumber } from 'src/phones/domain/phoneAggregate/value-objects/phoneNumber';
 import { Line } from 'src/phones/domain/phoneAggregate/value-objects/line';
+import { UserPhoneFactory } from 'src/users/domain/factories/user-phone.factory';
+import { PhoneParameterObject } from 'src/phones/domain/parameterObjects/phoneParameterObject';
 
 
-export class PhonesService implements IApplicationService<Phone,Phone> {
+export class PhonesService implements IApplicationService<number,Phone> {
   get name(): string {
     return this.constructor.name;
   }
@@ -24,17 +26,20 @@ export class PhonesService implements IApplicationService<Phone,Phone> {
   private readonly valiateisUsableOperator: ValidateIsUsableOperatorService = new ValidateIsUsableOperatorService(),
   private readonly valiateisLineValid: ValidateIsLineValidService = new ValidateIsLineValidService(),
   ){}
-  async execute(value: Phone): Promise<Result<Phone>> {
-    if(!this.valiateisUsableOperator.execute(value.phoneNumber.phoneNumber)) Result.fail<Phone>(new PhoneInvalidExceptions(value.phoneNumber));
-    
-    const prefixEntity = await this.repoLines.finderCriteria(value.phoneNumber.phoneNumber.toString().substring(0, 3));
-    console.log(prefixEntity )
-    const line: Line = Line.create(prefixEntity.linePhone.id,prefixEntity .linePhone.name);
-    if(!this.valiateisLineValid.execute(line)) Result.fail<Phone>(new LineInvalidExceptions(line));
+  
+  async execute(userPhone: number): Promise<Result<Phone>> {
+    if(!this.valiateisUsableOperator.execute(userPhone)) 
+      Result.fail<Phone>(new PhoneInvalidExceptions(userPhone));
 
-    const phone = new Phone(uuidv4(),phoneNumber.create(value.phoneNumber.phoneNumber),line);
-    const createdPhone = (await this.repo.createPhone(phone)).Value;
-    return Result.success<Phone>( createdPhone);
+    const prefixEntity = await this.repoLines.finderCriteria(userPhone.toString().substring(0,3));
+    const line: Line = Line.create(prefixEntity.linePhone.id,prefixEntity.linePhone.name);
+    
+    if(!this.valiateisLineValid.execute(line)) 
+      throw new LineInvalidExceptions(line);
+
+    let phoneFactory: UserPhoneFactory = new UserPhoneFactory(); 
+    const createdPhone = (await this.repo.createPhone(phoneFactory.factoryMethod(new PhoneParameterObject(uuidv4(),userPhone,line.id,line.name)))).value;
+    return Result.success<Phone>(createdPhone);
   }
 
 }

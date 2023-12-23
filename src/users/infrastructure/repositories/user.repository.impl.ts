@@ -45,7 +45,7 @@ extends Repository<UserEntity>
     const user = await this.createQueryBuilder('user')
       .innerJoinAndSelect('user.phone', 'phone')
       .where('phone.phoneNumber = :phoneNumber', {
-        phoneNumber: criteria.phoneNumber.phoneNumber,
+        phoneNumber: criteria.PhoneNumber.phoneNumber,
       })
       .getOne();
     //! HAY QUE IMPLEMENTAR LOS MAPPERS PARA PASAR DE ENTITY A CLASE DE DOMINIO

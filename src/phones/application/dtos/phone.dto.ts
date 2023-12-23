@@ -7,4 +7,11 @@ export class PhoneDto {
 
   @Expose()
   phoneNumber: number;
+
+  @Expose()
+  linePhoneId: string;
+
+  @Expose()
+  lineName: string;
+
 }

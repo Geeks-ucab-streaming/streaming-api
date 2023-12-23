@@ -5,11 +5,12 @@ import { phoneId } from './value-objects/phoneId';
 import { DomainEvent } from 'src/common/domain/Event/domain-event';
 import { PhoneCreated } from '../events/phone-created';
 import { AggregateRoot } from 'src/common/domain/aggregate-root';
+import { Prefix } from './value-objects/prefix';
 
 export class Phone extends AggregateRoot<phoneId> {
-  idPhone: phoneId;
-  phoneNumber: phoneNumber;
-  linePhone: Line;
+  private idPhone: phoneId;
+  private phoneNumber: phoneNumber;
+  private linePhone: Line;
 
   constructor(idPhone: phoneId, phoneNumber:  phoneNumber, line: Line) {
     const phoneCreated = PhoneCreated.create(idPhone, phoneNumber, line);
@@ -18,6 +19,32 @@ export class Phone extends AggregateRoot<phoneId> {
 
   static create(id: string, _phoneNumber:  number, id_line:string,line: string): Phone {
     return new Phone(phoneId.create(id), phoneNumber.create(_phoneNumber), Line.create(id_line,Object.keys(phoneOperatorsEnum).find(key => phoneOperatorsEnum[key] === line)));
+  }
+
+  get Id(): phoneId {
+    return this.idPhone;
+  } 
+
+  get PhoneNumber(): phoneNumber{
+    return this.phoneNumber;
+  }   
+
+  get LinePhone(): Line {
+    return this.linePhone;
+  }
+
+  public validatePrefixDigitel(prefix: Prefix): boolean {
+      if (prefix.Prefix === 412) {
+        return true;
+      }
+    return false; 
+  }
+
+  public validatePrefixMovistar(prefix: Prefix): boolean {
+    if (prefix.Prefix === 414 || prefix.Prefix === 424) {
+      return true;
+    }
+    return false; 
   }
 
   //asignando estado

@@ -9,26 +9,28 @@ import { UserCreated } from "../events/user-created";
 import { DomainEvent } from "src/common/domain/Event/domain-event";
 import { calculateHowOldYouAre } from "../../domain/services/calculateHowOldYouAre";
 import { calculateHowYoungYouAre } from "../../domain/services/calculateHowYoungYouAre";
+import { userEmail } from "./value-objects/userEmail";
 
 export class User extends AggregateRoot<userId> {
   private name: userName;
+  private email: userEmail;
   private birth_date: UserBirthDate;
   private gender: UserGender;
   private suscriptionState: userSuscriptionState;
   private phone: Phone ;
 
   //OJO: Evaluar el protected en la definición del constructor
-    constructor(id: userId, phone: Phone ,name?: userName, birthDate?: UserBirthDate, gender?: UserGender, suscriptionState?: userSuscriptionState) {
-    const userCreated = UserCreated.create(id, phone ,name, birthDate, gender, suscriptionState);
+    constructor(id: userId, phone: Phone , suscriptionState: userSuscriptionState) {
+    const userCreated = UserCreated.create(id, phone ,suscriptionState);
     super(id, userCreated);
   } 
 
-  static create(id: userId, phone: Phone ,name: userName, birthDate: UserBirthDate, gender: UserGender, suscriptionState: userSuscriptionState): User {
-    return new User(id, phone ,name, birthDate, gender, suscriptionState);
+  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState, name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
+    return new User(id, phone ,suscriptionState);
   }
 
-  public createUser(id: userId, phone: Phone ,name?: userName, birthDate?: UserBirthDate, gender?: UserGender, suscriptionState?: userSuscriptionState) {
-    this.apply(UserCreated.create(id, phone ,name, birthDate, gender, suscriptionState));
+  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState) {
+    this.apply(UserCreated.create(id, phone , suscriptionState));
   }
   
   get Name(): userName {
@@ -65,9 +67,6 @@ export class User extends AggregateRoot<userId> {
     switch (event.constructor) {
         case UserCreated:
             const userCreated: UserCreated = event as UserCreated;
-            this.name = userCreated.name;
-            this.birth_date = userCreated.birth_date;
-            this.gender= userCreated.gender;
             this.suscriptionState = userCreated.suscriptionState;
             this.phone = userCreated.phone;
             break;

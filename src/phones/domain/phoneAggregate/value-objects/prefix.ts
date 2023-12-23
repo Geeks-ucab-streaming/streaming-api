@@ -1,13 +1,20 @@
 import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
-import { phoneId } from "./phoneId";
 
 export class Prefix implements IValueObject<Prefix>{
-  id: string;
-  prefix: number;
+  private id: string;
+  private prefix: number;
 
   constructor(id: string, prefix: number) {
     this.id = id;
     this.prefix = prefix;
+  }
+
+  get Id(): string {
+    return this.id;
+  }
+
+  get Prefix(): number {
+    return this.prefix;
   }
 
   public equals(phonePrefix: Prefix): boolean {
