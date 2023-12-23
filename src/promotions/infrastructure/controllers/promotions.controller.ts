@@ -9,7 +9,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PromotionDto } from 'src/dtos';
 import { FindRandomPromotionsService } from 'src/promotions/application/services/FindRandomPromotion.service';
 
-@Controller('promotion')
+@Controller('api/promotion')
 export class PromotionsController {
   private readonly findOnePromotionsService: FindOnePromotionsService;
   private readonly findAllPromotionsService: FindAllPromotionsService;

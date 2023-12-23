@@ -13,7 +13,7 @@ import { LoggingApplicationServiceDecorator } from 'src/common/Application/appli
 import { Result } from 'src/common/domain/logic/Result';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 
-@Controller('songs')
+@Controller('api/songs')
 export class SongsController {
   private getSongByIdService: GetSongByIdService;
   private getSongBPlaylistIdService: GetSongBPlaylistIdService;
@@ -58,7 +58,7 @@ export class SongsController {
     );
     return this.findSongsByArtistIdService.execute(id);
   }
-
+  @ApiTags('Songs')
   @Get('/playlist/:playlistId')
   findByPlaylistId(@Param('playlistId') id: string): Promise<Song[]> {
     this.getSongBPlaylistIdService = new GetSongBPlaylistIdService(

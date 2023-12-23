@@ -5,6 +5,7 @@ export const swagger = (app) => {
     .setDescription('API para streming de canciones geeks ucab ')
     .setVersion('1.0.0')
     .addBearerAuth()
+    .setBasePath('api')
     .build();
     const document = SwaggerModule.createDocument(app, options);
 
