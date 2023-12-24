@@ -27,3 +27,4 @@ export class UserGender implements IValueObject<UserGender> {
   }
 
 }
+

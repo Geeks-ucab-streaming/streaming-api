@@ -1,8 +1,8 @@
 import {Repository } from "typeorm";
 import { Audith } from "../infrastructure/entities/audith.service.entity";
-import { Iaudith } from "../Application/audith-handler/Iaudith";
+import { IaudithRepository } from "../Application/audith-handler/Iaudith";
 
-export class audith_repo extends Repository<Audith> implements Iaudith{
+export class audith_repo extends Repository<Audith> implements IaudithRepository{
  audith_repo:Audith;
   async audith(id: string, origin: JSON): Promise<JSON> {
     this.audith_repo.id = id;

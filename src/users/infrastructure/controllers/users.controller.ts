@@ -48,8 +48,9 @@ export class UsersController {
     DataSourceSingleton.getInstance(),
   );
   private phonesService: PhonesService;
-  private jwtService: JwtService;
-  private signUserUp: SignUserUp;
+  private jwtService: JwtService
+  private signUserUpMovistar: SignUserUpMovistar;
+  private signUserUpDigitel: SignUserUpDigitel;
   private signUserIn: SignUserIn;
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
@@ -58,16 +59,7 @@ export class UsersController {
   private phoneDtoMapper: PhoneAndDtoMapper;
 
   constructor() {
-    this.phonesService = new PhonesService(
-      this.phoneRepository,
-      this.lineRepository,
-    );
-    this.signUserUp = new SignUserUp(
-      this.phonesService,
-      this.findByPhoneUserService,
-      this.usersMapper,
-      this.userRepository,
-    );
+    this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findByPhoneUserService = new findByPhoneUserService(
       this.userRepository,
@@ -80,22 +72,23 @@ export class UsersController {
 
   //Registro de Usuario con su número de teléfono
   @ApiTags('Users')
-  @Post('/auth/signup')
-  async createUser(@Body() body: CreateUserDto) {
-    const phoneService = new ErrorApplicationServiceDecorator(
-      this.findByPhoneUserService,
-    );
-    const service = new ErrorApplicationServiceDecorator(
-      new SignUserUp(
-        this.phonesService,
-        phoneService,
-        this.usersMapper,
-        this.userRepository,
-      ),
-    );
+  @Post('/auth/sign-up/movistar')
+  async createUserMovistar(@Body() body: CreateUserDto) {
+      const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
+      const serviceMovistar= new ErrorApplicationServiceDecorator(
+      new SignUserUpMovistar(this.phonesService,phoneService,this.usersMapper,this.phoneDtoMapper,this.userRepository));
+      const result = await serviceMovistar.execute(body);
+      return result; 
+  }
 
-    const result = await service.execute(body);
-    return result;
+  @ApiTags('Users')
+  @Post('/auth/sign-up/digitel')
+  async createUserDigitel(@Body() body: CreateUserDto) {
+      const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
+      const service= new ErrorApplicationServiceDecorator(
+      new SignUserUpDigitel(this.phonesService,phoneService,this.usersMapper,this.phoneDtoMapper,this.userRepository));  
+      const result = await service.execute(body);
+      return result; 
   }
 
   //Inicio de Sesión

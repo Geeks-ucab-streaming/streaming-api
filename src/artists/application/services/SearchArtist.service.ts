@@ -1,4 +1,4 @@
-import { Isearch } from "src/core/application/Isearch";
+/*import { Isearch } from "src/core/application/Isearch";
 import { FindArtistsInCollectionService } from "./findArtistsInCollection.service";
 import { Artist } from "src/artists/domain/artist";
 import { Result } from "src/common/domain/logic/Result";
@@ -11,4 +11,4 @@ export class SearchArtistService implements Isearch<Artist,Result<OrmArtistRepos
   async search(artist: OrmArtistRepository): Promise<Artist[]> {
     return await this.search(OrmArtistRepository);
   }
-}
+}*/
