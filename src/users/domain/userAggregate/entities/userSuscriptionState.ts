@@ -1,10 +1,11 @@
+import { SubscriptionEnum } from "../enums/subscriptionEnum";
+
 export class userSuscriptionState {
     static create(suscriptionState: string): userSuscriptionState {
-
         return new userSuscriptionState(suscriptionState);
     }
 
-    private suscriptionState: string;
+    private suscriptionState: SubscriptionEnum;
     private _suscription_date: Date;
 
     
@@ -17,15 +18,17 @@ export class userSuscriptionState {
     
 
     constructor(suscriptionState: string) {
-        this.suscriptionState = suscriptionState;
+        this.suscriptionState = suscriptionState as SubscriptionEnum;
     }
 
     public get SuscriptionState(): string {
         return this.suscriptionState;
     }
 
+    
+
     public set SuscriptionState(suscriptionState: string) { 
-        this.suscriptionState = suscriptionState;
+        this.suscriptionState = suscriptionState as SubscriptionEnum;
     }
 
     public equals(userSuscriptionState: userSuscriptionState): boolean {

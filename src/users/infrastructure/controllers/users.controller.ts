@@ -48,38 +48,18 @@ export class UsersController {
     DataSourceSingleton.getInstance(),
   );
   private phonesService: PhonesService;
-<<<<<<< HEAD
-  private jwtService: JwtService;
-  private signUserUp: SignUserUp;
-=======
   private jwtService: JwtService
   private signUserUpMovistar: SignUserUpMovistar;
   private signUserUpDigitel: SignUserUpDigitel;
->>>>>>> 122a7b72da316b6bc16a9b543b8070b7563aa172
   private signUserIn: SignUserIn;
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: UpdateUser;
   private userMapperForDomainAndDtos: UsersForDtoMapper;
-<<<<<<< HEAD
-
-  constructor() {
-    this.phonesService = new PhonesService(
-      this.phoneRepository,
-      this.lineRepository,
-    );
-    this.signUserUp = new SignUserUp(
-      this.phonesService,
-      this.findByPhoneUserService,
-      this.usersMapper,
-      this.userRepository,
-    );
-=======
   private phoneDtoMapper: PhoneAndDtoMapper;
 
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
->>>>>>> 122a7b72da316b6bc16a9b543b8070b7563aa172
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findByPhoneUserService = new findByPhoneUserService(
       this.userRepository,
