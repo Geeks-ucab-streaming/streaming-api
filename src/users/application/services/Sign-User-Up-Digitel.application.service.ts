@@ -6,11 +6,7 @@ import { User } from "src/users/domain/userAggregate/user";
 import { UserEntity } from "src/users/infrastructure/entities/users.entity";
 import { NotFoundException } from "@nestjs/common";
 import { Phone } from "src/phones/domain/phoneAggregate/phone";
-import { userId } from "src/users/domain/userAggregate/value-objects/userId";
-import { userSuscriptionState } from "src/users/domain/userAggregate/entities/userSuscriptionState";
 import { IUserRepository } from "src/users/domain/IUserRepository";
-import { phoneId } from "src/phones/domain/phoneAggregate/value-objects/phoneId";
-import { phoneNumber } from "src/phones/domain/phoneAggregate/value-objects/phoneNumber";
 import { UserFactory } from "src/users/domain/factories/user.factory";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 
@@ -31,12 +27,10 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,void
     if(users.Value){
       throw new NotFoundException ("User Alredy exists");
     }
-    let phoneMovistar = await this.phone.execute(usersDto.phone);
-    let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
-    usersDto.phone = phoneMovistarDto.phoneNumber;
-    const userFactory: UserFactory = new UserFactory(phoneMovistar.Value);
-    //Guardar usuario en la b/d
-    const savedUser = await this.repo.createUser(userFactory.factoryMethod(usersDto)); //Guarda la instancia en la BD.
+    let phoneDigitel = await this.phone.execute(usersDto.phone);
+    let phoneDigitelDto = await this.IMapperPhone.domainTo(phoneDigitel.Value);
+    usersDto.phone = phoneDigitelDto.phoneNumber;
+    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(usersDto,phoneDigitelDto));
     return savedUser;
   }
 }
