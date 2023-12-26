@@ -21,8 +21,4 @@ export class  UpdateUserDto{
   @IsString()
   gender?: string;
 
-  @ApiProperty()
-  @IsString()
-  suscriptionState?: string;
-
 }

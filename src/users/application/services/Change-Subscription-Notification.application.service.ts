@@ -1,3 +1,4 @@
+import { HttpVersionNotSupportedException } from "@nestjs/common";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { NotificationHandler } from "src/common/Application/notificaciont-handler/notification-handler";
 import { Result } from "src/common/domain/logic/Result";
@@ -17,9 +18,12 @@ export class SubscriptionNotifier<D> implements NotificationHandler<userSubscrip
 
     constructor(
         private readonly admin :NotificationSender<D>,
-        private readonly repo: IUserRepository,) {}
+        private readonly repo: IUserRepository,
+
+        ) {}
 
     async send(dto: userSubscriptionDto ): Promise<Result<void>>{
+        
         //TODO: SE DEBE BUSCAR TODOS LOS TOKENS DE DISPOSITVOS DE USUARIOS SUSCRITOS A NOTIFICACIONES
         await this.admin.sendNotification(dto.token,dto.notification.title, dto.notification.body,);
         return Result.success<void>(void 0);

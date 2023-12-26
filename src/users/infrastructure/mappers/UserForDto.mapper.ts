@@ -15,7 +15,6 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
   async domainTo(userDomainEntity: User): Promise<UserDto> {
       const userDto:UserDto = new UserDto();
       userDto.id = userDomainEntity.Id.Id;
-      userDto.suscriptionState = userDomainEntity.SuscriptionState.SuscriptionState
       userDto.phone= await this.mapperPhone.domainTo(userDomainEntity.Phone);
       /*userDto.name = userDomainEntity.Name.Name;
       userDto.birth_date = userDomainEntity.BirthDate.BirthDate;
@@ -28,7 +27,7 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
     let user: User =  User.create(
       userId.create(userDto.id),
       await this.mapperPhone.ToDomain(userDto.phone),
-      userSuscriptionState.create(userDto.suscriptionState),
+      userSuscriptionState.create("gratuito"),
       userName.create(userDto.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
       UserGender.create(userDto.gender),

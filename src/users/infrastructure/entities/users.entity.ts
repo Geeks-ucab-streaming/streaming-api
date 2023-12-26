@@ -23,6 +23,9 @@ export class UserEntity {
   @Column({ type: 'text', nullable: true })
   name: string;
 
+  @Column({ type: 'text', nullable: true })
+  email: string;
+
   @Column({ type: 'date', nullable: true })
   birth_date: Date;
 
@@ -44,20 +47,4 @@ export class UserEntity {
   @OneToMany(() => ReproducedSong, (reproducedSong) => reproducedSong.user)
   reproducedSong: ReproducedSong[];
 
-  //Decoradores Hooks. [Para que se ejecuten, debes crear(instanciar la entidad) y salvar]
-  @AfterInsert()
-  logInsert() {
-    //Se ejecutará este método cuando hagas algo al usuario (Insert, Update, Delete)
-    console.log('Inerted User with id ', this.id);
-  }
-
-  @AfterUpdate()
-  logUpdate() {
-    console.log('Update User whit id ', this.id);
-  }
-
-  @AfterRemove()
-  logRemove() {
-    console.log('Remove User whit id ', this.id);
-  }
 }
