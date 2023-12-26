@@ -22,7 +22,7 @@ export class UserFactory implements Factory<CreateUserDto,User>{
     let usuario = new User(
       userId.create(uuidv4())
     , phone.factoryMethod(new PhoneParameterObject(this.phone.Id.Id,this.phone.PhoneNumber.phoneNumber,this.phone.LinePhone.id,this.phone.LinePhone.name))
-    , userSuscriptionState.create(user.suscriptionState)
+    , userSuscriptionState.create("gratuito")
      )
      
     return usuario;

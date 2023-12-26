@@ -4,7 +4,7 @@ import { IApplicationService } from 'src/common/Application/application-service/
 import { Result } from 'src/common/domain/logic/Result';
 import { phoneNumber } from 'src/phones/domain/phoneAggregate/value-objects/phoneNumber';
 
-export class findByPhoneUserService implements IApplicationService<number, User> {
+export class findByPhoneUserService implements IApplicationService<string, User> {
   private readonly repo: IUserRepository;
   get name(): string {
     return this.constructor.name;
@@ -13,8 +13,8 @@ export class findByPhoneUserService implements IApplicationService<number, User>
     this.repo = repo;
   }
 
-  async execute(value?: number): Promise<Result<User>> {
-    const phone = phoneNumber.create(Number(value));
+  async execute(value?: string): Promise<Result<User>> {
+    const phone = phoneNumber.create(value);
     return Result.success<User>(await this.repo.finderCriteria({ PhoneNumber:  phone  }));
   }
 } 

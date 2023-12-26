@@ -16,7 +16,7 @@ import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,void>{
   constructor(private phone:PhonesService,
-    private findByPhoneUserService: IApplicationService<number, User>,
+    private findByPhoneUserService: IApplicationService<string, User>,
     private IMapper: Imapper<User,UserEntity>,
     private IMapperPhone: Imapper<Phone,PhoneDto>,
     private readonly repo: IUserRepository,
