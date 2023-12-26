@@ -14,6 +14,7 @@ import { Song } from 'src/songs/domain/song';
 import { FindArtistsInCollectionService } from 'src/artists/application/services/FindArtistsInCollection.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 import { FindTopAlbumsService } from 'src/playlist/application/services/FindTopAlbums.service';
+import { Result } from 'src/common/domain/logic/Result';
 
 @Controller('api/album')
 export class AlbumController {
@@ -46,16 +47,18 @@ export class AlbumController {
     let topAlbumsInfo: TopAlbumsDto = {
       playlists: [],
     };
-    const albumsResponse: Playlist[] =
+    const albumsResult: Result<Playlist[]> =
       await this.findTopAlbumsService.execute();
+    if (albumsResult.IsSuccess) {
+      const albumsResponse: Playlist[] = albumsResult.Value;
+      for (const album of albumsResponse) {
+        topAlbumsInfo.playlists.push({
+          id: album.Id.Value,
+          image: album.Playlist_Image,
+        });
+      }
 
-    for (const album of albumsResponse) {
-      topAlbumsInfo.playlists.push({
-        id: album.Id.Value,
-        image: album.Playlist_Image,
-      });
-    }
-
-    return topAlbumsInfo;
+      return topAlbumsInfo;
+    } else throw new Error(albumsResult.Error.message);
   }
 }

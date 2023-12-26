@@ -1,11 +1,15 @@
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { calculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
+import { Result } from '../../../common/domain/logic/Result';
 
-export class FindTopAlbumsService implements IFindService<void, Playlist[]> {
+export class FindTopAlbumsService
+  implements IApplicationService<void, Playlist[]>
+{
   private readonly playlistRepository: IPlaylistRepository;
   private readonly songRepository: ISongRepository;
   private readonly calculateDurationService: calculatePlaylistDurationService;
@@ -17,12 +21,16 @@ export class FindTopAlbumsService implements IFindService<void, Playlist[]> {
     this.songRepository = songRepository;
     this.calculateDurationService = new calculatePlaylistDurationService();
   }
+  get name(): string {
+    return this.constructor.name;
+  }
 
-  async execute(): Promise<Playlist[]> {
+  async execute(): Promise<Result<Playlist[]>> {
     const albums: Playlist[] = await this.playlistRepository.findTopAlbums();
     for (const album of albums) {
       await this.calculateDurationService.execute(album, this.songRepository);
     }
-    return albums;
+    console.log(albums);
+    return Result.success<Playlist[]>(albums);
   }
 }

@@ -1,12 +1,14 @@
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
+import { Result } from 'src/common/domain/logic/Result';
 import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { calculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 
 export class FindAlbumByPlaylistIDService
-  implements IFindService<string, Playlist>
+  implements IApplicationService<string, Playlist>
 {
   private readonly playlistRepository: IPlaylistRepository;
   private readonly songRepository: ISongRepository;
@@ -19,11 +21,14 @@ export class FindAlbumByPlaylistIDService
     this.songRepository = songRepository;
     this.calculateDurationService = new calculatePlaylistDurationService();
   }
+  get name(): string {
+    return this.constructor.name;
+  }
 
-  async execute(id: string): Promise<Playlist> {
+  async execute(id: string): Promise<Result<Playlist>> {
     const playlist: Playlist =
       await this.playlistRepository.findPlaylistById(id);
     await this.calculateDurationService.execute(playlist, this.songRepository);
-    return playlist;
+    return Result.success<Playlist>(playlist);
   }
 }
