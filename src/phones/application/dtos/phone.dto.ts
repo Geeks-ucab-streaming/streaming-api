@@ -6,7 +6,7 @@ export class PhoneDto {
   id: string;
 
   @Expose()
-  phoneNumber: number;
+  phoneNumber: string;
 
   @Expose()
   linePhoneId: string;

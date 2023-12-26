@@ -16,9 +16,6 @@ export class UserDto {
   birth_date: Date;
 
   @Expose()
-  suscriptionState: string;
-
-  @Expose()
   gender: string;
 
   @Expose()

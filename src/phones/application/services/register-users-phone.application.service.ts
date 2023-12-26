@@ -12,13 +12,12 @@ import { ValidateIsLineValidService } from 'src/phones/domain/services/validate-
 import { LineInvalidExceptions } from 'src/phones/domain/exceptions/line-not-valid.exception';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
-import { phoneNumber } from 'src/phones/domain/phoneAggregate/value-objects/phoneNumber';
 import { Line } from 'src/phones/domain/phoneAggregate/value-objects/line';
 import { UserPhoneFactory } from 'src/users/domain/factories/user-phone.factory';
 import { PhoneParameterObject } from 'src/phones/domain/parameterObjects/phoneParameterObject';
 
 
-export class PhonesService implements IApplicationService<number,Phone> {
+export class PhonesService implements IApplicationService<string,Phone> {
   get name(): string {
     return this.constructor.name;
   }
@@ -30,7 +29,7 @@ export class PhonesService implements IApplicationService<number,Phone> {
   private readonly valiateisLineValid: ValidateIsLineValidService = new ValidateIsLineValidService(),
   ){}
   
-  async execute(userPhone: number): Promise<Result<Phone>> {
+  async execute(userPhone: string): Promise<Result<Phone>> {
     if(!this.valiateisUsableOperator.execute(userPhone)) 
       Result.fail<Phone>(new PhoneInvalidExceptions(userPhone));
 
@@ -40,8 +39,7 @@ export class PhonesService implements IApplicationService<number,Phone> {
     if(!this.valiateisLineValid.execute(line)) 
       throw new LineInvalidExceptions(line);
 
-    let phoneFactory: UserPhoneFactory = new UserPhoneFactory(); 
-    const createdPhone = (await this.repo.createPhone(phoneFactory.factoryMethod(new PhoneParameterObject(uuidv4(),userPhone,line.id,line.name)))).value;
+    const createdPhone = (await this.repo.createPhone(UserPhoneFactory.phoneFactoryMethod(new PhoneParameterObject(uuidv4(),userPhone,line.id,line.name)))).value;
     return Result.success<Phone>(createdPhone);
   }
 }

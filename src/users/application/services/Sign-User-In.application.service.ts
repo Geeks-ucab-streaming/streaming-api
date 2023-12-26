@@ -3,17 +3,17 @@ import { IApplicationService } from "src/common/Application/application-service/
 import { Result } from "src/common/domain/logic/Result";
 import { User } from "src/users/domain/userAggregate/user";
 
-export class SignUserIn implements IApplicationService<number, User>{
+export class SignUserIn implements IApplicationService<string, User>{
 
   constructor(
-    private findByPhoneUserService: IApplicationService<number, User>){
+    private findByPhoneUserService: IApplicationService<string, User>){
     }
 
     get name(): string {
       return this.constructor.name;
     }
 
-  async execute(phone: number){
+  async execute(phone: string){
     //validation by operator in service
     //validation if user exists
     const user = await this.findByPhoneUserService.execute(phone); 
