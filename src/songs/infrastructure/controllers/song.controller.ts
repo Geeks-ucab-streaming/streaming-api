@@ -57,7 +57,7 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/artist/:artistId')
-  findByArtistId(@Param('artistId') id: string): Promise<Song[]> {
+  findByArtistId(@Param('artistId') id: string): Promise<Result<Song[]>> {
     this.findSongsByArtistIdService = new FindSongsByArtistIdService(
       this.ormSongRepository,
     );
