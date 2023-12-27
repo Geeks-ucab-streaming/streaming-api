@@ -14,6 +14,7 @@ import { UserEmailUpdated } from "../events/user-email-updated";
 import { UserNameUpdated } from "../events/user-name-updated";
 import { UserBirthDateUpdated } from "../events/user-birthDate-updated";
 import { UserGenderUpdated } from "../events/user-gender-updated";
+import { InvalidUserException } from "../exceptions/invalid-user.exception";
 
 
 export class User extends AggregateRoot<userId> {
@@ -118,7 +119,8 @@ export class User extends AggregateRoot<userId> {
   
   //validando estado
   protected ensureValidState(): void {
-    console.log("Falta este método por implementar (ensureValidState en user)");
+    if (!this.Id || !this.Phone) {
+      throw new InvalidUserException(this);
+   }
   }
-
 }
