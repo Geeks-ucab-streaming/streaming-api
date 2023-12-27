@@ -9,6 +9,7 @@ import { NotFoundException } from "@nestjs/common";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { Result } from "src/common/domain/logic/Result";
 import { UpdateUser } from "../ParameterObjects/updateUser";
+import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
 
 export class UpdateUserById implements IApplicationService<UpdateUser, User> {
 //InjectRepository(): Le decimos al sistema de DI que necesitamos usar el reporistorio de "User".
@@ -31,6 +32,7 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
       user.Id,
       user.Phone,
       userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState),
+      userEmail.create(usuarioParametrizado.userToUpdate.email || user.Email.Email),
       userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
       UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
       UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),

@@ -10,6 +10,11 @@ import { DomainEvent } from "src/common/domain/Event/domain-event";
 import { calculateHowOldYouAre } from "../../domain/services/calculateHowOldYouAre";
 import { calculateHowYoungYouAre } from "../../domain/services/calculateHowYoungYouAre";
 import { userEmail } from "./value-objects/userEmail";
+import { UserEmailUpdated } from "../events/user-email-updated";
+import { UserNameUpdated } from "../events/user-name-updated";
+import { UserBirthDateUpdated } from "../events/user-birthDate-updated";
+import { UserGenderUpdated } from "../events/user-gender-updated";
+
 
 export class User extends AggregateRoot<userId> {
   private name: userName;
@@ -25,14 +30,6 @@ export class User extends AggregateRoot<userId> {
     super(id, userCreated);
   } 
 
-  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState, name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
-    return new User(id, phone ,suscriptionState);
-  }
-
-  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState) {
-    this.apply(UserCreated.create(id, phone , suscriptionState));
-  }
-  
   get Name(): userName {
     return this.name;
   } 
@@ -49,8 +46,36 @@ export class User extends AggregateRoot<userId> {
     return this.suscriptionState;
   }
 
+  get Email(): userEmail {
+    return this.email;
+  }
+
   get Phone(): Phone {
     return this.phone;
+  }
+
+  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState, email?: userEmail,name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
+    return new User(id, phone ,suscriptionState);
+  }
+
+  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState) {
+    this.apply(UserCreated.create(id, phone , suscriptionState));
+  }
+
+  public updateUsersEmail (id: userId, email: userEmail) {
+    this.apply(UserEmailUpdated.create(id, email));
+  }
+
+  public updateUsersName (id: userId, name: userName) {
+    this.apply(UserNameUpdated.create(id, name));
+  }
+
+  public updateUsersBirthDate (id: userId,  birthDate: UserBirthDate) {
+    this.apply(UserBirthDateUpdated.create(id, birthDate));
+  }
+
+  public updateUsersGender (id: userId, gender: UserGender) {
+    this.apply(UserGenderUpdated.create(id, gender));
   }
 
   static validateRangeBirthDate(birthDate: UserBirthDate, yearBirthUser:number): UserBirthDate {
@@ -69,6 +94,22 @@ export class User extends AggregateRoot<userId> {
             const userCreated: UserCreated = event as UserCreated;
             this.suscriptionState = userCreated.suscriptionState;
             this.phone = userCreated.phone;
+            break;
+        case UserEmailUpdated:
+            const userEmailUpdated: UserEmailUpdated = event as UserEmailUpdated;
+            this.email = userEmailUpdated.email;
+            break;
+        case UserNameUpdated:
+            const userNameUpdated: UserNameUpdated = event as UserNameUpdated;
+            this.name = userNameUpdated.name;
+            break;
+        case UserGenderUpdated:
+            const userGenderUpdated: UserGenderUpdated = event as UserGenderUpdated;
+            this.gender = userGenderUpdated.gender;
+            break;
+        case UserBirthDateUpdated:
+            const userBirthDateUpdated: UserBirthDateUpdated = event as UserBirthDateUpdated;
+            this.birth_date = userBirthDateUpdated.birthDate;
             break;
         default:
           throw new Error("Event not implemented.");
