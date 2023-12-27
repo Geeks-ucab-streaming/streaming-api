@@ -20,6 +20,8 @@ import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
 import { ApiTags } from '@nestjs/swagger';
+import { GetTrendingArtistsService } from 'src/artists/application/services/FindTrendingArtists.service';
+import { TrendingArtistsDto } from 'src/dtos';
 @Controller('api/artists')
 export class ArtistController {
   private readonly ormArtistMapper: ArtistsMapper;
@@ -31,6 +33,31 @@ export class ArtistController {
     );
     this.ormArtistMapper = new ArtistsMapper();
   }
+
+  @ApiTags('ArtistTrending')
+  @Get('/top_artists')
+  async getArtistTrending(): Promise<Result<TrendingArtistsDto>> {
+    const service = new ErrorApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new GetTrendingArtistsService(this.ormArtistRepository),
+        new NestLogger(),
+      ),
+    );
+    const result = await service.execute();
+    if (result.IsSuccess) {
+      let trendingArtists: TrendingArtistsDto = { artists: [] };
+      for (const artist of result.Value) {
+        trendingArtists.artists.push({
+          id: artist.Id.Value,
+          name: artist.Name.Value,
+          image: artist.Image,
+        });
+      }
+      console.log(result);
+      return Result.success<TrendingArtistsDto>(trendingArtists);
+    } else throw Error(result.Error.message);
+  }
+
   @ApiTags('Artist')
   @Get()
   async findAll(): Promise<Result<Artist[]>> {
