@@ -14,6 +14,7 @@ import {
 import { PhoneEntity } from '../../../phones/infrastructure/entities/phones.entity';
 import { StoredEdition } from './storedEdition.entity';
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
+import {TokenDeviceUserEntity} from "./tokenDeviceUser.entity";
 
 @Entity('Users')
 export class UserEntity {
@@ -47,4 +48,8 @@ export class UserEntity {
   @OneToMany(() => ReproducedSong, (reproducedSong) => reproducedSong.user)
   reproducedSong: ReproducedSong[];
 
+  //oneToMany in tokenDeviceUser
+
+@OneToMany(() => TokenDeviceUserEntity, (tokenDeviceUser) => tokenDeviceUser)
+  tokenDeviceUser: TokenDeviceUserEntity[];
 }
