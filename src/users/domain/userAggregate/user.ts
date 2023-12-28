@@ -57,6 +57,10 @@ export class User extends AggregateRoot<userId> {
     return this.phone;
   }
 
+  get Token(): TokenEntity[] {
+    return this.token;
+  }
+
   static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState,token?:TokenEntity[], email?: userEmail,name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
     return new User(id, phone ,suscriptionState,token);
   }
