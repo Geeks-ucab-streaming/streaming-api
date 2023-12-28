@@ -23,6 +23,7 @@ export class User extends AggregateRoot<userId> {
   private birth_date: UserBirthDate;
   private gender: UserGender;
   private suscriptionState: userSuscriptionState;
+  //AQUI DEBE IR LA FECHA DE LA SUSCRIPCION O ADENTRO DEL CREATE
   private phone: Phone ;
   private token : TokenEntity[];
 
@@ -64,20 +65,20 @@ export class User extends AggregateRoot<userId> {
     this.apply(UserCreated.create(id, phone , suscriptionState,token));
   }
 
-  public updateUsersEmail (id: userId, email: userEmail) {
-    this.apply(UserEmailUpdated.create(id, email));
+  public updateUsersEmail (email: userEmail) {
+    this.apply(UserEmailUpdated.create(this.Id, email));
   }
 
-  public updateUsersName (id: userId, name: userName) {
-    this.apply(UserNameUpdated.create(id, name));
+  public updateUsersName (name: userName) {
+    this.apply(UserNameUpdated.create(this.Id, name));
   }
 
-  public updateUsersBirthDate (id: userId,  birthDate: UserBirthDate) {
-    this.apply(UserBirthDateUpdated.create(id, birthDate));
+  public updateUsersBirthDate (birthDate: UserBirthDate) {
+    this.apply(UserBirthDateUpdated.create(this.Id, birthDate));
   }
 
-  public updateUsersGender (id: userId, gender: UserGender) {
-    this.apply(UserGenderUpdated.create(id, gender));
+  public updateUsersGender (gender: UserGender) {
+    this.apply(UserGenderUpdated.create(this.Id, gender));
   }
 
   static validateRangeBirthDate(birthDate: UserBirthDate, yearBirthUser:number): UserBirthDate {

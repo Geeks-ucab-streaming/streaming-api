@@ -28,6 +28,9 @@ export class UserEntity {
   email: string;
 
   @Column({ type: 'date', nullable: true })
+  subscription_date: Date;
+
+  @Column({ type: 'date', nullable: true })
   birth_date: Date;
 
   @Column({ type: 'text', nullable: true })

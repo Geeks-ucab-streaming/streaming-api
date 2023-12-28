@@ -8,6 +8,7 @@ import { userSuscriptionState } from "src/users/domain/userAggregate/entities/us
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { phoneMapper } from "src/phones/infrastructure/mapper/phone.mapper";
 import { TokenEntity } from '../../domain/userAggregate/entities/token';
+import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
 
 export class UsersMapper implements Imapper<User, UserEntity> {
 
@@ -18,27 +19,39 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       ormEntity.id = domainEntity.Id.Id;
       ormEntity.suscriptionState = domainEntity.SuscriptionState.SuscriptionState
       ormEntity.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
-      ormEntity.email = domainEntity.Email.Email;
-      ormEntity.name = domainEntity.Name.Name;
-      ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
-      ormEntity.gender= domainEntity.Gender.Gender;
+      if(domainEntity.Email){
+        ormEntity.email = domainEntity.Email.Email;
+      }
+      
+      if(domainEntity.Name){
+        ormEntity.name = domainEntity.Name.Name;
+      }
+
+      if(domainEntity.BirthDate){
+        ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
+      }
+
+      if(domainEntity.Gender){
+        ormEntity.gender= domainEntity.Gender.Gender;
+      }
       return await ormEntity;
   }
 
   async ToDomain(ormEntity: UserEntity): Promise<User> {
     let usersDate = new Date(ormEntity.birth_date);
     let tokenArray: TokenEntity[] = [];
-    ormEntity.tokenDeviceUser.map((token) => {
+    /*ormEntity.tokenDeviceUser.map((token) => {
       tokenArray.push(TokenEntity.create(token.token));
-    });
+    });*/
     let user: User =  User.create(
       userId.create(ormEntity.id),
       await this.mapperPhone.ToDomain(ormEntity.phone),
-      userSuscriptionState.create(ormEntity.suscriptionState),
+      userSuscriptionState.create(ormEntity.suscriptionState, /*CAMBIAR POR LA FECHA REAL*/new Date(Date.now())),
       tokenArray,
-      /*userName.create(ormEntity.name),
+      userEmail.create(ormEntity.email),
+      userName.create(ormEntity.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
-      UserGender.create(ormEntity.gender),*/
+      UserGender.create(ormEntity.gender),
     );  
     console.log(user,"el usuerio del mapper")
     return Promise.resolve(user);
