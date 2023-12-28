@@ -7,6 +7,7 @@ import { userSuscriptionState } from "src/users/domain/userAggregate/entities/us
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { UserDto } from "src/users/application/dtos/user.dto";
 import { PhoneAndDtoMapper } from "src/phones/infrastructure/mapper/phoneAndDto.mapper";
+import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
 
 export class UsersForDtoMapper implements Imapper<User, UserDto> {
 
@@ -29,6 +30,7 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
       await this.mapperPhone.ToDomain(userDto.phone),
       userSuscriptionState.create("gratuito", new Date(Date.now())),
       null,
+      userEmail.create(userDto.email),
       userName.create(userDto.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
       UserGender.create(userDto.gender),

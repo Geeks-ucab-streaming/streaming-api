@@ -111,7 +111,19 @@ export class UsersController {
     const user = await this.findUserById.execute(id);
     if (!user) throw user.Error;
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
-    return userPayload;
+    return  {
+      "id": (await userPayload).id,
+      "phone": {
+        "id": (await userPayload).phone.id,
+        "phoneNumber": (await userPayload).phone.phoneNumber,
+        "linePhoneId": (await userPayload).phone.linePhoneId,
+        "lineName": (await userPayload).phone.lineName
+      },
+      "email": (await userPayload).email,
+      "name": (await userPayload).name,
+      "birthDate": (await userPayload).birth_date,
+      "gender": (await userPayload).gender,
+    };
   }
 
   //Actualizar usuario en base a su ID
@@ -119,7 +131,6 @@ export class UsersController {
   @Patch('/user/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     this.updateUserParameterObjetc = new UpdateUser(id, body, this.usersMapper);
-
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
 
