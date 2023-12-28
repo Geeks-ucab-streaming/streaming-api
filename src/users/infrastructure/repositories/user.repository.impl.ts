@@ -43,7 +43,9 @@ extends Repository<UserEntity>
       .leftJoinAndSelect("user.tokenDeviceUser", "tokenDeviceUser")
       .where('user.phone IS NOT NULL')
       .getMany();
-    const usersDomain = await Promise.all(users.map(async (user) =>
+    const filteredUsers = users.filter(user => user.phone != null && user.tokenDeviceUser.length > 0);
+
+    const usersDomain = await Promise.all(filteredUsers.map(async (user:UserEntity) =>
     {
 
       if (user.phone !=null && user.tokenDeviceUser.length > 0 ) {

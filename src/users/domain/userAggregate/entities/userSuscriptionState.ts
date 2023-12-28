@@ -17,8 +17,9 @@ export class userSuscriptionState {
     }
     
 
-    constructor(suscriptionState: string) {
+    constructor(suscriptionState: string, suscription_date?: Date) {
         this.suscriptionState = suscriptionState as SubscriptionEnum;
+        this._suscription_date = suscription_date;
     }
 
     public get SuscriptionState(): string {
