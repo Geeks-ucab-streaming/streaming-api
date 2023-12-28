@@ -17,7 +17,7 @@ export class Phone extends AggregateRoot<phoneId> {
     super(idPhone, phoneCreated);
   }
 
-  static create(id: string, _phoneNumber:  number, id_line:string,line: string): Phone {
+  static create(id: string, _phoneNumber:  string, id_line:string,line: string): Phone {
     return new Phone(phoneId.create(id), phoneNumber.create(_phoneNumber), Line.create(id_line,Object.keys(phoneOperatorsEnum).find(key => phoneOperatorsEnum[key] === line)));
   }
 

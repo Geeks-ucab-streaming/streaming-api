@@ -1,7 +1,10 @@
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
-import { IPhoneRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
+import {
+  IPhoneRepository,
+  IgenericRepo,
+} from 'src/phones/domain/generic-repo-phones';
 //ESTO DEBERIA SER UNA INTERFAZ Y NO USAR LA LIBRERIA DIRECTAMENTE
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { PrefixEntity } from '../../infrastructure/entities/prefixes.entity';
 import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
 import { ValidateIsUsableOperatorService } from 'src/phones/domain/services/validate-is-usable-operator.domain.service';
@@ -39,6 +42,4 @@ export class PhonesService implements IApplicationService<string,Phone> {
     const createdPhone = (await this.repo.createPhone(UserPhoneFactory.phoneFactoryMethod(new PhoneParameterObject(uuidv4(),userPhone,line.id,line.name)))).value;
     return Result.success<Phone>(createdPhone);
   }
-
 }
-

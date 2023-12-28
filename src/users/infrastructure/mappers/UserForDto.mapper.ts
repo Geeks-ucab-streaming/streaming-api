@@ -7,6 +7,7 @@ import { userSuscriptionState } from "src/users/domain/userAggregate/entities/us
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { UserDto } from "src/users/application/dtos/user.dto";
 import { PhoneAndDtoMapper } from "src/phones/infrastructure/mapper/phoneAndDto.mapper";
+import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
 
 export class UsersForDtoMapper implements Imapper<User, UserDto> {
 
@@ -15,7 +16,6 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
   async domainTo(userDomainEntity: User): Promise<UserDto> {
       const userDto:UserDto = new UserDto();
       userDto.id = userDomainEntity.Id.Id;
-      userDto.suscriptionState = userDomainEntity.SuscriptionState.SuscriptionState
       userDto.phone= await this.mapperPhone.domainTo(userDomainEntity.Phone);
       /*userDto.name = userDomainEntity.Name.Name;
       userDto.birth_date = userDomainEntity.BirthDate.BirthDate;
@@ -28,7 +28,9 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
     let user: User =  User.create(
       userId.create(userDto.id),
       await this.mapperPhone.ToDomain(userDto.phone),
-      userSuscriptionState.create(userDto.suscriptionState),
+      userSuscriptionState.create("gratuito", /*CAMBIAR POR LO REAL*/new Date(Date.now())),
+      null,
+      userEmail.create(userDto.email),
       userName.create(userDto.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
       UserGender.create(userDto.gender),

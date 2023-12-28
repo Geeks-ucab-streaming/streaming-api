@@ -4,11 +4,11 @@ import { UserEntity } from "src/users/infrastructure/entities/users.entity";
 
 export class PhoneParameterObject {
  public idPhone: string;
- public phoneNumber: number;
+ public phoneNumber: string;
  public idLine: string;
  public line: string; 
 
- constructor(idPhone: string, phoneNumber: number, idLine: string, line: string) {
+ constructor(idPhone: string, phoneNumber: string, idLine: string, line: string) {
   this.idPhone = idPhone;
   this.phoneNumber = phoneNumber;
   this.idLine = idLine;

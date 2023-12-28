@@ -14,6 +14,7 @@ import {
 import { PhoneEntity } from '../../../phones/infrastructure/entities/phones.entity';
 import { StoredEdition } from './storedEdition.entity';
 import { ReproducedSong } from 'src/common/infrastructure/entities/ReproducedSong.entity';
+import {TokenDeviceUserEntity} from "./tokenDeviceUser.entity";
 
 @Entity('Users')
 export class UserEntity {
@@ -22,6 +23,12 @@ export class UserEntity {
 
   @Column({ type: 'text', nullable: true })
   name: string;
+
+  @Column({ type: 'text', nullable: true })
+  email: string;
+
+  @Column({ type: 'date', nullable: true })
+  subscription_date: Date;
 
   @Column({ type: 'date', nullable: true })
   birth_date: Date;
@@ -44,20 +51,8 @@ export class UserEntity {
   @OneToMany(() => ReproducedSong, (reproducedSong) => reproducedSong.user)
   reproducedSong: ReproducedSong[];
 
-  //Decoradores Hooks. [Para que se ejecuten, debes crear(instanciar la entidad) y salvar]
-  @AfterInsert()
-  logInsert() {
-    //Se ejecutará este método cuando hagas algo al usuario (Insert, Update, Delete)
-    console.log('Inerted User with id ', this.id);
-  }
+  //oneToMany in tokenDeviceUser
 
-  @AfterUpdate()
-  logUpdate() {
-    console.log('Update User whit id ', this.id);
-  }
-
-  @AfterRemove()
-  logRemove() {
-    console.log('Remove User whit id ', this.id);
-  }
+@OneToMany(() => TokenDeviceUserEntity, (tokenDeviceUser  ) => tokenDeviceUser.user)
+  tokenDeviceUser: TokenDeviceUserEntity[];
 }
