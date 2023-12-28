@@ -11,7 +11,7 @@ export class UserGender implements IValueObject<UserGender> {
     return this.userGender;
   }
 
-  static create (userGender: string): UserGender {
+  public static create (userGender: string): UserGender {
     return new UserGender(userGender);
   }
 

@@ -1,14 +1,14 @@
 import { Imapper } from "src/core/application/IMapper";
-import { UpdateUserDto } from "../dtos/update-user.dto";
 import { User } from "src/users/domain/userAggregate/user";
 import { UserEntity } from "src/users/infrastructure/entities/users.entity";
+import { UserDto } from "../dtos/user.dto";
 
 export class UpdateUser {
  public id: string;
  public userToUpdate: Partial<UserEntity>;
- public mapper: Imapper<User, UpdateUserDto>;
+ public mapper: Imapper<User, UserDto>;
 
- constructor(id: string, userToUpdate: Partial<UserEntity>, mapper: Imapper<User, UpdateUserDto>) {
+ constructor(id: string, userToUpdate: Partial<UserEntity>, mapper: Imapper<User, UserDto>) {
   this.id = id;
   this.userToUpdate = userToUpdate;
   this.mapper = mapper;

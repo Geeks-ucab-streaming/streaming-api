@@ -25,10 +25,10 @@ extends Repository<UserEntity>
     return Result.success<void>(void 0);
   }
 
-  async updateUser(user: User): Promise<UserEntity> {  
+  async updateUser(user: User): Promise<Result<void>> {  
     const updatedUser = await this.userMapper.domainTo(user);
-    console.log(updatedUser,"el usuario actualizado")
-    return await this.save(updatedUser);
+    await this.save(updatedUser);
+    return Result.success<void>(void 0);
     }
 
   async findById(userId: string): Promise<User> {
