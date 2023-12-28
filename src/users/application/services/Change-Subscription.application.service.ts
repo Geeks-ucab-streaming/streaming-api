@@ -30,6 +30,7 @@ export class changeSusbscriptionStateService implements IApplicationService<chan
             },
             token: [],
         };
+        
         await Promise.all(this.notifiers.map((notifier) => notifier.send(dto)));
 
       return Result.success<User>(user);

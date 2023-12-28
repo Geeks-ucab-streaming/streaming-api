@@ -7,6 +7,7 @@ import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/user
 import { userSuscriptionState } from "src/users/domain/userAggregate/entities/userSuscriptionState";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { phoneMapper } from "src/phones/infrastructure/mapper/phone.mapper";
+import { TokenEntity } from '../../domain/userAggregate/entities/token';
 
 export class UsersMapper implements Imapper<User, UserEntity> {
 
@@ -25,15 +26,20 @@ export class UsersMapper implements Imapper<User, UserEntity> {
 
   async ToDomain(ormEntity: UserEntity): Promise<User> {
     let usersDate = new Date(ormEntity.birth_date);
+    let tokenArray: TokenEntity[] = [];
+    ormEntity.tokenDeviceUser.map((token) => {
+      tokenArray.push(TokenEntity.create(token.token));
+    });
     let user: User =  User.create(
       userId.create(ormEntity.id),
       await this.mapperPhone.ToDomain(ormEntity.phone),
       userSuscriptionState.create(ormEntity.suscriptionState),
+      tokenArray,
       /*userName.create(ormEntity.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
       UserGender.create(ormEntity.gender),*/
     );  
-
+    console.log(user,"el usuerio del mapper")
     return Promise.resolve(user);
   }
 

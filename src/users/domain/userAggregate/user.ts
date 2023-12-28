@@ -15,7 +15,7 @@ import { UserNameUpdated } from "../events/user-name-updated";
 import { UserBirthDateUpdated } from "../events/user-birthDate-updated";
 import { UserGenderUpdated } from "../events/user-gender-updated";
 import { InvalidUserException } from "../exceptions/invalid-user.exception";
-
+import { TokenEntity } from './entities/token';
 
 export class User extends AggregateRoot<userId> {
   private name: userName;
@@ -24,13 +24,14 @@ export class User extends AggregateRoot<userId> {
   private gender: UserGender;
   private suscriptionState: userSuscriptionState;
   private phone: Phone ;
+  private token : TokenEntity[];
 
   //OJO: Evaluar el protected en la definición del constructor
-    constructor(id: userId, phone: Phone , suscriptionState: userSuscriptionState) {
-    const userCreated = UserCreated.create(id, phone ,suscriptionState);
+    constructor(id: userId, phone: Phone , suscriptionState: userSuscriptionState, token?: TokenEntity[]) {
+    const userCreated = UserCreated.create(id, phone ,suscriptionState,token);
     super(id, userCreated);
   } 
-
+  
   get Name(): userName {
     return this.name;
   } 
@@ -55,12 +56,12 @@ export class User extends AggregateRoot<userId> {
     return this.phone;
   }
 
-  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState, email?: userEmail,name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
-    return new User(id, phone ,suscriptionState);
+  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState,token?:TokenEntity[], email?: userEmail,name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
+    return new User(id, phone ,suscriptionState,token);
   }
 
-  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState) {
-    this.apply(UserCreated.create(id, phone , suscriptionState));
+  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState,token?:TokenEntity[]) {
+    this.apply(UserCreated.create(id, phone , suscriptionState,token));
   }
 
   public updateUsersEmail (id: userId, email: userEmail) {
@@ -95,6 +96,7 @@ export class User extends AggregateRoot<userId> {
             const userCreated: UserCreated = event as UserCreated;
             this.suscriptionState = userCreated.suscriptionState;
             this.phone = userCreated.phone;
+            this.token = userCreated.token;
             break;
         case UserEmailUpdated:
             const userEmailUpdated: UserEmailUpdated = event as UserEmailUpdated;
