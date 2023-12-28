@@ -27,7 +27,7 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
     let user: User =  User.create(
       userId.create(userDto.id),
       await this.mapperPhone.ToDomain(userDto.phone),
-      userSuscriptionState.create("gratuito"),
+      userSuscriptionState.create("gratuito", new Date(Date.now())),
       null,
       userName.create(userDto.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
