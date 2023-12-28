@@ -20,17 +20,57 @@ import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
 import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
 import { ApiTags } from '@nestjs/swagger';
+import { GetTrendingArtistsService } from 'src/artists/application/services/FindTrendingArtists.service';
+import { AllArtistInfoDto, TrendingArtistsDto } from 'src/dtos';
+import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
+import { Song } from 'src/songs/domain/song';
+import { FindSongsByArtistIdService } from 'src/songs/application/services/getSongsByArtist.service';
+import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
+import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
+import { Playlist } from 'src/playlist/domain/playlist';
 @Controller('api/artists')
 export class ArtistController {
-  private readonly ormArtistMapper: ArtistsMapper;
   private readonly ormArtistRepository: OrmArtistRepository;
+  private readonly ormSongsRepository: OrmSongRepository;
+  private readonly ormPlaylistRepository: PlaylistRepository;
 
   constructor() {
     this.ormArtistRepository = new OrmArtistRepository(
       DataSourceSingleton.getInstance(),
     );
-    this.ormArtistMapper = new ArtistsMapper();
+    this.ormSongsRepository = new OrmSongRepository(
+      DataSourceSingleton.getInstance(),
+    );
+    this.ormPlaylistRepository = new PlaylistRepository(
+      DataSourceSingleton.getInstance(),
+    );
   }
+
+  @ApiTags('ArtistTrending')
+  @Get('/top_artists')
+  async getArtistTrending(): Promise<Result<TrendingArtistsDto>> {
+    const service = new ErrorApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new GetTrendingArtistsService(this.ormArtistRepository),
+        new NestLogger(),
+      ),
+    );
+
+    const result = await service.execute();
+    if (result.IsSuccess) {
+      let trendingArtists: TrendingArtistsDto = { artists: [] };
+      for (const artist of result.Value) {
+        trendingArtists.artists.push({
+          id: artist.Id.Value,
+          name: artist.Name.Value,
+          image: artist.Image,
+        });
+      }
+      console.log(result);
+      return Result.success<TrendingArtistsDto>(trendingArtists);
+    } else throw Error(result.Error.message);
+  }
+
   @ApiTags('Artist')
   @Get()
   async findAll(): Promise<Result<Artist[]>> {
@@ -46,7 +86,7 @@ export class ArtistController {
   }
   @ApiTags('Artist')
   @Get('/:ArtistId')
-  async getArtist(@Param('ArtistId') id): Promise<Result<Artist>> {
+  async getArtist(@Param('ArtistId') id): Promise<Result<AllArtistInfoDto>> {
     const dto: GetArtistProfilesApplicationServiceDto = { id };
     // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
     //Mapeamos y retornamos.
@@ -57,8 +97,82 @@ export class ArtistController {
       new GetArtistProfilesApplicationService(this.ormArtistRepository),
       new NestLogger(),
     );
+    const getSongsByArtistIdservice = new ErrorApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new FindSongsByArtistIdService(this.ormSongsRepository),
+        new NestLogger(),
+      ),
+    );
+    const getAlbumsByArtistIdservice = new ErrorApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new FindAlbumByArtistIDService(
+          this.ormPlaylistRepository,
+          this.ormSongsRepository,
+        ),
+        new NestLogger(),
+      ),
+    );
     const result = await service.execute(dto);
-    return result;
+
+    if (result.IsSuccess) {
+      const artistSongsResponse: Result<Song[]> =
+        await getSongsByArtistIdservice.execute(result.Value.Id.Value);
+      if (artistSongsResponse.IsSuccess) {
+        const artistAlbumsResponse: Result<Playlist[]> =
+          await getAlbumsByArtistIdservice.execute(result.Value.Id.Value);
+        if (artistAlbumsResponse.IsSuccess) {
+          let allArtistInfo: AllArtistInfoDto = {
+            id: '',
+            name: '',
+            image: null,
+            albums: [],
+            songs: [],
+          };
+
+          allArtistInfo.id = result.Value.Id.Value;
+          allArtistInfo.name = result.Value.Id.Value;
+          allArtistInfo.image = result.Value.Image;
+          if (artistAlbumsResponse.Value.length >= 1) {
+            for (const album of artistAlbumsResponse.Value) {
+              allArtistInfo.albums.push({
+                id: album.Id.Value,
+                image: album.Playlist_Image,
+              });
+            }
+          }
+          if (artistSongsResponse.Value.length >= 1) {
+            for (const song of artistSongsResponse.Value) {
+              let artistsAux: { id: string; name: string }[] = [];
+              for (const artist of song.Artists) {
+                if (artist === result.Value.Id.Value) {
+                  artistsAux.push({
+                    id: result.Value.Id.Value,
+                    name: result.Value.Name.Value,
+                  });
+                } else {
+                  const dto: GetArtistProfilesApplicationServiceDto = {
+                    id: artist,
+                  };
+                  const otherArtist: Result<Artist> =
+                    await service.execute(dto);
+                  artistsAux.push({
+                    id: otherArtist.Value.Id.Value,
+                    name: otherArtist.Value.Name.Value,
+                  });
+                }
+              }
+              allArtistInfo.songs.push({
+                id: song.Id.Value,
+                duration: song.DurationString,
+                image: song.Image,
+                artists: artistsAux,
+              });
+            }
+          }
+          return Result.success<AllArtistInfoDto>(allArtistInfo);
+        } else throw new Error(artistAlbumsResponse.Error.message);
+      } else throw new Error(artistSongsResponse.Error.message);
+    } else throw new Error(result.Error.message);
   }
 }
 

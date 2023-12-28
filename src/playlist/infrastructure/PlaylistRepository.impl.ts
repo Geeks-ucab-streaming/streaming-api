@@ -49,6 +49,7 @@ export class PlaylistRepository
     for (const playlist of playlistsResponse) {
       playlists.push(await this.playlistMapper.ToDomain(playlist));
     }
+    console.log(playlists);
     return playlists;
   }
 
@@ -68,7 +69,25 @@ export class PlaylistRepository
     const playlist = await this.playlistMapper.ToDomain(playlistResponse);
     return playlist;
   }
-  findPlaylistsByArtistId(id: string): Promise<Playlist[]> {
-    throw new Error('Method not implemented.');
+  async findPlaylistsByArtistId(id: string): Promise<Playlist[]> {
+    const playlistsResponse: PlaylistEntity[] = await this.createQueryBuilder(
+      'playlist',
+    )
+      .leftJoinAndSelect('playlist.playlistCreator', 'playlistCreator')
+      .leftJoinAndSelect('playlistCreator.artist', 'artist')
+      .leftJoinAndSelect('playlist.playlistSong', 'playlistSong')
+      .leftJoinAndSelect('playlistSong.song', 'song')
+      .leftJoinAndSelect('song.song_artist', 'songArtist')
+      .leftJoinAndSelect('songArtist.artist', 'artist2')
+      .where('artist.id = :artistId', { artistId: id })
+      .getMany();
+
+    console.log(playlistsResponse);
+
+    let playlists: Playlist[] = [];
+    for (const playlist of playlistsResponse) {
+      playlists.push(await this.playlistMapper.ToDomain(playlist));
+    }
+    return playlists;
   }
 }
