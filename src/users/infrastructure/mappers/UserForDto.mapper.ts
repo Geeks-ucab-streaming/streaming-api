@@ -13,13 +13,26 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
 
   private readonly mapperPhone = new PhoneAndDtoMapper();
 
-  async domainTo(userDomainEntity: User): Promise<UserDto> {
+  async domainTo(domainEntity: User): Promise<UserDto> {
       const userDto:UserDto = new UserDto();
-      userDto.id = userDomainEntity.Id.Id;
-      userDto.phone= await this.mapperPhone.domainTo(userDomainEntity.Phone);
-      /*userDto.name = userDomainEntity.Name.Name;
-      userDto.birth_date = userDomainEntity.BirthDate.BirthDate;
-      userDto.gender= userDomainEntity.Gender.Gender;*/
+      userDto.id = domainEntity.Id.Id;
+      userDto.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
+      if(domainEntity.Email){
+        userDto.email = domainEntity.Email.Email;
+      }
+      
+      if(domainEntity.Name){
+        userDto.name = domainEntity.Name.Name;
+      }
+
+      if(domainEntity.BirthDate){
+        userDto.birth_date = domainEntity.BirthDate.BirthDate;
+      }
+
+      if(domainEntity.Gender){
+        userDto.gender= domainEntity.Gender.Gender;
+      }
+      
       return await userDto;
   }
 

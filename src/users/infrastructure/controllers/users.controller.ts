@@ -130,7 +130,7 @@ export class UsersController {
   @ApiTags('Users')
   @Patch('/user/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    this.updateUserParameterObjetc = new UpdateUser(id, body, this.usersMapper);
+    this.updateUserParameterObjetc = new UpdateUser(id, body, this.userMapperForDomainAndDtos);
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
 
