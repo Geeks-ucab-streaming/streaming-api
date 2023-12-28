@@ -28,6 +28,7 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
       userId.create(userDto.id),
       await this.mapperPhone.ToDomain(userDto.phone),
       userSuscriptionState.create("gratuito"),
+      null,
       userName.create(userDto.name),
       UserBirthDate.create(usersDate, usersDate.getFullYear()),
       UserGender.create(userDto.gender),

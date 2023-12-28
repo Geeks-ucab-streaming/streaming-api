@@ -107,6 +107,7 @@ export class UsersController {
   @ApiTags('Users')
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
+    await this.userRepository.findAll();
     const user = await this.findUserById.execute(id);
     if (!user) throw user.Error;
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);

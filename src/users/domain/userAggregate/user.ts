@@ -10,6 +10,7 @@ import { DomainEvent } from "src/common/domain/Event/domain-event";
 import { calculateHowOldYouAre } from "../../domain/services/calculateHowOldYouAre";
 import { calculateHowYoungYouAre } from "../../domain/services/calculateHowYoungYouAre";
 import { userEmail } from "./value-objects/userEmail";
+import { TokenEntity } from './entities/token';
 
 export class User extends AggregateRoot<userId> {
   private name: userName;
@@ -18,19 +19,20 @@ export class User extends AggregateRoot<userId> {
   private gender: UserGender;
   private suscriptionState: userSuscriptionState;
   private phone: Phone ;
+  private token : TokenEntity[];
 
   //OJO: Evaluar el protected en la definición del constructor
-    constructor(id: userId, phone: Phone , suscriptionState: userSuscriptionState) {
-    const userCreated = UserCreated.create(id, phone ,suscriptionState);
+    constructor(id: userId, phone: Phone , suscriptionState: userSuscriptionState, token?: TokenEntity[]) {
+    const userCreated = UserCreated.create(id, phone ,suscriptionState,token);
     super(id, userCreated);
   } 
 
-  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState, name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
-    return new User(id, phone ,suscriptionState);
+  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState,token?:TokenEntity[], name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
+    return new User(id, phone ,suscriptionState,token);
   }
 
-  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState) {
-    this.apply(UserCreated.create(id, phone , suscriptionState));
+  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState,token?:TokenEntity[]) {
+    this.apply(UserCreated.create(id, phone , suscriptionState,token));
   }
   
   get Name(): userName {
@@ -69,6 +71,7 @@ export class User extends AggregateRoot<userId> {
             const userCreated: UserCreated = event as UserCreated;
             this.suscriptionState = userCreated.suscriptionState;
             this.phone = userCreated.phone;
+            this.token = userCreated.token;
             break;
         default:
           throw new Error("Event not implemented.");

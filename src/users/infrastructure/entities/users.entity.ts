@@ -50,6 +50,6 @@ export class UserEntity {
 
   //oneToMany in tokenDeviceUser
 
-@OneToMany(() => TokenDeviceUserEntity, (tokenDeviceUser) => tokenDeviceUser)
+@OneToMany(() => TokenDeviceUserEntity, (tokenDeviceUser  ) => tokenDeviceUser.user)
   tokenDeviceUser: TokenDeviceUserEntity[];
 }

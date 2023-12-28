@@ -33,6 +33,7 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
       user.Id,
       user.Phone,
       userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState),
+      null,
       userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
       UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
       UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),
