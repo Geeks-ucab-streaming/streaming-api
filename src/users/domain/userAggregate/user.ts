@@ -23,6 +23,7 @@ export class User extends AggregateRoot<userId> {
   private birth_date: UserBirthDate;
   private gender: UserGender;
   private suscriptionState: userSuscriptionState;
+  //AQUI DEBE IR LA FECHA DE LA SUSCRIPCION O ADENTRO DEL CREATE
   private phone: Phone ;
   private token : TokenEntity[];
 
