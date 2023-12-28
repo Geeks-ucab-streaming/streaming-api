@@ -46,7 +46,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
     let user: User =  User.create(
       userId.create(ormEntity.id),
       await this.mapperPhone.ToDomain(ormEntity.phone),
-      userSuscriptionState.create(ormEntity.suscriptionState, /*CAMBIAR POR LA FECHA REAL*/new Date(Date.now())),
+      userSuscriptionState.create(ormEntity.suscriptionState, /*CAMBIAR POR LA FECHA REAL*/ormEntity.subscription_date),
       tokenArray,
       userEmail.create(ormEntity.email),
       userName.create(ormEntity.name),
