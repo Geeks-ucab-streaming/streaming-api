@@ -11,8 +11,6 @@ import { Result } from "src/common/domain/logic/Result";
 import { UpdateUser } from "../ParameterObjects/updateUser";
 import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
 import { has } from 'lodash';
-import { UserNameUpdated } from "src/users/domain/events/user-name-updated";
-import { UserCreated } from "src/users/domain/events/user-created";
 
 export class UpdateUserById implements IApplicationService<UpdateUser, User> {
 //InjectRepository(): Le decimos al sistema de DI que necesitamos usar el reporistorio de "User".
@@ -33,19 +31,30 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
     
     if (!user) return Result.fail<User>(new NotFoundException('user not found'))
 
-
     const userUpdated = User.create(
       user.Id,
       user.Phone,
       userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState),
       null,
-      userEmail.create(usuarioParametrizado.userToUpdate.email)|| user.Email,
-      userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
-      UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
-      UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),
       )
-    
-    Object.assign(user, usuarioParametrizado.userToUpdate);
+
+    if (has(usuarioParametrizado.userToUpdate.name, 'name')) {
+        userUpdated.updateUsersName(userUpdated.Id, userName.create(usuarioParametrizado.userToUpdate.name));
+      }
+  
+      if (has(usuarioParametrizado.userToUpdate.email, 'email')) {
+        userUpdated.updateUsersEmail(userUpdated.Id, userEmail.create(usuarioParametrizado.userToUpdate.email));
+      }
+  
+      if (has(usuarioParametrizado.userToUpdate.gender, 'gender')) {
+        userUpdated.updateUsersGender(userUpdated.Id, UserGender.create(usuarioParametrizado.userToUpdate.gender));
+      }
+
+      if (has(usuarioParametrizado.userToUpdate.birth_date, 'birth_date')) {
+        userUpdated.updateUsersBirthDate(userUpdated.Id, UserBirthDate.create(usuarioParametrizado.userToUpdate.birth_date, usuarioParametrizado.userToUpdate.birth_date.getFullYear()));
+      }
+
+    Object.assign(userUpdated, usuarioParametrizado.userToUpdate);
     const savedUser = await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.
     return Result.success<User>(await usuarioParametrizado.mapper.ToDomain(savedUser));
   }

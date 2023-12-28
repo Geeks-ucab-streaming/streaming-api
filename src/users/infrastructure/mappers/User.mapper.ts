@@ -18,9 +18,10 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       ormEntity.id = domainEntity.Id.Id;
       ormEntity.suscriptionState = domainEntity.SuscriptionState.SuscriptionState
       ormEntity.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
-      /*ormEntity.name = domainEntity.Name.Name;
+      ormEntity.email = domainEntity.Email.Email;
+      ormEntity.name = domainEntity.Name.Name;
       ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
-      ormEntity.gender= domainEntity.Gender.Gender;*/
+      ormEntity.gender= domainEntity.Gender.Gender;
       return await ormEntity;
   }
 
