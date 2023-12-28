@@ -16,8 +16,7 @@ export class UserFactory {
     let usuario = new User(
       userId.create(uuidv4())
     , UserPhoneFactory.phoneFactoryMethod(new PhoneParameterObject(userPhone.id,userPhone.phoneNumber,userPhone.linePhoneId,userPhone.lineName))
-    , userSuscriptionState.create("premium")
-    , userSuscriptionState.create("gratuito", new Date(Date.now()))
+    , userSuscriptionState.create("premium", /*CAMBIAR POR LO REAL*/ new Date(Date.now()))
      )
      
     return usuario;

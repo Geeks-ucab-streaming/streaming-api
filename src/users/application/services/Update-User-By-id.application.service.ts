@@ -37,7 +37,7 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState),
+      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState, /*CAMBIAR POR LO REAL*/new Date(Date.now())),
       null,
       userEmail.create(usuarioParametrizado.userToUpdate.email)|| user.Email,
       userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
