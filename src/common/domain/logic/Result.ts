@@ -10,9 +10,9 @@ export class Result<T> {
 
   private constructor(value: T, error: DomainException<T>) {
     if (error) {
-      console.log(error)
+      console.log(error,"mi errorrrrrrrrrrrrrrrrrrrrr")
       this.statusCode = Number(error.httpStatus) || 500;
-      this.message = error?.message ? error?.message : 'Unknown.';
+      this.message = error?.errorCode ? error?.errorCode : 'Unknown.';
       this.error = 'Internal Domain Error';
     } else {
       this.value = value;

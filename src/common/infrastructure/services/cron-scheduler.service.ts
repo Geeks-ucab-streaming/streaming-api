@@ -19,7 +19,7 @@ export class CronSchedulerService {
   constructor() {
   }
 
-  @Cron('*/10 * * * * *')
+  @Cron('*/58 * * * * *')
   async notificationSubscriptionCron() {
 
       const users = await this.userRepository.findAll();

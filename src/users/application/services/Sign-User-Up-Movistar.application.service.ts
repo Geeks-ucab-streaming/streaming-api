@@ -28,6 +28,7 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,voi
       throw new NotFoundException ("User Alredy exists");
     }
     let phoneMovistar = await this.phone.execute(usersDto.phone);
+    if(phoneMovistar. Error) throw phoneMovistar.Error
     let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
     usersDto.phone = phoneMovistarDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(usersDto,phoneMovistarDto));
