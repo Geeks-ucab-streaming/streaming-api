@@ -16,6 +16,8 @@ import { UserBirthDateUpdated } from "../events/user-birthDate-updated";
 import { UserGenderUpdated } from "../events/user-gender-updated";
 import { InvalidUserException } from "../exceptions/invalid-user.exception";
 import { TokenEntity } from './entities/token';
+import { phoneNumber } from "src/phones/domain/phoneAggregate/value-objects/phoneNumber";
+
 
 export class User extends AggregateRoot<userId> {
   private name: userName;
@@ -130,4 +132,18 @@ export class User extends AggregateRoot<userId> {
       throw new InvalidUserException(this);
    }
   }
+
+  protected EnsureStateofPhone(cellphone: this):boolean{
+
+       return this.Phone === cellphone.Phone;
+
+  }
+
+
+protected EnsureStateofSubscription(sub: this):boolean{
+
+  return this.SuscriptionState === sub.SuscriptionState;
+
+}
+
 }

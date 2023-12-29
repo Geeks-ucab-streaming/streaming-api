@@ -32,7 +32,7 @@ export class CronSchedulerService {
             //EXAMPLE FOR NOTIFICATION
             notification: {
               title: 'Subscripcion por vencer',
-              body: 'Su subscripcion se vencera en ' + daysUntilExpiration + ' dias',
+              body: '' + daysUntilExpiration + '',
             },
 
             token: [tokens.token],
