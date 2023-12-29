@@ -29,7 +29,7 @@ export class phoneNumber implements IValueObject<phoneNumber>{
   public isValidOperator(phoneNumber: string): boolean {
      if (
       !Object.values(phoneOperatorsEnum).includes(
-        phoneNumber.toString().substring(0, 3) as phoneOperatorsEnum,
+        phoneNumber?.toString().substring(0, 3) as phoneOperatorsEnum,
       )
     )
         return false;

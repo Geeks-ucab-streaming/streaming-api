@@ -77,6 +77,7 @@ export class UsersController {
       const serviceMovistar= new ErrorApplicationServiceDecorator(
       new SignUserUpMovistar(this.phonesService,phoneService,this.usersMapper,this.phoneDtoMapper,this.userRepository));
       const result = await serviceMovistar.execute(body);
+      console.log("el pepe",result,"el value ")
       return result; 
   }
 

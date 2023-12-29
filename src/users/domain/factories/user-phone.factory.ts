@@ -7,6 +7,7 @@ import { PhoneParameterObject } from "src/phones/domain/parameterObjects/phonePa
 
 export class UserPhoneFactory {
   public static phoneFactoryMethod(phone: PhoneParameterObject): Phone {
-        return new Phone(phoneId.create(phone.idPhone), phoneNumber.create(phone.phoneNumber), Line.create(phone.idLine,Object.keys(phoneOperatorsEnum).find(key => phoneOperatorsEnum[key] === phone.line)));
+        return new Phone(phoneId.create(phone.idPhone), phoneNumber.create(phone.phoneNumber), Line.create(phone.idLine,Object.keys(phoneOperatorsEnum).find(key => key === phone.line.toUpperCase()
+         )));
     }
 }

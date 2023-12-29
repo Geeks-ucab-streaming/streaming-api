@@ -16,11 +16,15 @@ export class OrmPhoneRepository extends Repository<PhoneEntity> implements IPhon
     this.phoneMapper = phoneMapper;
   }
   
-  async createPhone(phone: Phone): Promise<Result< Phone>> {
+  async createPhone(phone: Phone): Promise<Result<Phone>> {
     const isExistPhone = await this.findOneBy({
       phoneNumber:phone.PhoneNumber.phoneNumber
     });
-    if(isExistPhone) return Result.fail<Phone>(new PhoneRegistedAlredyExceptions(phone.PhoneNumber));
+    if(isExistPhone) {
+      const resultadito = Result.fail<Phone>(new PhoneRegistedAlredyExceptions(phone.PhoneNumber));
+      console.log(resultadito)
+      return resultadito;
+    }
     const phoneToOrm = await this.phoneMapper.domainTo(phone);
     const phoneCreated = await this.phoneMapper.ToDomain(await this.save(phoneToOrm));
     return Result.success<Phone>(phoneCreated);

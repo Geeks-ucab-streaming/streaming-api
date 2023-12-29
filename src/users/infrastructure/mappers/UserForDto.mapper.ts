@@ -13,7 +13,8 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
 
   private readonly mapperPhone = new PhoneAndDtoMapper();
 
-  async domainTo(domainEntity: User): Promise<UserDto> {
+  async domainTo(userDomainEntity: User): Promise<UserDto> {
+      console.log("aqui estoy llegando al userForDtoMapper")
       const userDto:UserDto = new UserDto();
       userDto.id = domainEntity.Id.Id;
       userDto.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
@@ -37,6 +38,7 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
   }
 
   async ToDomain(userDto: UserDto): Promise<User> {
+      console.log("aqui estoy llegando al userForDtoMapper")
     let usersDate = new Date(userDto.birth_date);
     let user: User =  User.create(
       userId.create(userDto.id),
