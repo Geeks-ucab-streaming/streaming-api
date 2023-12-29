@@ -13,6 +13,7 @@ export class phoneMapper implements Imapper<Phone,PhoneEntity> {
         ormEntity.id=phoneDomainEntity.Id.Id,
         ormEntity.phoneNumber=phoneDomainEntity.PhoneNumber.phoneNumber,
         lineEntity.id=phoneDomainEntity.LinePhone.id;
+        lineEntity.name=phoneDomainEntity.LinePhone.name;
         ormEntity.linePhone=lineEntity;
         return ormEntity; 
     }

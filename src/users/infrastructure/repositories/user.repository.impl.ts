@@ -41,7 +41,7 @@ extends Repository<UserEntity>
       .innerJoinAndSelect("user.phone", "phone")
       .innerJoinAndSelect("phone.linePhone", "linePhone")
       .leftJoinAndSelect("user.tokenDeviceUser", "tokenDeviceUser")
-      .where('user.phone IS NOT NULL')
+      .where('user.phone IS NOT NULL AND phone.phoneNumber IS NOT NULL')
       .getMany();
     const filteredUsers = users.filter(user => user.phone != null && user.tokenDeviceUser.length > 0);
 

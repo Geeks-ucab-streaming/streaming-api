@@ -9,6 +9,7 @@ import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { IUserRepository } from "src/users/domain/IUserRepository";
 import { UserFactory } from "src/users/domain/factories/user.factory";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
+import { Result } from '../../../common/domain/logic/Result';
 
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,void>{
   constructor(private phone:PhonesService,
@@ -22,13 +23,14 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,voi
     return this.constructor.name;
   }
 
-  async execute(usersDto: CreateUserDto){
+  async execute(usersDto: CreateUserDto):Promise<Result<void>>{
     const users = await this.findByPhoneUserService.execute(usersDto.phone); 
     if(users.Value){
       throw new NotFoundException ("User Alredy exists");
     }
     let phoneMovistar = await this.phone.execute(usersDto.phone);
-    if(phoneMovistar. Error) throw phoneMovistar.Error
+    phoneMovistar.IsSuccess
+    if(!phoneMovistar.IsSuccess) return Result.fail<void>(phoneMovistar.Error);
     let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
     usersDto.phone = phoneMovistarDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(usersDto,phoneMovistarDto));

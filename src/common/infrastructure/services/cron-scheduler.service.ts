@@ -19,15 +19,14 @@ export class CronSchedulerService {
   constructor() {
   }
 
-  @Cron('*/58 * * * * *')
+  @Cron('*/60 * * * * *')
   async notificationSubscriptionCron() {
 
       const users = await this.userRepository.findAll();
-      const tokenUsers: string[] = [];
+      console.log(users,"los usuarios")
       users.map((user) => {
       const daysUntilExpiration = calculateDaysToEndSubscription.daysToEndSubscription(user.SuscriptionState.suscription_date)
         return user.Token.map(async (tokens) => {
-          tokenUsers.push(tokens.token);
           await this.notifier.send({
             //EXAMPLE FOR NOTIFICATION
             notification: {
