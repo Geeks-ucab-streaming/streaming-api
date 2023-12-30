@@ -17,19 +17,28 @@ export class FirebaseNotificationSender implements NotificationSender<admin.mess
     this.messaging = admin.messaging();
   }
 
-  async sendNotification(token: string[], title: string, body: string): Promise<Result<void>> {
-    for (const t of token) {
-        const message = {
-            notification: {
-              title,
-              body,
-            },
-            token:t,
-          };
-          await this.messaging.send(message)
-    }
-    
+  async sendNotification(token: string[], title: string, body: string): Promise<Result<void| Error>> {
+    try {
 
-    return Result.success<void>(void 0);
+      for (const t of token) {
+        const message = {
+          notification: {
+            title,
+            body,
+          },
+          token:t,
+        };
+        await this.messaging.send(message)
+      }
+
+
+      return Result.success<void>(void 0);
+    }
+    catch (e) {
+      console.log('tu sabe qlq con el frawel ',e);
+      return Result.fail<Error>(e);
+
+    }
+
   }
 }

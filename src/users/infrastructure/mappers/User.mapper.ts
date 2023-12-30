@@ -17,7 +17,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
   async domainTo(domainEntity: User): Promise<UserEntity> {
       const ormEntity:UserEntity = new UserEntity();
       ormEntity.id = domainEntity.Id.Id;
-      ormEntity.suscriptionState = domainEntity.SuscriptionState.SuscriptionState
+      ormEntity.suscriptionState = domainEntity.SuscriptionState.SuscriptionState;
       ormEntity.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
       if(domainEntity.Email){
         ormEntity.email = domainEntity.Email.Email;
@@ -46,7 +46,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
     let user: User =  User.create(
       userId.create(ormEntity.id),
       await this.mapperPhone.ToDomain(ormEntity.phone),
-      userSuscriptionState.create(ormEntity.suscriptionState, /*CAMBIAR POR LA FECHA REAL*/new Date(Date.now())),
+      userSuscriptionState.create(ormEntity.suscriptionState, /*CAMBIAR POR LA FECHA REAL*/ormEntity.subscription_date),
       tokenArray,
       userEmail.create(ormEntity.email),
       userName.create(ormEntity.name),

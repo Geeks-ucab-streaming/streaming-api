@@ -37,11 +37,12 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
   }
 
   async ToDomain(userDto: UserDto): Promise<User> {
+      console.log("aqui estoy llegando al userForDtoMapper")
     let usersDate = new Date(userDto.birth_date);
     let user: User =  User.create(
       userId.create(userDto.id),
       await this.mapperPhone.ToDomain(userDto.phone),
-      userSuscriptionState.create("gratuito", /*CAMBIAR POR LO REAL*/new Date(Date.now())),
+      userSuscriptionState.create("premium", /*CAMBIAR POR LO REAL*/new Date(Date.now())),
       null,
       userEmail.create(userDto.email),
       userName.create(userDto.name),
