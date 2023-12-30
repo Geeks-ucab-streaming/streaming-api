@@ -1,5 +1,4 @@
-import { Result } from "src/common/domain/logic/Result";
-
+import { Result } from 'src/common/domain/logic/Result';
 
 /** IApplicationService: Es una interfaz genérica utilizada para implementar servicios de aplicación.
  *  @typeParam `D` Tipo parametrizado de los DTOs.

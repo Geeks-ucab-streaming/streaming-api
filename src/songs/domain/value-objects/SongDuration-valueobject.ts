@@ -10,7 +10,7 @@ export class SongDuration implements IValueObject<SongDuration> {
   private constructor(value: number) {
     if (this.checkDuration(value)) this.value = value;
     else {
-      throw new Error('la duración no puede ser despues de este momento');
+      throw new Error('la duración no puede ser negativa');
     } //Aqui deberiamos crear una excepcion
   }
 

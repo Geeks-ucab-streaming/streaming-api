@@ -5,6 +5,7 @@ import { ArtistEntity } from '../entities/artist.entity';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 import { ArtistName } from 'src/artists/domain/value-objects/artistName-valueobject';
 import { ArtistImage } from 'src/artists/domain/value-objects/artistImage-valueobject';
+import { ArtistStreams } from 'src/artists/domain/value-objects/artistStreams-valueobject';
 
 export class ArtistsMapper implements Imapper<Artist, ArtistEntity> {
   private readonly getArtistImageService: GetFileService;
@@ -20,6 +21,7 @@ export class ArtistsMapper implements Imapper<Artist, ArtistEntity> {
       ArtistID.create(ormEntity.id),
       ArtistName.create(ormEntity.name),
       ArtistImage.create(ormEntity.image_reference),
+      ArtistStreams.create(ormEntity.reproductions),
     );
     artist.setImage(
       await this.getArtistImageService.execute(artist.ImageReference.Image),

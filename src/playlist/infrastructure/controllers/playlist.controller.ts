@@ -13,8 +13,9 @@ import { GetSongsInCollectionService } from 'src/songs/application/services/getS
 import { Song } from 'src/songs/domain/song';
 import { FindArtistsInCollectionService } from 'src/artists/application/services/FindArtistsInCollection.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
+import { Result } from '../../../common/domain/logic/Result';
 
-@Controller('api/playlists')
+@Controller('api/playlist')
 export class PlaylistController {
   private repository: PlaylistRepository;
   private songRepository: OrmSongRepository;
@@ -45,27 +46,32 @@ export class PlaylistController {
     let topPlaylistsInfo: TopPlaylistDto = {
       playlists: [],
     };
-    const playlistsResponse: Playlist[] =
+    const playlistsResponse: Result<Playlist[]> =
       await this.findTopPlaylistsService.execute();
+    if (playlistsResponse.IsSuccess) {
+      const playlistsResult: Playlist[] = (
+        await this.findTopPlaylistsService.execute()
+      ).Value;
 
-    for (const playlist of playlistsResponse) {
-      topPlaylistsInfo.playlists.push({
-        id: playlist.Id.Value,
-        image: playlist.Playlist_Image,
-      });
-    }
+      for (const playlist of playlistsResult) {
+        topPlaylistsInfo.playlists.push({
+          id: playlist.Id.Value,
+          image: playlist.Playlist_Image,
+        });
+      }
 
-    return topPlaylistsInfo;
+      return topPlaylistsInfo;
+    } else throw new Error(playlistsResponse.Error.message);
   }
 
   @ApiTags('Playlist')
   @Get('/FindByArtistID/:id')
-  findByArtistId(@Param('id') id: string): Promise<Playlist[]> {
+  async findByArtistId(@Param('id') id: string): Promise<Playlist[]> {
     this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
       this.repository,
       this.songRepository,
     );
-    return this.findPlaylistByArtistIdService.execute(id);
+    return (await this.findPlaylistByArtistIdService.execute(id)).Value;
   }
   @ApiTags('Playlist')
   @Get(':id')
@@ -80,67 +86,72 @@ export class PlaylistController {
     this.findSongsInCollectionService = new GetSongsInCollectionService(
       this.songRepository,
     );
-
-    const playlistResponse: Playlist =
+    const playlistResult: Result<Playlist> =
       await this.findPlaylistByIdService.execute(id);
 
-    let playlistCreators: Artist[] = [];
+    if (playlistResult.IsSuccess) {
+      const playlistResponse: Playlist = (
+        await this.findPlaylistByIdService.execute(id)
+      ).Value;
 
-    if (playlistResponse.IsAlbum)
-      playlistCreators = await this.findArtistsInCollectionService.execute(
-        playlistResponse.PlaylistCreator,
-      );
-    console.log(playlistResponse.IsAlbum);
+      let playlistCreators: Artist[] = [];
 
-    let creators: { creatorId: string; creatorName: string }[] = [];
-    for (const creator of playlistCreators) {
-      creators.push({
-        creatorId: creator.Id.Value,
-        creatorName: creator.Name.Value,
-      });
-    }
-    console.log('=========================');
-    console.log(creators);
+      if (playlistResponse.IsAlbum)
+        playlistCreators = await this.findArtistsInCollectionService.execute(
+          playlistResponse.PlaylistCreator,
+        );
+      console.log(playlistResponse.IsAlbum);
 
-    let songsId: string[] = [];
-
-    for (const song of playlistResponse.PlaylistSong) {
-      songsId.push(song);
-    }
-
-    const songs: Song[] =
-      await this.findSongsInCollectionService.execute(songsId);
-
-    let playlistSongs: SongDto[] = [];
-
-    for (const song of songs) {
-      const artists: Artist[] =
-        await this.findArtistsInCollectionService.execute(song.Artists);
-      let artistsSong: { id: string; name: string }[] = [];
-      for (const artist of artists) {
-        artistsSong.push({
-          id: artist.Id.Value,
-          name: artist.Name.Value,
+      let creators: { creatorId: string; creatorName: string }[] = [];
+      for (const creator of playlistCreators) {
+        creators.push({
+          creatorId: creator.Id.Value,
+          creatorName: creator.Name.Value,
         });
       }
-      playlistSongs.push({
-        songId: song.Id.Value.toString(),
-        name: song.Name,
-        image: song.Image,
-        duration: song.DurationString,
-        artists: artistsSong,
-      });
-    }
+      console.log('=========================');
+      console.log(creators);
 
-    const playlist: PlaylistDto = {
-      id: playlistResponse.Id.Value,
-      name: playlistResponse.Name,
-      duration: playlistResponse.DurationString,
-      image: playlistResponse.Playlist_Image,
-      creators: creators,
-      songs: playlistSongs,
-    };
+      let songsId: string[] = [];
 
-    return playlist;
+      for (const song of playlistResponse.PlaylistSong) {
+        songsId.push(song);
+      }
+
+      const songs: Song[] =
+        await this.findSongsInCollectionService.execute(songsId);
+
+      let playlistSongs: SongDto[] = [];
+
+      for (const song of songs) {
+        const artists: Artist[] =
+          await this.findArtistsInCollectionService.execute(song.Artists);
+        let artistsSong: { id: string; name: string }[] = [];
+        for (const artist of artists) {
+          artistsSong.push({
+            id: artist.Id.Value,
+            name: artist.Name.Value,
+          });
+        }
+        playlistSongs.push({
+          songId: song.Id.Value.toString(),
+          name: song.Name,
+          image: song.Image,
+          duration: song.DurationString,
+          artists: artistsSong,
+        });
+      }
+
+      const playlist: PlaylistDto = {
+        id: playlistResponse.Id.Value,
+        name: playlistResponse.Name,
+        duration: playlistResponse.DurationString,
+        image: playlistResponse.Playlist_Image,
+        creators: creators,
+        songs: playlistSongs,
+      };
+
+      return playlist;
+    } else throw new Error(playlistResult.Error.message);
   }
 }
