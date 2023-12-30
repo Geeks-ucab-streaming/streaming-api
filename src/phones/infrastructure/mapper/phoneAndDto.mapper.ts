@@ -7,6 +7,7 @@ import { PhoneDto } from 'src/phones/application/dtos/phone.dto';
 
 export class PhoneAndDtoMapper implements Imapper<Phone, PhoneDto> {
   async domainTo(phoneDomainEntity: Phone): Promise<PhoneDto> {
+    console.log(phoneDomainEntity, 'AYUDACON LA ENTITY');
     const phoneDto = new PhoneDto();
     phoneDto.id = phoneDomainEntity.Id.Id;
     phoneDto.phoneNumber = phoneDomainEntity.PhoneNumber.phoneNumber;

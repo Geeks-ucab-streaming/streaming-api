@@ -1,8 +1,8 @@
 import { SubscriptionEnum } from "../enums/subscriptionEnum";
 
 export class userSuscriptionState {
-    static create(suscriptionState: string): userSuscriptionState {
-        return new userSuscriptionState(suscriptionState);
+    static create(suscriptionState: string, subscriptionDate: Date): userSuscriptionState {
+        return new userSuscriptionState(suscriptionState,subscriptionDate);
     }
 
     private suscriptionState: SubscriptionEnum;
@@ -17,8 +17,9 @@ export class userSuscriptionState {
     }
     
 
-    constructor(suscriptionState: string) {
+    constructor(suscriptionState: string, suscription_date?: Date) {
         this.suscriptionState = suscriptionState as SubscriptionEnum;
+        this._suscription_date = suscription_date;
     }
 
     public get SuscriptionState(): string {

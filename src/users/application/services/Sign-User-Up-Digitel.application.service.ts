@@ -31,6 +31,9 @@ export class SignUserUpDigitel
       throw new NotFoundException('User Alredy exists');
     }
     let phoneDigitel = await this.phone.execute(usersDto.phone);
+    if(phoneDigitel.Error){
+      throw phoneDigitel.Error;
+    }
     let phoneDigitelDto = await this.IMapperPhone.domainTo(phoneDigitel.Value);
     usersDto.phone = phoneDigitelDto.phoneNumber;
     const savedUser = await this.repo.createUser(

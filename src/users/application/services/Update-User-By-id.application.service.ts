@@ -9,6 +9,10 @@ import { NotFoundException } from "@nestjs/common";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { Result } from "src/common/domain/logic/Result";
 import { UpdateUser } from "../ParameterObjects/updateUser";
+import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
+import { has } from 'lodash';
+import { UserNameUpdated } from "src/users/domain/events/user-name-updated";
+import { UserCreated } from "src/users/domain/events/user-created";
 
 export class UpdateUserById implements IApplicationService<UpdateUser, User> {
 //InjectRepository(): Le decimos al sistema de DI que necesitamos usar el reporistorio de "User".
@@ -26,11 +30,16 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
     //Puedes pasar un objeto vacío, con el nombre, la fecha de nacimiento o lo que sea: va a funcionar.
     //TODO: FALTA VALIDAR EL GENERO Y COLOCAR EMAIL
     const user = await this.repo.findById(usuarioParametrizado.id);
+    
     if (!user) return Result.fail<User>(new NotFoundException('user not found'))
+
+
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState || user.SuscriptionState.SuscriptionState),
+      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState, /*CAMBIAR POR LO REAL*/new Date(Date.now())),
+      null,
+      userEmail.create(usuarioParametrizado.userToUpdate.email)|| user.Email,
       userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
       UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
       UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),

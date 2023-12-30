@@ -24,10 +24,13 @@ export class OrmPhoneRepository
     const isExistPhone = await this.findOneBy({
       phoneNumber: phone.PhoneNumber.phoneNumber,
     });
-    if (isExistPhone)
-      return Result.fail<Phone>(
+    if (isExistPhone) {
+      const resultadito = Result.fail<Phone>(
         new PhoneRegistedAlredyExceptions(phone.PhoneNumber),
       );
+      console.log(resultadito);
+      return resultadito;
+    }
     const phoneToOrm = await this.phoneMapper.domainTo(phone);
     const phoneCreated = await this.phoneMapper.ToDomain(
       await this.save(phoneToOrm),

@@ -20,5 +20,7 @@ export class UserDto {
 
   @Expose()
   phone: PhoneDto;
-  
+  @Expose()
+  token: string[];
+
 }

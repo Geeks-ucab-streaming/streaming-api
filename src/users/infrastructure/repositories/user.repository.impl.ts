@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from '../../domain/userAggregate/user';
 import { UserEntity } from '../entities/users.entity';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
@@ -39,8 +39,24 @@ export class OrmUserRepository
   }
 
   async findAll(): Promise<User[]> {
-    // return await this.find();
-    return;
+    const users = await this.createQueryBuilder("user")
+      .innerJoinAndSelect("user.phone", "phone")
+      .innerJoinAndSelect("phone.linePhone", "linePhone")
+      .leftJoinAndSelect("user.tokenDeviceUser", "tokenDeviceUser")
+      .where('user.phone IS NOT NULL AND phone.phoneNumber IS NOT NULL')
+      .getMany();
+    const filteredUsers = users.filter(user => user.phone != null && user.tokenDeviceUser.length > 0);
+
+    const usersDomain = await Promise.all(filteredUsers.map(async (user:UserEntity) =>
+    {
+
+      if (user.phone !=null && user.tokenDeviceUser.length > 0 ) {
+        return await this.userMapper.ToDomain(user)
+      }
+
+    } ));
+  console.log(usersDomain,"los usuarios")
+    return usersDomain;
   }
 
   async finderCriteria(criteria: Partial<Phone>): Promise<User | undefined> {

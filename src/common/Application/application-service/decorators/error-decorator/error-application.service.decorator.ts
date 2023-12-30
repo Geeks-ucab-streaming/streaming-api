@@ -11,7 +11,7 @@ export class ErrorApplicationServiceDecorator<D,R,> extends ApplicationServiceDe
     } catch (error) {
       if (error.constructor.name) {
         const domainError: DomainException<R> = error as DomainException<R>;
-        const result = Result.fail<R>(domainError);
+        const result = Result.fail<R>(error);
         return result;
       } else {
         throw error;
