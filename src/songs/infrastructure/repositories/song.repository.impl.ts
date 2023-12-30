@@ -14,13 +14,31 @@ export class OrmSongRepository
     super(SongEntity, dataSource.manager);
     this.songMapper = new SongsMapper();
   }
+
   async browseSongsName(query: string): Promise<Song[]> {
+    const subquery = await this.createQueryBuilder('song')
+      .innerJoin(
+        'song.song_artist',
+        'songArtist',
+        'song.id = songArtist.songId',
+      )
+      .innerJoin('Artists', 'a', 'a.id = songArtist.artistId')
+      .where('song.name ILIKE :query', { query: `%${query}%` })
+      .orWhere('a.name ILIKE :query', { query: `%${query}%` })
+      .select('song.id')
+      .getMany();
+
+    let values = [];
+    subquery.forEach((sub) => values.push(sub.id));
+
+    console.log(values);
+
     const songsResponse = await this.createQueryBuilder('song')
       .leftJoinAndSelect('song.song_artist', 'song_artist')
       .leftJoinAndSelect('song_artist.artist', 'artist')
-      .where('song.name ILIKE :query', { query: `%${query}%` })
-      .orWhere('artist.name ILIKE :query', { query: `%${query}%` })
+      .where('song.id IN (:...values)', { values })
       .getMany();
+
     const songs: Promise<Song>[] = [];
     songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
     return await Promise.all(songs);

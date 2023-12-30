@@ -15,11 +15,11 @@ import {
   GetArtistProfilesApplicationServiceDto,
 } from 'src/artists/application/services/get-artist-profile.application.service';
 import { Artist } from 'src/artists/domain/artist';
+import { BrowseArtistService } from 'src/artists/application/services/browseArtists.service';
 
 export class QueryDto {
-  artists?: ArtistDTO[];
+  artists?: { id: string; name: string; image: Buffer }[];
   songs?: SongDto[];
-  playlists?: PlaylistDto[];
 }
 
 @Controller('api/browser')
@@ -47,16 +47,20 @@ export class CommonController {
       new BrowseSongsService(this.ormSongRepository),
       new NestLogger(),
     );
+    const browseArtistsService = new LoggingApplicationServiceDecorator(
+      new BrowseArtistService(this.ormArtistRepository),
+      new NestLogger(),
+    );
     const getArtistservice = new LoggingApplicationServiceDecorator(
       new GetArtistProfilesApplicationService(this.ormArtistRepository),
       new NestLogger(),
     );
     const songsResult: Result<Song[]> = await browseSongsService.execute(query);
-
-    console.log('está en el browser');
+    const artistsResult: Result<Artist[]> =
+      await browseArtistsService.execute(query);
 
     if (songsResult.IsSuccess) {
-      const queryResult: QueryDto = { songs: [], artists: [], playlists: [] };
+      const queryResult: QueryDto = { songs: [], artists: [] };
       for (const song of songsResult.Value) {
         let artistsAux: { id: string; name: string }[] = [];
         for (const artist of song.Artists) {
@@ -78,7 +82,16 @@ export class CommonController {
           artists: artistsAux,
         });
       }
-      return queryResult;
-    }
+      if (artistsResult.IsSuccess) {
+        for (const artist of artistsResult.Value) {
+          queryResult.artists.push({
+            id: artist.Id.Value,
+            name: artist.Name.Value,
+            image: artist.Image,
+          });
+        }
+        return queryResult;
+      } else throw new Error(artistsResult.Error.message);
+    } else throw new Error(songsResult.Error.message);
   }
 }
