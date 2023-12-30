@@ -7,4 +7,5 @@ export interface IArtistsRepository {
   findArtistById(id: ArtistID): Promise<Artist>;
   // findArtistById(id: string): Promise<Artist>;
   findArtistsInCollection(ids: string[]): Promise<Artist[]>;
+  browseArtistsName(query: string): Promise<Artist[]>;
 }

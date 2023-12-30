@@ -4,7 +4,6 @@ import {
   Post,
   Get,
   Param,
-  NotFoundException,
   UseGuards,
   Patch,
 } from '@nestjs/common';
@@ -15,7 +14,7 @@ import { PhonesService } from 'src/phones/application/services/register-users-ph
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { OrmUserRepository } from '../repositories/user.repository.impl';
 import { OrmPhoneRepository } from 'src/phones/infrastructure/repositories/phone.repository.imp';
-import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefixes.repository.imp';
 import { JwtService } from '@nestjs/jwt';
 import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
@@ -48,7 +47,7 @@ export class UsersController {
     DataSourceSingleton.getInstance(),
   );
   private phonesService: PhonesService;
-  private jwtService: JwtService
+  private jwtService: JwtService;
   private signUserUpMovistar: SignUserUpMovistar;
   private signUserUpDigitel: SignUserUpDigitel;
   private signUserIn: SignUserIn;
@@ -59,7 +58,10 @@ export class UsersController {
   private phoneDtoMapper: PhoneAndDtoMapper;
 
   constructor() {
-    this.phonesService = new PhonesService(this.phoneRepository, this.lineRepository);
+    this.phonesService = new PhonesService(
+      this.phoneRepository,
+      this.lineRepository,
+    );
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findByPhoneUserService = new findByPhoneUserService(
       this.userRepository,
@@ -74,21 +76,40 @@ export class UsersController {
   @ApiTags('Users')
   @Post('/auth/sign-up/movistar')
   async createUserMovistar(@Body() body: CreateUserDto) {
-      const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
-      const serviceMovistar= new ErrorApplicationServiceDecorator(
-      new SignUserUpMovistar(this.phonesService,phoneService,this.usersMapper,this.phoneDtoMapper,this.userRepository));
-      const result = await serviceMovistar.execute(body);
-      return result; 
+    const phoneService = new ErrorApplicationServiceDecorator(
+      this.findByPhoneUserService,
+    );
+    const serviceMovistar = new ErrorApplicationServiceDecorator(
+      new SignUserUpMovistar(
+        this.phonesService,
+        phoneService,
+        this.usersMapper,
+        this.phoneDtoMapper,
+        this.userRepository,
+      ),
+    );
+    const result = await serviceMovistar.execute(body);
+    console.log('el pepe', result, 'el value ');
+    return result;
   }
 
   @ApiTags('Users')
   @Post('/auth/sign-up/digitel')
   async createUserDigitel(@Body() body: CreateUserDto) {
-      const phoneService = new ErrorApplicationServiceDecorator(this.findByPhoneUserService);
-      const service= new ErrorApplicationServiceDecorator(
-      new SignUserUpDigitel(this.phonesService,phoneService,this.usersMapper,this.phoneDtoMapper,this.userRepository));  
-      const result = await service.execute(body);
-      return result; 
+    const phoneService = new ErrorApplicationServiceDecorator(
+      this.findByPhoneUserService,
+    );
+    const service = new ErrorApplicationServiceDecorator(
+      new SignUserUpDigitel(
+        this.phonesService,
+        phoneService,
+        this.usersMapper,
+        this.phoneDtoMapper,
+        this.userRepository,
+      ),
+    );
+    const result = await service.execute(body);
+    return result;
   }
 
   //Inicio de Sesión
@@ -108,18 +129,29 @@ export class UsersController {
   @ApiTags('Users')
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
+    //await this.userRepository.findAll();
     const user = await this.findUserById.execute(id);
     if (!user) throw user.Error;
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
-    return userPayload;
+    return {
+      id: (await userPayload).id,
+      phone: (await userPayload).phone.phoneNumber,
+      email: (await userPayload).email,
+      name: (await userPayload).name,
+      birthDate: (await userPayload).birth_date,
+      gender: (await userPayload).gender,
+    };
   }
 
   //Actualizar usuario en base a su ID
   @ApiTags('Users')
   @Patch('/user/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    this.updateUserParameterObjetc = new UpdateUser(id, body, this.usersMapper);
-
+    this.updateUserParameterObjetc = new UpdateUser(
+      id,
+      body,
+      this.userMapperForDomainAndDtos,
+    );
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
 

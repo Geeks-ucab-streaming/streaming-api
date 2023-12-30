@@ -4,7 +4,7 @@ import { FindOnePromotionsService } from 'src/promotions/application/services/Fi
 import { Promotion } from 'src/promotions/domain/promotion';
 import { OrmPromotionRepository } from '../Repositories/promotion.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
-import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
 import { PromotionDto } from 'src/dtos';
 import { FindRandomPromotionsService } from 'src/promotions/application/services/FindRandomPromotion.service';

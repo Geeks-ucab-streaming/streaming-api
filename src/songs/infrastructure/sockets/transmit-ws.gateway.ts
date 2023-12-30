@@ -10,7 +10,7 @@ import { IFindService } from 'src/common/domain/ifind.service';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { Song } from 'src/songs/domain/song';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
-import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import {
   GetSongByIdService,
   GetSongByIdServiceDto,
