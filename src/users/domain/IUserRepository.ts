@@ -7,5 +7,5 @@ export interface IUserRepository {
   findAll(): Promise<User[]>;
   finderCriteria(criteria: Partial<Phone>): Promise<User | undefined>;
   createUser(user: User): Promise<Result<void>>;
-  updateUser(user: User): Promise<UserEntity>;
+  updateUser(user: User): Promise<Result<void>>;
 }

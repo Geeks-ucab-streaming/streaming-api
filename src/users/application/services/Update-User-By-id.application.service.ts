@@ -1,6 +1,5 @@
 import { IUserRepository } from "src/users/domain/IUserRepository";
 import { User } from "src/users/domain/userAggregate/user";
-import { UpdateUserDto } from "../dtos/update-user.dto";
 import { userName } from "src/users/domain/userAggregate/value-objects/userName";
 import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/userBirthDate";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
@@ -10,14 +9,9 @@ import { IApplicationService } from "src/common/Application/application-service/
 import { Result } from "src/common/domain/logic/Result";
 import { UpdateUser } from "../ParameterObjects/updateUser";
 import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
-import { has } from 'lodash';
-import { UserNameUpdated } from "src/users/domain/events/user-name-updated";
-import { UserCreated } from "src/users/domain/events/user-created";
+import { UserDto } from "../dtos/user.dto";
 
-export class UpdateUserById implements IApplicationService<UpdateUser, User> {
-//InjectRepository(): Le decimos al sistema de DI que necesitamos usar el reporistorio de "User".
-  //DI usa esta notación (Repository<User>) para avaeriguar cuál instancia necesita "inyectar" a esta clase en tiempo de ejecución.
-  //Se usa el decorador porque Repository<User> tiene un parámetro genérico
+export class UpdateUserById implements IApplicationService<UpdateUser, UserDto> {
   constructor(
     private readonly repo: IUserRepository,
   ) {}
@@ -25,29 +19,37 @@ export class UpdateUserById implements IApplicationService<UpdateUser, User> {
     throw new Error("Method not implemented.");
   }
 
-  async execute(usuarioParametrizado: UpdateUser): Promise<Result<User>>{
-    //attrs: Partial<User> te permite colocar la cantidad de parámetros que quieras del objeto User, hacíendolo más flexible. 
-    //Puedes pasar un objeto vacío, con el nombre, la fecha de nacimiento o lo que sea: va a funcionar.
-    //TODO: FALTA VALIDAR EL GENERO Y COLOCAR EMAIL
+  async execute(usuarioParametrizado: UpdateUser): Promise<Result<UserDto>>{
     const user = await this.repo.findById(usuarioParametrizado.id);
     
-    if (!user) return Result.fail<User>(new NotFoundException('user not found'))
-
+    if (!user) return Result.fail<UserDto>(new NotFoundException('user not found'))
 
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState, /*CAMBIAR POR LO REAL*/new Date(Date.now())),
+      userSuscriptionState.create("premium", /*CAMBIAR POR LO REAL*/new Date(Date.now())),
       null,
-      userEmail.create(usuarioParametrizado.userToUpdate.email)|| user.Email,
-      userName.create(usuarioParametrizado.userToUpdate.name)|| user.Name,
-      UserBirthDate.create(new Date(usuarioParametrizado.userToUpdate.birth_date || user.BirthDate.BirthDate),new Date(usuarioParametrizado.userToUpdate.birth_date ||user.BirthDate.BirthDate).getFullYear()),
-      UserGender.create(usuarioParametrizado.userToUpdate.gender || user.Gender.Gender),
       )
-    
-    Object.assign(user, usuarioParametrizado.userToUpdate);
-    const savedUser = await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.
-    return Result.success<User>(await usuarioParametrizado.mapper.ToDomain(savedUser));
+
+      if (usuarioParametrizado.userToUpdate.name) {
+        userUpdated.updateUsersName(userName.create(usuarioParametrizado.userToUpdate.name));
+      }
+  
+      if (usuarioParametrizado.userToUpdate.email) {
+        userUpdated.updateUsersEmail(userEmail.create(usuarioParametrizado.userToUpdate.email));
+      }
+  
+      if (usuarioParametrizado.userToUpdate.gender) {
+        userUpdated.updateUsersGender(UserGender.create(usuarioParametrizado.userToUpdate.gender));
+      }
+
+      if (usuarioParametrizado.userToUpdate.birth_date) {
+        let birthDate = new Date(usuarioParametrizado.userToUpdate.birth_date);
+        userUpdated.updateUsersBirthDate(UserBirthDate.create(birthDate, birthDate.getFullYear()));
+      }
+
+    await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.
+    return Result.success<UserDto>(await usuarioParametrizado.mapper.domainTo(userUpdated));
   }
   
 }

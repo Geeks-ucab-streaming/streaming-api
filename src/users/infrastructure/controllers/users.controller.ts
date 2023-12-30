@@ -129,18 +129,13 @@ export class UsersController {
   @ApiTags('Users')
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
-    await this.userRepository.findAll();
+    //await this.userRepository.findAll();
     const user = await this.findUserById.execute(id);
     if (!user) throw user.Error;
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
     return {
       id: (await userPayload).id,
-      phone: {
-        id: (await userPayload).phone.id,
-        phoneNumber: (await userPayload).phone.phoneNumber,
-        linePhoneId: (await userPayload).phone.linePhoneId,
-        lineName: (await userPayload).phone.lineName,
-      },
+      phone: (await userPayload).phone.phoneNumber,
       email: (await userPayload).email,
       name: (await userPayload).name,
       birthDate: (await userPayload).birth_date,
@@ -152,7 +147,11 @@ export class UsersController {
   @ApiTags('Users')
   @Patch('/user/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    this.updateUserParameterObjetc = new UpdateUser(id, body, this.usersMapper);
+    this.updateUserParameterObjetc = new UpdateUser(
+      id,
+      body,
+      this.userMapperForDomainAndDtos,
+    );
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
 

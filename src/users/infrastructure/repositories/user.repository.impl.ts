@@ -24,10 +24,10 @@ export class OrmUserRepository
     return Result.success<void>(void 0);
   }
 
-  async updateUser(user: User): Promise<UserEntity> {
+  async updateUser(user: User): Promise<Result<void>> {
     const updatedUser = await this.userMapper.domainTo(user);
-    console.log(updatedUser, 'el usuario actualizado');
-    return await this.save(updatedUser);
+    await this.save(updatedUser);
+    return Result.success<void>(void 0);
   }
 
   async findById(userId: string): Promise<User> {
@@ -39,23 +39,24 @@ export class OrmUserRepository
   }
 
   async findAll(): Promise<User[]> {
-    const users = await this.createQueryBuilder("user")
-      .innerJoinAndSelect("user.phone", "phone")
-      .innerJoinAndSelect("phone.linePhone", "linePhone")
-      .leftJoinAndSelect("user.tokenDeviceUser", "tokenDeviceUser")
-      .where('user.phone IS NOT NULL AND phone.phoneNumber IS NOT NULL')
+    const users = await this.createQueryBuilder('user')
+      .innerJoinAndSelect('user.phone', 'phone')
+      .innerJoinAndSelect('phone.linePhone', 'linePhone')
+      .leftJoinAndSelect('user.tokenDeviceUser', 'tokenDeviceUser')
+      .where('user.phone IS NOT NULL')
       .getMany();
-    const filteredUsers = users.filter(user => user.phone != null && user.tokenDeviceUser.length > 0);
+    const filteredUsers = users.filter(
+      (user) => user.phone != null && user.tokenDeviceUser.length > 0,
+    );
 
-    const usersDomain = await Promise.all(filteredUsers.map(async (user:UserEntity) =>
-    {
-
-      if (user.phone !=null && user.tokenDeviceUser.length > 0 ) {
-        return await this.userMapper.ToDomain(user)
-      }
-
-    } ));
-  console.log(usersDomain,"los usuarios")
+    const usersDomain = await Promise.all(
+      filteredUsers.map(async (user: UserEntity) => {
+        if (user.phone != null && user.tokenDeviceUser.length > 0) {
+          return await this.userMapper.ToDomain(user);
+        }
+      }),
+    );
+    console.log(usersDomain, 'los usuarios');
     return usersDomain;
   }
 
