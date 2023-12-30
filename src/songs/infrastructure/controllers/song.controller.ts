@@ -8,7 +8,7 @@ import { FindSongsByArtistIdService } from '../../application/services/getSongsB
 import { EntityManager } from 'typeorm';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
-import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
 import { GetSongBPlaylistIdService } from 'src/songs/application/services/getSongsByPlaylistId.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';

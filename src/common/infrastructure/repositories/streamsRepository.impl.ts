@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
-import { IStreamRepository } from '../domain/repositories/IStreamRepository';
-import { ReproducedSong } from '../infrastructure/entities/ReproducedSong.entity';
+import { IStreamRepository } from '../../domain/repositories/IStreamRepository';
+import { ReproducedSong } from '../entities/ReproducedSong.entity';
 import { Song } from 'src/songs/domain/song';
 import { User } from 'src/users/domain/userAggregate/user';
 import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';

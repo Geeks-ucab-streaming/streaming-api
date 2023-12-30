@@ -1,4 +1,4 @@
-import { Imapper } from 'src/core/application/IMapper';
+import { Imapper } from 'src/common/Application/IMapper';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';

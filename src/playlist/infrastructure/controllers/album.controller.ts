@@ -3,7 +3,7 @@ import { FindAlbumByArtistIDService } from 'src/playlist/application/services/Fi
 import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindAlbumByPlaylistID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
-import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
 import { FindTopPlaylistsService } from 'src/playlist/application/services/FindTopPlaylists.service';
