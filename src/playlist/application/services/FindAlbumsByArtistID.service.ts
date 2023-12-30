@@ -5,15 +5,15 @@ import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repositor
 import { Result } from 'src/common/domain/logic/Result';
 import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
-import { calculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
+import { CalculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 
 @Injectable()
 export class FindAlbumByArtistIDService
   implements IApplicationService<string, Playlist[]>
 {
-  private readonly calculateDurationService: calculatePlaylistDurationService =
-    new calculatePlaylistDurationService();
+  private readonly calculateDurationService: CalculatePlaylistDurationService =
+    CalculatePlaylistDurationService.getInstance();
   constructor(
     private readonly albumRepository: IPlaylistRepository,
     private readonly songRepository: ISongRepository,
