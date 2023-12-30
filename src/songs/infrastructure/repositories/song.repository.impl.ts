@@ -14,6 +14,18 @@ export class OrmSongRepository
     super(SongEntity, dataSource.manager);
     this.songMapper = new SongsMapper();
   }
+  async findTrendingSongs(): Promise<Song[]> {
+    const songsResponse = await this.createQueryBuilder('song')
+      .leftJoinAndSelect('song.song_artist', 'song_artist')
+      .leftJoinAndSelect('song_artist.artist', 'artist')
+      .orderBy('song.reproductions', 'DESC')
+      .limit(4)
+      .getMany();
+
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
+    return await Promise.all(songs);
+  }
 
   async browseSongsName(query: string): Promise<Song[]> {
     const subquery = await this.createQueryBuilder('song')
