@@ -1,4 +1,4 @@
-import { DataSource, EntityRepository, Repository } from 'typeorm';
+import { DataSource, EntityRepository, ILike, Repository } from 'typeorm';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
@@ -13,6 +13,17 @@ export class OrmSongRepository
   constructor(dataSource: DataSource) {
     super(SongEntity, dataSource.manager);
     this.songMapper = new SongsMapper();
+  }
+  async browseSongsName(query: string): Promise<Song[]> {
+    const songsResponse = await this.createQueryBuilder('song')
+      .leftJoinAndSelect('song.song_artist', 'song_artist')
+      .leftJoinAndSelect('song_artist.artist', 'artist')
+      .where('song.name ILIKE :query', { query: `%${query}%` })
+      .orWhere('artist.name ILIKE :query', { query: `%${query}%` })
+      .getMany();
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
+    return await Promise.all(songs);
   }
   async findOrmEntityById(id: string): Promise<SongEntity> {
     return this.findOneBy({ id });
