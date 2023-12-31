@@ -90,15 +90,17 @@ export class UsersController {
       ),
     );
     const result = await serviceMovistar.execute(body);
-    const sign = await this.signin(body)
-
-    return {
-      data:{
-        token : sign.token
-
-      },
-      statusCode: 200,
-    };
+    if(result.IsSuccess){
+      const sign = await this.signin(body)
+      return {
+        data:{
+          token : sign.token
+        },
+        statusCode: result.statusCode,
+      };
+    }else{
+      return result
+    }
   }
 
   @ApiTags('Users')
@@ -133,7 +135,6 @@ export class UsersController {
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
-    console.log(data);
     const jwt = this.jwtService.sign({data: data.Value.Id.Id}, {secret: jwtcontanst.secret});
 
     return {

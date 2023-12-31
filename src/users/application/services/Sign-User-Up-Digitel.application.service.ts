@@ -9,6 +9,8 @@ import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { IUserRepository } from "src/users/domain/IUserRepository";
 import { UserFactory } from "src/users/domain/factories/user.factory";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
+import { Result } from '../../../common/domain/logic/Result';
+import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 
 export class SignUserUpDigitel implements IApplicationService<CreateUserDto,void>{
   constructor(private phone:PhonesService,
@@ -28,9 +30,7 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,void
       throw new NotFoundException ("User Alredy exists");
     }
     let phoneDigitel = await this.phone.execute(usersDto.phone);
-    if(phoneDigitel.Error){
-      throw phoneDigitel.Error;
-    }
+    if(!phoneDigitel.IsSuccess) return Result.fail<void>(new DomainException<string>(void 0,phoneDigitel.message,phoneDigitel.error,phoneDigitel.statusCode));
     let phoneDigitelDto = await this.IMapperPhone.domainTo(phoneDigitel.Value);
     usersDto.phone = phoneDigitelDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneDigitelDto.id, phoneDigitelDto.phoneNumber, 
