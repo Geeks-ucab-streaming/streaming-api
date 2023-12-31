@@ -3,7 +3,7 @@ import { userId } from "../userAggregate/value-objects/userId";
 import { userName } from "../userAggregate/value-objects/userName";
 import { UserBirthDate } from "../userAggregate/value-objects/userBirthDate";
 import { UserGender } from "../userAggregate/value-objects/userGender";
-import { userSuscriptionState } from "../userAggregate/entities/userSuscriptionState";
+import { userSuscriptionState } from "../userAggregate/value-objects/userSuscriptionState";
 import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { TokenEntity } from '../userAggregate/entities/token';
 
