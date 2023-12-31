@@ -32,11 +32,10 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
       userDto.gender = domainEntity.Gender.Gender;
     }
 
-    return await userDto;
+    return  userDto;
   }
 
   async ToDomain(userDto: UserDto): Promise<User> {
-    console.log('aqui estoy llegando al userForDtoMapper');
     let usersDate = new Date(userDto.birth_date);
     let user: User = User.create(
       userId.create(userDto.id),

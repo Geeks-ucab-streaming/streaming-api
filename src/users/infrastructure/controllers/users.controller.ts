@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   UseGuards,
-  Patch,
+  Patch, Req,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -31,6 +31,7 @@ import { SignUserUpDigitel } from 'src/users/application/services/Sign-User-Up-D
 import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
+import { jwtcontanst } from '../../application/constants/jwt.constansts';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -49,7 +50,7 @@ export class UsersController {
     DataSourceSingleton.getInstance(),
   );
   private phonesService: PhonesService;
-  private jwtService: JwtService;
+  private jwtService: JwtService = new JwtService();
   private signUserUpMovistar: SignUserUpMovistar;
   private signUserUpDigitel: SignUserUpDigitel;
   private signUserIn: SignUserIn;
@@ -64,10 +65,10 @@ export class UsersController {
       this.phoneRepository,
       this.lineRepository,
     );
-    this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findByPhoneUserService = new findByPhoneUserService(
       this.userRepository,
     );
+    this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findUserById = new FindUserById(this.userRepository);
     this.updateUserById = new UpdateUserById(this.userRepository);
     this.userMapperForDomainAndDtos = new UsersForDtoMapper();
@@ -79,7 +80,7 @@ export class UsersController {
   @Post('/auth/sign-up/movistar')
   async createUserMovistar(@Body() body: CreateUserDto) {
     const phoneService = this.findByPhoneUserService;
-    const service = new LoggingApplicationServiceDecorator(
+    const serviceMovistar = new LoggingApplicationServiceDecorator(
       new SignUserUpMovistar(
         this.phonesService,
         phoneService,
@@ -89,13 +90,26 @@ export class UsersController {
       ),
       new NestLogger(),
     );
-    const result = await service.execute(body);
+   /* const result = await service.execute(body);
     
     const userPayload = this.userMapperForDomainAndDtos.domainTo(result.Value);
     return {
       id: (await userPayload).id,
       phone: (await userPayload).phone.phoneNumber,
-    };
+    };*/
+
+    const result = await serviceMovistar.execute(body);
+    if(result.IsSuccess){
+      const sign = await this.signin(body)
+      return {
+        data:{
+          token : sign.token
+        },
+        statusCode: result.statusCode,
+      };
+    }else{
+      return result
+    }
   }
 
   @ApiTags('Users')
@@ -114,10 +128,17 @@ export class UsersController {
     );
     const result = await service.execute(body);
 
-    const userPayload = this.userMapperForDomainAndDtos.domainTo(result.Value);
+    /*const userPayload = this.userMapperForDomainAndDtos.domainTo(result.Value);
     return {
       id: (await userPayload).id,
-      phone: (await userPayload).phone.phoneNumber,
+      phone: (await userPayload).phone.phoneNumber,*/
+    const sign = await this.signin(body)
+    return {
+      data:{
+        token : sign
+
+      },
+      statusCode: result.statusCode,
     };
   }
 
@@ -126,7 +147,7 @@ export class UsersController {
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
-    const jwt = this.jwtService.sign(data);
+    const jwt = this.jwtService.sign({data: data.Value.Id.Id}, {secret: jwtcontanst.secret});
 
     return {
       token: jwt,
@@ -137,9 +158,11 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Get('/user/:id')
-  async findUser(@Param('id') id: string) {
+  async findUser(@Req()req: Request) {
     //await this.userRepository.findAll();
-    const user = await this.findUserById.execute(id);
+    const userId = req.headers['authorization'].split(' ')[1];
+     console.log(this.jwtService.decode(req.headers['authorization'].split(' ')[1]));
+    const user = await this.findUserById.execute(userId);
     if (!user) throw user.Error;
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
     return {
@@ -150,6 +173,7 @@ export class UsersController {
       birthDate: (await userPayload).birth_date,
       gender: (await userPayload).gender,
     };
+
   }
 
   //Actualizar usuario en base a su ID
@@ -164,7 +188,4 @@ export class UsersController {
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
 
-  @ApiTags('Users')
-  @Post('/user/notificacion')
-  async notificacion(@Body() body: CreateUserDto) {}
 }

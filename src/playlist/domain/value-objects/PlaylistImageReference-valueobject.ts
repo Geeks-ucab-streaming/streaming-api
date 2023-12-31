@@ -1,4 +1,4 @@
-import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
+  import { IValueObject } from 'src/common/domain/ValueObjects/value-object.interface';
 import { Result } from 'src/common/domain/logic/Result';
 
 export class PlaylistImageReference
