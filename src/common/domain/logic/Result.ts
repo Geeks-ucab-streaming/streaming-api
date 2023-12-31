@@ -13,7 +13,7 @@ export class Result<T> {
       console.log(error.httpStatus, 'mi errorrrrrrrrrrrrrrrrrrrrr');
 
       this.statusCode = Number(error.httpStatus) || 500;
-      this.message = error?.errorCode ? error?.errorCode : 'Unknown.';
+      this.message = error?.message ? error?.message : 'Unknown.';
       this.error = 'Internal Domain Error';
     } else {
       this.value = value;
