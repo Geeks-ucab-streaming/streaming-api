@@ -78,22 +78,7 @@ export class UsersController {
   @ApiTags('Users')
   @Post('/auth/sign-up/movistar')
   async createUserMovistar(@Body() body: CreateUserDto) {
-    const phoneService = new ErrorApplicationServiceDecorator(
-      this.findByPhoneUserService,
-    );
-    // const serviceMovistar = new ErrorApplicationServiceDecorator(
-    //   new SignUserUpMovistar(
-    //     this.phonesService,
-    //     phoneService,
-    //     this.usersMapper,
-    //     this.phoneDtoMapper,
-    //     this.userRepository,
-    //   ),
-    // );
-    // const result = await serviceMovistar.execute(body);
-    // console.log('el pepe', result, 'el value ');
-    // return result;
-
+    const phoneService = this.findByPhoneUserService;
     const service = new LoggingApplicationServiceDecorator(
       new SignUserUpMovistar(
         this.phonesService,
@@ -105,33 +90,19 @@ export class UsersController {
       new NestLogger(),
     );
     const result = await service.execute(body);
-    // return result;
     
     const userPayload = this.userMapperForDomainAndDtos.domainTo(result.Value);
     return {
       id: (await userPayload).id,
       phone: (await userPayload).phone.phoneNumber,
     };
-        // const service = new LoggingApplicationServiceDecorator(
-        //   new GetArtistProfilesApplicationService(this.ormArtistRepository),
-        //   new NestLogger(),
-        // );
-        // const getSongsByArtistIdservice = new ErrorApplicationServiceDecorator(
-        //   new LoggingApplicationServiceDecorator(
-        //     new FindSongsByArtistIdService(this.ormSongsRepository),
-        //     new NestLogger(),
-        //   ),
-        // );
-          //  const result = await service.execute(dto);
   }
 
   @ApiTags('Users')
   @Post('/auth/sign-up/digitel')
   async createUserDigitel(@Body() body: CreateUserDto) {
-    const phoneService = new ErrorApplicationServiceDecorator(
-      this.findByPhoneUserService,
-    );
-    const service = new ErrorApplicationServiceDecorator(
+    const phoneService = this.findByPhoneUserService;
+    const service = new LoggingApplicationServiceDecorator(
       new SignUserUpDigitel(
         this.phonesService,
         phoneService,
@@ -139,9 +110,15 @@ export class UsersController {
         this.phoneDtoMapper,
         this.userRepository,
       ),
+      new NestLogger(),
     );
     const result = await service.execute(body);
-    return result;
+
+    const userPayload = this.userMapperForDomainAndDtos.domainTo(result.Value);
+    return {
+      id: (await userPayload).id,
+      phone: (await userPayload).phone.phoneNumber,
+    };
   }
 
   //Inicio de Sesión
