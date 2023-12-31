@@ -18,10 +18,10 @@ export class OrmUserRepository
     this.userMapper = userMapper;
   }
 
-  async createUser(user: User): Promise<Result<void>> {
+  async createUser(user: User): Promise<Result<User>> {
     const createdUser = await this.userMapper.domainTo(user);
     await this.save(createdUser);
-    return Result.success<void>(void 0);
+    return Result.success<User>(user);
   }
 
   async updateUser(user: User): Promise<Result<void>> {
@@ -71,6 +71,6 @@ export class OrmUserRepository
       .getOne();
     //! HAY QUE IMPLEMENTAR LOS MAPPERS PARA PASAR DE ENTITY A CLASE DE DOMINIO
     //RECORDAR QUE SE DEBE TRASLADAR DE ALGUNA MANERA EL RESULTADO DE LA CONSULTA A LA ENTIDAD USER Y PHONENUMBER COMO VO
-      return await this.userMapper.ToDomain(user)
+    return user ? await this.userMapper.ToDomain(user): undefined;
   }
 }

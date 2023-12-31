@@ -18,7 +18,7 @@ export class SignUserIn implements IApplicationService<string, User>{
     //validation if user exists
     const user = await this.findByPhoneUserService.execute(phone); 
     if(!user){
-      Result.fail<User>(new NotFoundException('user not found'))
+      return Result.fail<User>(new NotFoundException('user not found'))
     }
     //const payload = {phone: users.value.Id.Id,id: users.value.Id.Id, name: users.value.Name.Name};    
     return Result.success<User>(user.Value);

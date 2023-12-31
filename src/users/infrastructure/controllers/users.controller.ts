@@ -100,7 +100,9 @@ export class UsersController {
 
     const result = await serviceMovistar.execute(body);
     if(result.IsSuccess){
-      const sign = await this.signin(body)
+      let dto: CreateUserDto = new CreateUserDto();
+      dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
+      const sign = await this.signin(dto);
       return {
         data:{
           token : sign.token
@@ -132,15 +134,21 @@ export class UsersController {
     return {
       id: (await userPayload).id,
       phone: (await userPayload).phone.phoneNumber,*/
-    const sign = await this.signin(body)
-    return {
-      data:{
-        token : sign
+      if(result.IsSuccess){
+        let dto: CreateUserDto = new CreateUserDto();
+        dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
+        const sign = await this.signin(dto);
+        return {
+          data:{
+            token : sign.token
+          },
+          statusCode: result.statusCode,
+        };
+      }else{
+        return result
+      }
+    }
 
-      },
-      statusCode: result.statusCode,
-    };
-  }
 
   //Inicio de Sesión
   @ApiTags('Users')
@@ -158,11 +166,9 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Get('/user/:id')
-  async findUser(@Req()req: Request) {
+  async findUser(@Param('id') id: string) {
     //await this.userRepository.findAll();
-    const userId = req.headers['authorization'].split(' ')[1];
-     console.log(this.jwtService.decode(req.headers['authorization'].split(' ')[1]));
-    const user = await this.findUserById.execute(userId);
+    const user = await this.findUserById.execute(id);
     if (!user) throw user.Error;
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
     return {
@@ -173,7 +179,6 @@ export class UsersController {
       birthDate: (await userPayload).birth_date,
       gender: (await userPayload).gender,
     };
-
   }
 
   //Actualizar usuario en base a su ID

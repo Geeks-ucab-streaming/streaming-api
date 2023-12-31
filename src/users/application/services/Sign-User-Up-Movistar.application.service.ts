@@ -13,7 +13,7 @@ import { Result } from '../../../common/domain/logic/Result';
 import { UserSnapShot } from "src/users/domain/parameterObjects/user-snapshot";
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 
-export class SignUserUpMovistar implements IApplicationService<CreateUserDto,void>{
+export class SignUserUpMovistar implements IApplicationService<CreateUserDto,User>{
   constructor(private phone:PhonesService,
     private findByPhoneUserService: IApplicationService<string, User>,
     private IMapper: Imapper<User,UserEntity>,
@@ -25,7 +25,7 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,voi
     return this.constructor.name;
   }
 
-  async execute(usersDto: CreateUserDto):Promise<Result<void>>{
+  async execute(usersDto: CreateUserDto):Promise<Result<User>>{
 
     const users = await this.findByPhoneUserService.execute(usersDto.phone); 
     if(users.Value){
@@ -33,12 +33,12 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,voi
     }
 
     let phoneMovistar = await this.phone.execute(usersDto.phone);
-    if(!phoneMovistar.IsSuccess) return Result.fail<void>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
+    if(!phoneMovistar.IsSuccess) return Result.fail<User>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
     
     if(!phoneMovistar.Value.validatePrefixMovistar()){
-      Result.fail<User>(new Error("Phone prefix is not from Movistar"));
+      return Result.fail<User>(new Error("Phone prefix is not from Movistar"));
     }
-    
+
     let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
     usersDto.phone = phoneMovistarDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber, 

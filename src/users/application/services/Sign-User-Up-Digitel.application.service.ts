@@ -12,7 +12,7 @@ import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { Result } from '../../../common/domain/logic/Result';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 
-export class SignUserUpDigitel implements IApplicationService<CreateUserDto,void>{
+export class SignUserUpDigitel implements IApplicationService<CreateUserDto,User>{
   constructor(private phone:PhonesService,
     private findByPhoneUserService: IApplicationService<string, User>,
     private IMapper: Imapper<User,UserEntity>,
@@ -29,13 +29,13 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,void
     if(users.Value){
       throw new NotFoundException ("User Alredy exists");
     }
-    let phoneDigitel = await this.phone.execute(usersDto.phone);
-    if(!phoneDigitel.IsSuccess) return Result.fail<void>(new DomainException<string>(void 0,phoneDigitel.message,phoneDigitel.error,phoneDigitel.statusCode));
+    let phoneDigitel = await this.phone.execute(usersDto.phone);void 0
+    if(!phoneDigitel.IsSuccess) return Result.fail<User>(new DomainException<string>(void 0,phoneDigitel.message,phoneDigitel.error,phoneDigitel.statusCode));
 
     if(!phoneDigitel.Value.validatePrefixDigitel()){
-      Result.fail<User>(new Error("Phone prefix is not from Digitel"));
+      return Result.fail<User>(new Error("Phone prefix is not from Digitel"));
     }
-    
+
     let phoneDigitelDto = await this.IMapperPhone.domainTo(phoneDigitel.Value);
     usersDto.phone = phoneDigitelDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneDigitelDto.id, phoneDigitelDto.phoneNumber, 
