@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   UseGuards,
-  Patch, Req,
+  Patch, Req, NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -166,10 +166,13 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Get('/user/:id')
-  async findUser(@Param('id') id: string) {
+  async findUser(@Req() req:Request) {
     //await this.userRepository.findAll();
+
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const id = this.jwtService.decode(token)?.data;
     const user = await this.findUserById.execute(id);
-    if (!user) throw user.Error;
+    if (!user.value) throw new NotFoundException('User not found');
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
     return {
       id: (await userPayload).id,
@@ -179,6 +182,8 @@ export class UsersController {
       birthDate: (await userPayload).birth_date,
       gender: (await userPayload).gender,
     };
+
+
   }
 
   //Actualizar usuario en base a su ID
