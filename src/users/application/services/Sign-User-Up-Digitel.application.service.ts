@@ -32,9 +32,15 @@ implements IApplicationService<CreateUserDto, User>
       throw new NotFoundException('User Already exists');
     }
     let phoneDigitel = await this.phone.execute(usersDto.phone);
+
     if(phoneDigitel.Error){
       throw phoneDigitel.Error;
     }
+
+    if(!phoneDigitel.Value.validatePrefixDigitel()){
+      Result.fail<User>(new Error("Phone prefix is not from Digitel"));
+    }
+
     let phoneDigitelDto = await this.IMapperPhone.domainTo(phoneDigitel.Value);
     usersDto.phone = phoneDigitelDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneDigitelDto.id, phoneDigitelDto.phoneNumber, 

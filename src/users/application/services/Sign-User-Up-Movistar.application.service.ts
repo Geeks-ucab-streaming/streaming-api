@@ -29,15 +29,21 @@ export class SignUserUpMovistar
 
   async execute(usersDto: CreateUserDto): Promise<Result<User>> {
     const users = await this.findByPhoneUserService.execute(usersDto.phone);
+
     if (users.Value) {
       throw new NotFoundException('User Already exists');
     }
+
     let phoneMovistar = await this.phone.execute(usersDto.phone);
-    phoneMovistar.IsSuccess;
-    if (!phoneMovistar.IsSuccess) return Result.fail<User>(phoneMovistar.Error);
-    let phoneMovistarDto = await this.IMapperPhone.domainTo(
-      phoneMovistar.Value,
-    );
+
+    if (!phoneMovistar.IsSuccess) 
+      return Result.fail<User>(phoneMovistar.Error);
+
+    if(!phoneMovistar.Value.validatePrefixMovistar()){
+      Result.fail<User>(new Error("Phone prefix is not from Movistar"));
+    }
+
+    let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
     usersDto.phone = phoneMovistarDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber, 
       phoneMovistarDto.linePhoneId, phoneMovistarDto.lineName));

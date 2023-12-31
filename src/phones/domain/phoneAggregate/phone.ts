@@ -33,15 +33,15 @@ export class Phone extends AggregateRoot<phoneId> {
     return this.linePhone;
   }
 
-  public validatePrefixDigitel(prefix: Prefix): boolean {
-      if (prefix.Prefix === 412) {
+  public validatePrefixDigitel(): boolean {
+      if (this.phoneNumber.extractPrefix(this.PhoneNumber.phoneNumber) === '412') {
         return true;
       }
     return false; 
   }
 
-  public validatePrefixMovistar(prefix: Prefix): boolean {
-    if (prefix.Prefix === 414 || prefix.Prefix === 424) {
+  public validatePrefixMovistar(): boolean {
+    if (this.phoneNumber.extractPrefix(this.PhoneNumber.phoneNumber) === '414' || this.phoneNumber.extractPrefix(this.PhoneNumber.phoneNumber) ===  '424') {
       return true;
     }
     return false; 

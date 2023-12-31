@@ -36,6 +36,10 @@ export class phoneNumber implements IValueObject<phoneNumber>{
     return true;
   }
 
+  public extractPrefix(phoneNumber: string): string {
+      return phoneNumber?.toString().substring(0,3);
+ }
+
   public equals(userPhoneNumber: phoneNumber): boolean {
     return this._phoneNumber === userPhoneNumber.phoneNumber;
   }
