@@ -107,7 +107,7 @@ export class UsersController {
         data:{
           token : sign.token
         },
-        statusCode: result.statusCode,
+        statusCode: result.statusCode || 200,
       };
     }else{
       return result
