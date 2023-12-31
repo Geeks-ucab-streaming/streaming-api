@@ -33,7 +33,8 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,void
     }
     let phoneDigitelDto = await this.IMapperPhone.domainTo(phoneDigitel.Value);
     usersDto.phone = phoneDigitelDto.phoneNumber;
-    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(usersDto,phoneDigitelDto));
+    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneDigitelDto.id, phoneDigitelDto.phoneNumber, 
+      phoneDigitelDto.linePhoneId, phoneDigitelDto.lineName));
     return savedUser;
   }
 }

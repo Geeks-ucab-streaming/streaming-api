@@ -10,6 +10,7 @@ import { IUserRepository } from "src/users/domain/IUserRepository";
 import { UserFactory } from "src/users/domain/factories/user.factory";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { Result } from '../../../common/domain/logic/Result';
+import { UserSnapShot } from "src/users/domain/parameterObjects/user-snapshot";
 
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,void>{
   constructor(private phone:PhonesService,
@@ -33,7 +34,8 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,voi
     if(!phoneMovistar.IsSuccess) return Result.fail<void>(phoneMovistar.Error);
     let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
     usersDto.phone = phoneMovistarDto.phoneNumber;
-    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(usersDto,phoneMovistarDto));
+    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber, 
+      phoneMovistarDto.linePhoneId, phoneMovistarDto.lineName));
     return savedUser;
   }
 }

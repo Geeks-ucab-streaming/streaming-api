@@ -66,6 +66,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
     if(ormEntity.gender){
       user.updateUsersGender(UserGender.create(ormEntity.gender));
     }
+
     return Promise.resolve(user);
   }
 
