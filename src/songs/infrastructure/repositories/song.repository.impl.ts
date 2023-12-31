@@ -65,7 +65,10 @@ export class OrmSongRepository
       .where('song.id = :id', { id: id })
       .getOne();
 
-    const song: Song = (await this.songMapper.ToDomain(songResponse)) as Song;
+    let song: Song;
+    if (songResponse) {
+      song = (await this.songMapper.ToDomain(songResponse)) as Song;
+    }
     return song;
   }
   async findByArtistId(artistId: string): Promise<Song[]> {

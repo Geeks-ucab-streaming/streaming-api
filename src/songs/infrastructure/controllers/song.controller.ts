@@ -82,7 +82,7 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<Result<Song>> {
+  async findById(@Param('id') id: string): Promise<Song> {
     // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
     // const song: Song = await this.getSongByIdService.execute(id);
     // return song;
@@ -92,7 +92,8 @@ export class SongsController {
       new NestLogger(),
     );
     const result = await service.execute(dto);
-    return result;
+    if (result.IsSuccess) return result.Value;
+    throw result.Error;
   }
 
   @ApiTags('Songs')

@@ -11,7 +11,7 @@ export class Result<T> {
   private constructor(value: T, error: DomainException<T>) {
     if (error) {
       this.statusCode = Number(error.httpStatus) || 500;
-      this.message = error?.errorCode ? error?.errorCode : 'Unknown.';
+      this.message = error?.message ? error?.message : 'Unknown.';
       this.error = 'Internal Domain Error';
     } else {
       this.value = value;
