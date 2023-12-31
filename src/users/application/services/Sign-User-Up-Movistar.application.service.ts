@@ -1,7 +1,7 @@
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { PhonesService } from "src/phones/application/services/register-users-phone.application.service";
-import { Imapper } from "src/core/application/IMapper";
+import {Imapper} from '../../../common/Application/IMapper';
 import { User } from "src/users/domain/userAggregate/user";
 import { UserEntity } from "src/users/infrastructure/entities/users.entity";
 import { NotFoundException } from "@nestjs/common";

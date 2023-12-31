@@ -2,7 +2,7 @@ import { User } from 'src/users/domain/userAggregate/user';
 import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
 import { userName } from 'src/users/domain/userAggregate/value-objects/userName';
 import { UserBirthDate } from 'src/users/domain/userAggregate/value-objects/userBirthDate';
-import { userSuscriptionState } from 'src/users/domain/userAggregate/entities/userSuscriptionState';
+import { userSuscriptionState } from 'src/users/domain/userAggregate/value-objects/userSuscriptionState';
 import { UserGender } from 'src/users/domain/userAggregate/value-objects/userGender';
 import { UserDto } from 'src/users/application/dtos/user.dto';
 import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
@@ -32,7 +32,7 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
       userDto.gender = domainEntity.Gender.Gender;
     }
 
-    return await userDto;
+    return  userDto;
   }
 
   async ToDomain(userDto: UserDto): Promise<User> {
