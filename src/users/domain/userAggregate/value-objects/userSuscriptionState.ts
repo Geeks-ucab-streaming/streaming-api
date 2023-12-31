@@ -1,6 +1,7 @@
+import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
 import { SubscriptionEnum } from "../enums/subscriptionEnum";
 
-export class userSuscriptionState {
+export class userSuscriptionState implements IValueObject<userSuscriptionState>{
     private suscriptionState: SubscriptionEnum;
     private _suscription_date: Date;
 

@@ -4,7 +4,7 @@ import { Imapper } from "src/core/application/IMapper";
 import { userId } from "src/users/domain/userAggregate/value-objects/userId";
 import { userName } from "src/users/domain/userAggregate/value-objects/userName";
 import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/userBirthDate";
-import { userSuscriptionState } from "src/users/domain/userAggregate/entities/userSuscriptionState";
+import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { phoneMapper } from "src/phones/infrastructure/mapper/phone.mapper";
 import { TokenEntity } from '../../domain/userAggregate/entities/token';
@@ -48,12 +48,24 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       await this.mapperPhone.ToDomain(ormEntity.phone),
       userSuscriptionState.create(ormEntity.suscriptionState, /*CAMBIAR POR LA FECHA REAL*/ormEntity.subscription_date),
       tokenArray,
-      userEmail.create(ormEntity.email),
-      userName.create(ormEntity.name),
-      UserBirthDate.create(usersDate, usersDate.getFullYear()),
-      UserGender.create(ormEntity.gender),
     );  
-    console.log(user,"el usuerio del mapper")
+
+    if(ormEntity.email){
+      user.updateUsersEmail(userEmail.create(ormEntity.email));
+    }
+    
+    if(ormEntity.name){
+      user.updateUsersName(userName.create(ormEntity.name));
+    }
+
+    if(ormEntity.birth_date){
+      let birthDate = new Date(ormEntity.birth_date);
+      user.updateUsersBirthDate(UserBirthDate.create(birthDate, birthDate.getFullYear()));
+    }
+
+    if(ormEntity.gender){
+      user.updateUsersGender(UserGender.create(ormEntity.gender));
+    }
     return Promise.resolve(user);
   }
 
