@@ -12,7 +12,7 @@ import { Result } from '../../../common/domain/logic/Result';
 import { Imapper } from 'src/common/Application/IMapper';
 
 export class SignUserUpMovistar
-  implements IApplicationService<CreateUserDto, void>
+  implements IApplicationService<CreateUserDto, User>
 {
   constructor(
     private phone: PhonesService,
@@ -26,14 +26,14 @@ export class SignUserUpMovistar
     return this.constructor.name;
   }
 
-  async execute(usersDto: CreateUserDto): Promise<Result<void>> {
+  async execute(usersDto: CreateUserDto): Promise<Result<User>> {
     const users = await this.findByPhoneUserService.execute(usersDto.phone);
     if (users.Value) {
       throw new NotFoundException('User Alredy exists');
     }
     let phoneMovistar = await this.phone.execute(usersDto.phone);
     phoneMovistar.IsSuccess;
-    if (!phoneMovistar.IsSuccess) return Result.fail<void>(phoneMovistar.Error);
+    if (!phoneMovistar.IsSuccess) return Result.fail<User>(phoneMovistar.Error);
     let phoneMovistarDto = await this.IMapperPhone.domainTo(
       phoneMovistar.Value,
     );

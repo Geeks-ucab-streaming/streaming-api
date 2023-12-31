@@ -11,7 +11,7 @@ import { UserFactory } from 'src/users/domain/factories/user.factory';
 import { PhoneDto } from 'src/phones/application/dtos/phone.dto';
 
 export class SignUserUpDigitel
-  implements IApplicationService<CreateUserDto, void>
+  implements IApplicationService<CreateUserDto, User>
 {
   constructor(
     private phone: PhonesService,

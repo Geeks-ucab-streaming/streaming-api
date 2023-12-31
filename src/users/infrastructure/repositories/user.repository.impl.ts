@@ -18,10 +18,10 @@ export class OrmUserRepository
     this.userMapper = userMapper;
   }
 
-  async createUser(user: User): Promise<Result<void>> {
+  async createUser(user: User): Promise<Result<User>> {
     const createdUser = await this.userMapper.domainTo(user);
     await this.save(createdUser);
-    return Result.success<void>(void 0);
+    return Result.success<User>(user);
   }
 
   async updateUser(user: User): Promise<Result<void>> {
