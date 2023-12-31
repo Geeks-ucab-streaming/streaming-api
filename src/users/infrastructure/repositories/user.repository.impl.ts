@@ -31,11 +31,15 @@ export class OrmUserRepository
   }
 
   async findById(userId: string): Promise<User> {
-    const user = await this.findOne({
-      where: { id: userId },
-      relations: ['phone', 'phone.linePhone'],
-    });
-    return this.userMapper.ToDomain(user);
+    const user = await this.createQueryBuilder('user')
+      .innerJoinAndSelect('user.phone', 'phone')
+      .innerJoinAndSelect('phone.linePhone', 'linePhone')
+      .leftJoinAndSelect('user.tokenDeviceUser', 'tokenDeviceUser')
+      .where('user.id = :id', {
+        id: userId,
+      })
+      .getOne();
+    return user ? this.userMapper.ToDomain(user) : null;
   }
 
   async findAll(): Promise<User[]> {
