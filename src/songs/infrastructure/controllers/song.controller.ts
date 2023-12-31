@@ -25,6 +25,10 @@ import {
 } from 'src/artists/application/services/get-artist-profile.application.service';
 import { Artist } from 'src/artists/domain/artist';
 
+export class TrendingSongsDto {
+  songs: SongDto[];
+}
+
 @Controller('api/songs')
 export class SongsController {
   private getSongByIdService: GetSongByIdService;
@@ -42,8 +46,9 @@ export class SongsController {
     );
   }
 
-  @Get()
-  async findTrendingSongs(): Promise<SongDto[]> {
+  @ApiTags('Trending Songs')
+  @Get('/trending')
+  async findTrendingSongs(): Promise<TrendingSongsDto> {
     const service = new LoggingApplicationServiceDecorator(
       new GetTrendingSongsService(this.ormSongRepository),
       new NestLogger(),
@@ -54,7 +59,7 @@ export class SongsController {
     );
     const songsResponse: Result<Song[]> = await service.execute();
     if (songsResponse.IsSuccess) {
-      let songs: SongDto[] = [];
+      let TrendingSongs: TrendingSongsDto = { songs: [] };
       for (const song of songsResponse.Value) {
         let artistsAux: { id: string; name: string }[] = [];
         for (const artist of song.Artists) {
@@ -68,7 +73,7 @@ export class SongsController {
             name: artistResponse.Value.Name.Value,
           });
         }
-        songs.push({
+        TrendingSongs.songs.push({
           songId: song.Id.Value,
           name: song.Name,
           image: song.Image,
@@ -76,7 +81,7 @@ export class SongsController {
           artists: artistsAux,
         });
       }
-      return songs;
+      return TrendingSongs;
     } else throw new Error(songsResponse.Error.message);
   }
 
