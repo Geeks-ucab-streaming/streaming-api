@@ -16,7 +16,7 @@ export class AddStreamToSongService
     this.streamsRepository = streamsRepository;
   }
   get name(): string {
-    throw new Error('Method not implemented.');
+    return this.constructor.name;
   }
   async execute(dto: streamDto): Promise<Result<void>> {
     await this.streamsRepository.saveSongStream(dto.user, dto.song);

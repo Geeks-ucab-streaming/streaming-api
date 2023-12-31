@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
 import {
   GetSongByIdService,
   GetSongByIdServiceDto,
@@ -24,6 +24,9 @@ import {
   GetArtistProfilesApplicationServiceDto,
 } from 'src/artists/application/services/get-artist-profile.application.service';
 import { Artist } from 'src/artists/domain/artist';
+import { AddStreamToSongService } from 'src/songs/application/services/addStreamtoSong.service';
+import { IStreamRepository } from 'src/common/domain/repositories/IStreamRepository';
+import { StreamRepository } from 'src/common/infrastructure/repositories/streamsRepository.impl';
 
 export class TrendingSongsDto {
   songs: SongDto[];
@@ -87,7 +90,7 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<Song> {
+  async findById(@Param('id') id: string): Promise<Result<Song>> {
     // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
     // const song: Song = await this.getSongByIdService.execute(id);
     // return song;
@@ -97,8 +100,7 @@ export class SongsController {
       new NestLogger(),
     );
     const result = await service.execute(dto);
-    if (result.IsSuccess) return result.Value;
-    throw result.Error;
+    return result;
   }
 
   @ApiTags('Songs')
@@ -116,5 +118,21 @@ export class SongsController {
       this.ormSongRepository,
     );
     return this.getSongBPlaylistIdService.execute(id);
+  }
+
+  @ApiTags('StreamedSong')
+  @Post('/streamedsong')
+  addStreamToSong(
+    @Query() streamDto: { user: string; song: string; playlist?: string },
+  ): void {
+    const streamRepository: StreamRepository = new StreamRepository(
+      DataSourceSingleton.getInstance(),
+    );
+    const service = new LoggingApplicationServiceDecorator(
+      new AddStreamToSongService(streamRepository),
+      new NestLogger(),
+    );
+    service.execute(streamDto);
+    return;
   }
 }

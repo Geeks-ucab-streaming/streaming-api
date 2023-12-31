@@ -19,8 +19,10 @@ export class GetSongByIdService
 
   async execute(dto?: GetSongByIdServiceDto): Promise<Result<Song>> {
     const song = await this.songsRepository.findById(dto.id);
-    if (song) return Result.success<Song>(song);
+    if (song) return Result.success<Song>(song, 200);
     return Result.fail<Song>(
+      404,
+      `No se encontró la canción de ID: ${dto.id}`,
       new Error(`No se encontró la canción de ID: ${dto.id}`),
     );
   }
