@@ -14,6 +14,33 @@ export class OrmArtistRepository
     super(ArtistEntity, dataSource.manager);
     this.ormArtistMapper = new ArtistsMapper();
   }
+
+  async browseArtistsName(query: string): Promise<Artist[]> {
+    const artistsResponse = await this.createQueryBuilder('artist')
+      .orWhere('artist.name ILIKE :query', { query: `%${query}%` })
+      .getMany();
+    const artists: Promise<Artist>[] = [];
+    artistsResponse.forEach((artist) =>
+      artists.push(this.ormArtistMapper.ToDomain(artist)),
+    );
+    return await Promise.all(artists);
+  }
+
+  async findTrendingArtists(): Promise<Artist[]> {
+    const ormArtists = await this.createQueryBuilder('artist')
+      .orderBy('artist.reproductions', 'DESC')
+      .getMany();
+
+    console.log(ormArtists);
+    console.log('---------------------------------');
+
+    let artists: Artist[] = [];
+    for (const artist of ormArtists) {
+      artists.push(await this.ormArtistMapper.ToDomain(artist));
+    }
+
+    return artists;
+  }
   async findAllArtists(): Promise<Artist[]> {
     const ormArtist = await this.find();
     if (!ormArtist) throw new Error('Method not implemented.');

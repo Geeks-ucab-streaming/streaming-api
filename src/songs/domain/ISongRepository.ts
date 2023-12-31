@@ -6,4 +6,6 @@ export interface ISongRepository {
   findByArtistId(id: string): Promise<Song[]>;
   findByPlaylistId(id: string): Promise<Song[]>;
   findSongsInCollection(ids: string[]): Promise<Song[]>;
+  browseSongsName(query: string): Promise<Song[]>;
+  findTrendingSongs(): Promise<Song[]>;
 }

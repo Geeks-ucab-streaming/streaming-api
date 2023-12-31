@@ -12,6 +12,8 @@ import { ArtistController } from './artists/infrastructure/controllers/artist.co
 import { TransmitWsGateway } from './songs/infrastructure/sockets/transmit-ws.gateway';
 import { CronSchedulerService } from './common/infrastructure/services/cron-scheduler.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AlbumController } from './playlist/infrastructure/controllers/album.controller';
+import { CommonController } from './common/infrastructure/Common.controller';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -34,6 +36,8 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     PlaylistController,
     UsersController,
     ArtistController,
+    AlbumController,
+    CommonController,
   ],
   providers: [AppService, CronSchedulerService, TransmitWsGateway],
 })

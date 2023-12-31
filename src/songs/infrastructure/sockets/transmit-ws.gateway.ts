@@ -10,7 +10,7 @@ import { IFindService } from 'src/common/domain/ifind.service';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { Song } from 'src/songs/domain/song';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
-import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import {
   GetSongByIdService,
   GetSongByIdServiceDto,
@@ -23,14 +23,15 @@ import { ConfigService } from '@nestjs/config';
 export class TransmitWsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  private cont = 0;
   private readonly getSongByIdService: GetSongByIdService =
     new GetSongByIdService(
       new OrmSongRepository(DataSourceSingleton.getInstance()),
     );
+
   constructor() {}
   handleConnection(client: Socket) {
     console.log('cliente conectado: ', client.id);
+    client.data = { currentStream: null };
   }
 
   handleDisconnect(client: Socket) {
@@ -40,8 +41,14 @@ export class TransmitWsGateway
   @SubscribeMessage('message-from-client')
   async sendSong(
     client: Socket,
-    payload: { preview: boolean; songId: string },
+    payload: { preview: boolean; songId: string; second: number | 0 },
   ) {
+    // Si hay un stream actual, lo cerramos
+    if (client.data.currentStream) {
+      client.data.currentStream.destroy();
+      client.data.currentStream = null;
+    }
+    let cont = 0;
     const getSongByIdServiceDto: GetSongByIdServiceDto = { id: payload.songId };
     console.log(payload.songId);
     console.log(getSongByIdServiceDto);
@@ -58,17 +65,30 @@ export class TransmitWsGateway
     console.log(filePath);
 
     try {
-      const response = await axios.get(filePath, { responseType: 'stream' });
+      client.emit('song-duration', { duration: song.Duration }); //mando la duracion para la barra de carga
+
+      const songLength = (await axios.head(filePath)).headers['content-length'];
+      const initialByte =
+        payload.second * Math.floor(songLength / song.Duration);
+      const response = await axios.get(filePath, {
+        responseType: 'stream',
+        headers: {
+          Range: `bytes=${String(initialByte)}-${songLength}`,
+        },
+      });
+
+      // Guardamos el stream actual en el objeto Socket
+      client.data.currentStream = response.data;
 
       response.data.on('data', (chunk: Buffer) => {
-        this.cont++;
+        cont++;
         client.emit('message-from-server', { chunk });
-        console.log(this.cont);
+        console.log(cont);
       });
 
       response.data.on('end', () => {
         console.log('Streaming complete');
-        console.log(this.cont);
+        client.data.currentStream = null;
       });
     } catch (error) {
       console.log('Error fetching data: ', error);

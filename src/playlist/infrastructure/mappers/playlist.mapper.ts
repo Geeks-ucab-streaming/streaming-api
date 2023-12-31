@@ -1,4 +1,4 @@
-import { Imapper } from 'src/core/application/IMapper';
+import { Imapper } from 'src/common/Application/IMapper';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistEntity } from '../entities/playlist.entity';
@@ -36,8 +36,9 @@ export class PlaylistMapper implements Imapper<Playlist, PlaylistEntity> {
 
   private getPlaylistArtists(ormEntity: PlaylistEntity): ArtistID[] {
     let artists: ArtistID[] = [];
+    console.log(ormEntity);
     for (const artist of ormEntity.playlistCreator) {
-      artists.push(ArtistID.create(artist.artist.id));
+      artists.push(ArtistID.create(artist.id));
     }
     return artists;
   }

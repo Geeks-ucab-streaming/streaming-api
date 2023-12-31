@@ -4,8 +4,8 @@ import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
 
-export class FindSongsByArtistIdService
-  implements IApplicationService<String, Song[]>
+export class GetTrendingSongsService
+  implements IApplicationService<void, Song[]>
 {
   constructor(private readonly songsRepository: ISongRepository) {}
 
@@ -13,8 +13,8 @@ export class FindSongsByArtistIdService
     return this.constructor.name;
   }
 
-  async execute(artistId: string): Promise<Result<Song[]>> {
-    const songs: Song[] = await this.songsRepository.findByArtistId(artistId);
+  async execute(): Promise<Result<Song[]>> {
+    const songs: Song[] = await this.songsRepository.findTrendingSongs();
     return Result.success<Song[]>(songs);
   }
 }

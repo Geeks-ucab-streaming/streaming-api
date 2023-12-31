@@ -13,6 +13,9 @@ export class ArtistEntity {
   @Column({ type: 'text', nullable: false, unique: true })
   image_reference: string;
 
+  @Column({ type: 'int', nullable: false, default: 0 })
+  reproductions: number;
+
   @OneToMany(() => SongArtist, (songArtist) => songArtist.artist)
   song_artist: SongArtist[];
 

@@ -8,7 +8,7 @@ import { FindSongsByArtistIdService } from '../../application/services/getSongsB
 import { EntityManager } from 'typeorm';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
-import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
 import { GetSongBPlaylistIdService } from 'src/songs/application/services/getSongsByPlaylistId.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
@@ -17,6 +17,13 @@ import { Result } from 'src/common/domain/logic/Result';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { TransmitWsGateway } from '../sockets/transmit-ws.gateway';
 import { Socket } from 'socket.io';
+import { GetTrendingSongsService } from 'src/songs/application/services/getTrendingSongs.service';
+import { SongDto } from 'src/dtos';
+import {
+  GetArtistProfilesApplicationService,
+  GetArtistProfilesApplicationServiceDto,
+} from 'src/artists/application/services/get-artist-profile.application.service';
+import { Artist } from 'src/artists/domain/artist';
 
 @Controller('api/songs')
 export class SongsController {
@@ -35,10 +42,43 @@ export class SongsController {
     );
   }
 
-  // @Get()
-  // findAll(): Promise<Artist[]> {
-  //   return this.findAllArtistService.execute();
-  // }
+  @Get()
+  async findTrendingSongs(): Promise<SongDto[]> {
+    const service = new LoggingApplicationServiceDecorator(
+      new GetTrendingSongsService(this.ormSongRepository),
+      new NestLogger(),
+    );
+    const findArtistByIdService = new LoggingApplicationServiceDecorator(
+      new GetArtistProfilesApplicationService(this.ormArtistRepository),
+      new NestLogger(),
+    );
+    const songsResponse: Result<Song[]> = await service.execute();
+    if (songsResponse.IsSuccess) {
+      let songs: SongDto[] = [];
+      for (const song of songsResponse.Value) {
+        let artistsAux: { id: string; name: string }[] = [];
+        for (const artist of song.Artists) {
+          const dto: GetArtistProfilesApplicationServiceDto = {
+            id: artist,
+          };
+          const artistResponse: Result<Artist> =
+            await findArtistByIdService.execute(dto);
+          artistsAux.push({
+            id: artistResponse.Value.Id.Value,
+            name: artistResponse.Value.Name.Value,
+          });
+        }
+        songs.push({
+          songId: song.Id.Value,
+          name: song.Name,
+          image: song.Image,
+          duration: song.DurationString,
+          artists: artistsAux,
+        });
+      }
+      return songs;
+    } else throw new Error(songsResponse.Error.message);
+  }
 
   @ApiTags('Songs')
   @Get('/:id')
@@ -57,7 +97,7 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/artist/:artistId')
-  findByArtistId(@Param('artistId') id: string): Promise<Song[]> {
+  findByArtistId(@Param('artistId') id: string): Promise<Result<Song[]>> {
     this.findSongsByArtistIdService = new FindSongsByArtistIdService(
       this.ormSongRepository,
     );
