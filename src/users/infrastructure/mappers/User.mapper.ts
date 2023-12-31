@@ -38,7 +38,6 @@ export class UsersMapper implements Imapper<User, UserEntity> {
   }
 
   async ToDomain(ormEntity: UserEntity): Promise<User> {
-    let usersDate = new Date(ormEntity.birth_date);
     let tokenArray: TokenEntity[] = [];
     /*ormEntity.tokenDeviceUser.map((token) => {
       tokenArray.push(TokenEntity.create(token.token));
