@@ -27,7 +27,7 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,voi
   async execute(usersDto: CreateUserDto):Promise<Result<void>>{
     const users = await this.findByPhoneUserService.execute(usersDto.phone); 
     if(users.Value){
-      throw new NotFoundException ("User Alredy exists");
+      throw new NotFoundException ("User Already exists");
     }
     let phoneMovistar = await this.phone.execute(usersDto.phone);
     phoneMovistar.IsSuccess
