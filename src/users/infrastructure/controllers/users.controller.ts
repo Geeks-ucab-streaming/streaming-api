@@ -105,7 +105,7 @@ export class UsersController {
       const sign = await this.signin(dto);
       return {
         data:{
-          token : sign.token
+          token : sign.data.token
         },
         statusCode: result.statusCode || 200,
       };
@@ -140,7 +140,7 @@ export class UsersController {
         const sign = await this.signin(dto);
         return {
           data:{
-            token : sign.token
+            token : sign.data.token
           },
           statusCode: result.statusCode,
         };
@@ -155,10 +155,19 @@ export class UsersController {
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
-    const jwt = this.jwtService.sign({data: data.Value.Id.Id}, {secret: jwtcontanst.secret});
+
+    if (!data.IsSuccess) {
+      return {
+        message: data,
+        token:null
+      }
+    }
+    const jwt = this.jwtService.sign({id: data.Value.Id.Id}, {secret: jwtcontanst.secret, expiresIn: '24h'});
 
     return {
-      token: jwt,
+      data:{
+        token:jwt
+      },statusCode:data.statusCode || 200
     };
   }
 

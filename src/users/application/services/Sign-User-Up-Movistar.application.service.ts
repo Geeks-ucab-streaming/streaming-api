@@ -39,7 +39,7 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
       return Result.fail<User>(new Error("Phone prefix is not from Movistar"));
     }
 
-    if(!phoneMovistar.IsSuccess) return Result.fail<void>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
+    if(!phoneMovistar.IsSuccess) return Result.fail<User>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
     let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
     usersDto.phone = phoneMovistarDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber, 

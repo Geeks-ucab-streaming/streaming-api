@@ -33,7 +33,7 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,User
     if(!phoneDigitel.IsSuccess) return Result.fail<User>(new DomainException<string>(void 0,phoneDigitel.message,phoneDigitel.error,phoneDigitel.statusCode));
 
     if(!phoneDigitel.Value.validatePrefixDigitel()){
-      return Result.fail<User>(new Error("Phone prefix is not from Digitel"));
+      return Result.fail<User>(new DomainException<string>(void 0,'Phone prefix is not from Digitel','DomainException',404));
     }
 
     let phoneDigitelDto = await this.IMapperPhone.domainTo(phoneDigitel.Value);
