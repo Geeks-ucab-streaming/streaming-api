@@ -19,7 +19,6 @@ import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefix
 import { JwtService } from '@nestjs/jwt';
 import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
 import { UsersMapper } from '../mappers/User.mapper';
-import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
 import { UpdateUserDto } from 'src/users/application/dtos/update-user.dto';
 import { SignUserUpMovistar } from 'src/users/application/services/Sign-User-Up-Movistar.application.service';
 import { SignUserIn } from 'src/users/application/services/Sign-User-In.application.service';
@@ -206,5 +205,4 @@ export class UsersController {
     );
     return this.updateUserById.execute(this.updateUserParameterObjetc);
   }
-
 }
