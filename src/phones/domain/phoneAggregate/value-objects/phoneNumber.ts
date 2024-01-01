@@ -9,7 +9,6 @@ export class phoneNumber implements IValueObject<phoneNumber>{
   private _phoneNumber: string;
 
   constructor(phoneNumber: string) {
-    if(!this.isValidOperator(phoneNumber))throw new PhoneInvalidExceptions(phoneNumber);
     this._phoneNumber = phoneNumber;
   }
 
@@ -27,14 +26,15 @@ export class phoneNumber implements IValueObject<phoneNumber>{
   }
 
   public isValidOperator(phoneNumber: string): boolean {
-     if (
-      !Object.values(phoneOperatorsEnum).includes(
-        phoneNumber?.toString().substring(0,3) as phoneOperatorsEnum,
-      )
-    )
-        return false;
-    return true;
+     return Object.values(phoneOperatorsEnum).includes(
+       phoneNumber?.toString().substring(0, 3) as phoneOperatorsEnum,
+     );
+
   }
+
+  public extractPrefix(phoneNumber: string): string {
+      return phoneNumber?.toString().substring(0,3);
+ }
 
   public equals(userPhoneNumber: phoneNumber): boolean {
     return this._phoneNumber === userPhoneNumber.phoneNumber;

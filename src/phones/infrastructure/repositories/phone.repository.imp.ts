@@ -28,7 +28,6 @@ export class OrmPhoneRepository
       const resultadito = Result.fail<Phone>(
         new PhoneRegistedAlredyExceptions(phone.PhoneNumber),
       );
-      console.log(resultadito);
       return resultadito;
     }
     const phoneToOrm = await this.phoneMapper.domainTo(phone);

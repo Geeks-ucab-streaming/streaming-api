@@ -1,13 +1,13 @@
-import { User } from 'src/users/domain/userAggregate/user';
-import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
-import { userName } from 'src/users/domain/userAggregate/value-objects/userName';
-import { UserBirthDate } from 'src/users/domain/userAggregate/value-objects/userBirthDate';
-import { userSuscriptionState } from 'src/users/domain/userAggregate/entities/userSuscriptionState';
-import { UserGender } from 'src/users/domain/userAggregate/value-objects/userGender';
-import { UserDto } from 'src/users/application/dtos/user.dto';
-import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
-import { userEmail } from 'src/users/domain/userAggregate/value-objects/userEmail';
-import { Imapper } from 'src/common/Application/IMapper';
+import { User } from "src/users/domain/userAggregate/user";
+import { Imapper } from "src/common/Application/IMapper";
+import { userId } from "src/users/domain/userAggregate/value-objects/userId";
+import { userName } from "src/users/domain/userAggregate/value-objects/userName";
+import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/userBirthDate";
+import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
+import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
+import { UserDto } from "src/users/application/dtos/user.dto";
+import { PhoneAndDtoMapper } from "src/phones/infrastructure/mapper/phoneAndDto.mapper";
+import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
 
 export class UsersForDtoMapper implements Imapper<User, UserDto> {
   private readonly mapperPhone = new PhoneAndDtoMapper();
@@ -32,11 +32,10 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
       userDto.gender = domainEntity.Gender.Gender;
     }
 
-    return await userDto;
+    return  userDto;
   }
 
   async ToDomain(userDto: UserDto): Promise<User> {
-    console.log('aqui estoy llegando al userForDtoMapper');
     let usersDate = new Date(userDto.birth_date);
     let user: User = User.create(
       userId.create(userDto.id),

@@ -18,10 +18,10 @@ export class OrmUserRepository
     this.userMapper = userMapper;
   }
 
-  async createUser(user: User): Promise<Result<void>> {
+  async createUser(user: User): Promise<Result<User>> {
     const createdUser = await this.userMapper.domainTo(user);
     await this.save(createdUser);
-    return Result.success<void>(void 0);
+    return Result.success<User>(user);
   }
 
   async updateUser(user: User): Promise<Result<void>> {
@@ -31,11 +31,15 @@ export class OrmUserRepository
   }
 
   async findById(userId: string): Promise<User> {
-    const user = await this.findOne({
-      where: { id: userId },
-      relations: ['phone', 'phone.linePhone'],
-    });
-    return this.userMapper.ToDomain(user);
+    const user = await this.createQueryBuilder('user')
+      .innerJoinAndSelect('user.phone', 'phone')
+      .innerJoinAndSelect('phone.linePhone', 'linePhone')
+      .leftJoinAndSelect('user.tokenDeviceUser', 'tokenDeviceUser')
+      .where('user.id = :id', {
+        id: userId,
+      })
+      .getOne();
+    return user ? this.userMapper.ToDomain(user) : null;
   }
 
   async findAll(): Promise<User[]> {
@@ -63,14 +67,14 @@ export class OrmUserRepository
   async finderCriteria(criteria: Partial<Phone>): Promise<User | undefined> {
     const user = await this.createQueryBuilder('user')
       .innerJoinAndSelect('user.phone', 'phone')
-      .where('phone.phoneNumber = :phoneNumber', {
+      .innerJoinAndSelect('phone.linePhone', 'linePhone')
+      .leftJoinAndSelect('user.tokenDeviceUser', 'tokenDeviceUser')
+      .where('phone.phoneNumber ILIKE :phoneNumber', {
         phoneNumber: criteria.PhoneNumber.phoneNumber,
       })
       .getOne();
     //! HAY QUE IMPLEMENTAR LOS MAPPERS PARA PASAR DE ENTITY A CLASE DE DOMINIO
     //RECORDAR QUE SE DEBE TRASLADAR DE ALGUNA MANERA EL RESULTADO DE LA CONSULTA A LA ENTIDAD USER Y PHONENUMBER COMO VO
-
-    // return user;
-    return;
+      return user ? await this.userMapper.ToDomain(user): null
   }
 }
