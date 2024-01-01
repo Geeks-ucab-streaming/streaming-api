@@ -27,7 +27,7 @@ export class FindAlbumByArtistIDService
     const playlists: Playlist[] =
       await this.albumRepository.findPlaylistsByArtistId(id);
     for (const playlist of playlists) {
-      this.calculateDurationService.execute(playlist, this.songRepository);
+      await this.calculateDurationService.execute(playlist, this.songRepository);
     }
     return Result.success<Playlist[]>(playlists);
   }

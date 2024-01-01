@@ -48,7 +48,7 @@ export class ArtistController {
 
   @ApiTags('ArtistTrending')
   @Get('/top_artists')
-  async getArtistTrending(): Promise<Result<TrendingArtistsDto>> {
+  async getArtistTrending(): Promise<TrendingArtistsDto> {
     const service = new ErrorApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new GetTrendingArtistsService(this.ormArtistRepository),
@@ -67,7 +67,7 @@ export class ArtistController {
         });
       }
       console.log(result);
-      return Result.success<TrendingArtistsDto>(trendingArtists);
+      return Result.success<TrendingArtistsDto>(trendingArtists).Value;
     } else throw Error(result.Error.message);
   }
 
