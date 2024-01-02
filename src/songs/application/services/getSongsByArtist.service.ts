@@ -3,6 +3,7 @@ import { Song } from 'src/songs/domain/song';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 
 export class FindSongsByArtistIdService
   implements IApplicationService<String, Song[]>

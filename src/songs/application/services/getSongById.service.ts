@@ -2,7 +2,6 @@ import { IFindService } from 'src/common/domain/ifind.service';
 import { Song } from 'src/songs/domain/song';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { Artist } from 'src/artists/domain/artist';
-import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';

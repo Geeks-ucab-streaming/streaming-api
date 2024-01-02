@@ -1,4 +1,3 @@
-import { Artist } from 'src/artists/domain/artist';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 import { GetSongByIdService } from 'src/songs/application/services/getSongById.service';
 import { Song } from 'src/songs/domain/song';

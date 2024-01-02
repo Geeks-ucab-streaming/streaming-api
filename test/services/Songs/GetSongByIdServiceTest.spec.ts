@@ -1,13 +1,11 @@
 import { GetSongByIdService } from "src/songs/application/services/getSongById.service";
 import { OMGetSongByIdService } from "../ObjectMother/OMGetSongByIdService";
-import { ISongRepository } from "src/songs/domain/ISongRepository";
-import { Song } from "src/songs/domain/song";
 
 
 
 describe('GetSongByIdService', () => {
 
-test('should return a song', async () => {
+test('should return a song by the id of a song', async () => {
 //ARRANGE
 const dto = OMGetSongByIdService.getdtoValid();
 const service: GetSongByIdService= OMGetSongByIdService.GetSongByIdServicemock();
@@ -16,20 +14,19 @@ const service: GetSongByIdService= OMGetSongByIdService.GetSongByIdServicemock()
 const Result= await service.execute(dto);
 
 //ASSERT
-expect(dto).toBeTruthy();
+expect(Result.IsSuccess).toBeTruthy() ;
 
 });
 });
 test('should return an error', async () => {
-//ARRANGE
-const dto = OMGetSongByIdService.GedtonotValid
-const service: GetSongByIdService= OMGetSongByIdService.GetSongByIdServicemock();
+    //ARRANGE
+    const dtoB = OMGetSongByIdService.GedtonotValid();
+    const service: GetSongByIdService= OMGetSongByIdService.GetSongByIdServicemock();
 
-//ACT
-const Result= await service.execute();
+    //ACT
+    const Result= await service.execute(dtoB);
 
-//ASSERT
-expect(dto).toBeTruthy();
-
-
+    //ASSERT
+    expect(Result.IsSuccess).toBeTruthy() ;
 });
+

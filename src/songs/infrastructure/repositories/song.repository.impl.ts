@@ -1,4 +1,4 @@
-import { DataSource, EntityRepository, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
