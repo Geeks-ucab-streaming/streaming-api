@@ -24,9 +24,9 @@ export class OMGetSongByArtistIdService {
       return new FindSongsByArtistIdService(repo);
     }
   
-    public static GetArtistnotValid(): ArtistID {
+    public static GetdtonotValid(): string {
   
-        const dto: ArtistID= ArtistID.create("1");
+        const dto="-1";
 
   
    return dto;

@@ -20,7 +20,7 @@ expect(Result.IsSuccess).toBeTruthy() ;
 });
 test('should return an error', async () => {
     //ARRANGE
-    const dtoB = OMGetSongByArtistIdService.getdtoValid();
+    const dtoB = OMGetSongByArtistIdService.GetdtonotValid();
     const service: FindSongsByArtistIdService=OMGetSongByArtistIdService.GetSongByArtistIdServicemock();
 
     //ACT
