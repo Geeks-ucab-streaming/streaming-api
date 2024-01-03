@@ -115,7 +115,7 @@ export class UsersController {
 
   @ApiTags('Users')
   @Post('/auth/sign-up/digitel')
-  async createUserDigitel(@Body() body: CreateUserDto) {
+  async createUserDigitel(@Req() req: Request, @Body() body: CreateUserDto) {
     const phoneService = this.findByPhoneUserService;
     const service = new LoggingApplicationServiceDecorator(
       new SignUserUpDigitel(

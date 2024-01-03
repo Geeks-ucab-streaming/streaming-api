@@ -35,7 +35,7 @@ export class FirebaseNotificationSender implements NotificationSender<admin.mess
       return Result.success<void>(void 0);
     }
     catch (e) {
-      console.log('tu sabe qlq con el frawel ',e);
+      console.log('hola, pruebo aquí ',e);
       return Result.fail<Error>(e);
 
     }

@@ -8,20 +8,24 @@ import { FirebaseNotificationSender } from 'src/users/infrastructure/subscriptio
 import * as admin from 'firebase-admin';
 import { Injectable } from '@nestjs/common';
 import { calculateDaysToEndSubscription } from '../../../users/domain/services/calculateDaysToEndSubscription';
-
-3;
+import { UsersForDtoMapper } from 'src/users/infrastructure/mappers/UserForDto.mapper';
 
 @Injectable()
 export class CronSchedulerService {
-  private usersMapper: UsersMapper = new UsersMapper();
-  private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
-  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
+  private usersMapper: UsersMapper;
+  private userRepository: OrmUserRepository;
+  private notifier: SubscriptionNotifier<admin.messaging.Messaging>;
+  private userMapperDto: UsersForDtoMapper;
+
   constructor() {
+    this.userMapperDto = new UsersForDtoMapper();
+    this.usersMapper = new UsersMapper();
+    this.userRepository = new OrmUserRepository(this.usersMapper);
+    this.notifier = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
   }
 
   @Cron('*/60 * * * * *')
-  async notificationSubscriptionCron() {
-
+  async send() {
       const users = await this.userRepository.findAll();
       console.log(users,"los usuarios")
       users.map((user) => {
