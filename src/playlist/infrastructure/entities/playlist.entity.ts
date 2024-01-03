@@ -3,6 +3,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistCreator } from 'src/common/infrastructure/entities/playlistCreator.entity';
 import { PlaylistSongEntity } from 'src/common/infrastructure/entities/playlistSong.entity';
+import { ReproducedPlaylist } from 'src/common/infrastructure/entities/ReproducedPlaylist.entity';
 
 @Entity('Playlists')
 export class PlaylistEntity {
@@ -32,4 +33,10 @@ export class PlaylistEntity {
 
   @OneToMany(() => PlaylistSongEntity, (playlistSong) => playlistSong.playlist)
   playlistSong: PlaylistSongEntity[];
+
+  @OneToMany(
+    () => ReproducedPlaylist,
+    (reproducedPlaylist) => reproducedPlaylist.playlist,
+  )
+  reproducedPlaylist: ReproducedPlaylist[];
 }

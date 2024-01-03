@@ -14,6 +14,16 @@ export class OrmSongRepository
     super(SongEntity, dataSource.manager);
     this.songMapper = new SongsMapper();
   }
+  async saveStream(id: string) {
+    const song = await this.findOne({ where: { id } });
+
+    if (!song) {
+      throw new Error(`La canción con ID ${id} no se encontró`);
+    }
+    song.reproductions += 1;
+
+    await this.save(song);
+  }
   async findTrendingSongs(): Promise<Song[]> {
     const songsResponse = await this.createQueryBuilder('song')
       .leftJoinAndSelect('song.song_artist', 'song_artist')

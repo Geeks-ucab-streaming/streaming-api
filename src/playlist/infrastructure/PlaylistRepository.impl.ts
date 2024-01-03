@@ -15,6 +15,18 @@ export class PlaylistRepository
     super(PlaylistEntity, dataSource.manager);
     this.playlistMapper = new PlaylistMapper();
   }
+  async saveStream(id: string) {
+    const playlist = await this.findOne({ where: { id } });
+
+    if (!playlist) {
+      throw new Error(`El playlist con ID ${id} no se encontró`);
+    }
+    playlist.reproductions += 1;
+
+    console.log('LLEGOOO A PLAYLIST');
+
+    await this.save(playlist);
+  }
   async findTopPlaylists(): Promise<Playlist[]> {
     let playlists: Playlist[] = [];
     const playlistsResponse: PlaylistEntity[] = await this.createQueryBuilder(

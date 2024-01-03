@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
-import { IStreamRepository } from '../../domain/repositories/IStreamRepository';
+import { IStreamRepository } from '../../domain/repositories/ISongStreamRepository';
 import { ReproducedSong } from '../entities/ReproducedSong.entity';
 import { Song } from 'src/songs/domain/song';
 import { User } from 'src/users/domain/userAggregate/user';
@@ -11,22 +11,19 @@ export class StreamRepository
   implements IStreamRepository
 {
   constructor(dataSource: DataSource) {
-    super(SongEntity, dataSource.manager);
+    super(ReproducedSong, dataSource.manager);
   }
 
   async saveSongStream(user: string, song: string) {
     const stream: ReproducedSong = new ReproducedSong();
-    stream.song = await this.manager.findOne(SongEntity, {
-      where: { id: song },
-    });
-    if (stream.song) console.log('Si está');
     stream.user = await this.manager.findOne(UserEntity, {
       where: { id: user },
     });
+    stream.song = await this.manager.findOne(SongEntity, {
+      where: { id: song },
+    });
     stream.reproduced_date = new Date();
-    await this.save(stream);
-
-    console.log('insertó');
+    await this.manager.save(stream);
     return;
   }
 }

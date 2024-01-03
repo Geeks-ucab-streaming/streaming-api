@@ -11,6 +11,7 @@ import { calculateDaysToEndSubscription } from '../../../users/domain/services/c
 
 import { OrmTokenRepository } from 'src/users/infrastructure/repositories/token.repository.impl';
 import { TokenMapper } from 'src/users/infrastructure/mappers/token.mapper';
+import { UsersForDtoMapper } from 'src/users/infrastructure/mappers/UserForDto.mapper';
 
 @Injectable()
 export class CronSchedulerService {
@@ -19,12 +20,12 @@ export class CronSchedulerService {
   private tokenMapper: TokenMapper = new TokenMapper();
 private tokenRepository: OrmTokenRepository = new OrmTokenRepository(this.tokenMapper);
   private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
+  private userMapperDto = new UsersForDtoMapper();
   constructor() {
   }
 
-  @Cron('*/15 * * * * *')
-  async notificationSubscriptionCron() {
-
+  @Cron('*/60 * * * * *')
+  async send() {
       const users = await this.userRepository.findAll();
       users.map((user) => {
       const daysUntilExpiration = calculateDaysToEndSubscription.daysToEndSubscription(user.SuscriptionState.suscription_date)

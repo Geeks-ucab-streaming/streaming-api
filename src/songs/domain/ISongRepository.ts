@@ -8,4 +8,5 @@ export interface ISongRepository {
   findSongsInCollection(ids: string[]): Promise<Song[]>;
   browseSongsName(query: string): Promise<Song[]>;
   findTrendingSongs(): Promise<Song[]>;
+  saveStream(id: string);
 }

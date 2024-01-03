@@ -32,7 +32,7 @@ export class UsersForDtoMapper implements Imapper<User, UserDto> {
       userDto.gender = domainEntity.Gender.Gender;
     }
 
-    return  userDto;
+    return userDto;
   }
 
   async ToDomain(userDto: UserDto): Promise<User> {
