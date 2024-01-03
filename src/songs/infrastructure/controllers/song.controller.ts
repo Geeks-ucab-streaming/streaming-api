@@ -25,8 +25,11 @@ import {
 } from 'src/artists/application/services/get-artist-profile.application.service';
 import { Artist } from 'src/artists/domain/artist';
 import { AddStreamToSongService } from 'src/songs/application/services/addStreamtoSong.service';
-import { IStreamRepository } from 'src/common/domain/repositories/IStreamRepository';
+import { IStreamRepository } from 'src/common/domain/repositories/ISongStreamRepository';
 import { StreamRepository } from 'src/common/infrastructure/repositories/streamsRepository.impl';
+import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
+import { IPlaylistStreamRepository } from 'src/common/domain/repositories/IPlaylistStreamRepository';
+import { PlaylistStreamsRepository } from 'src/common/infrastructure/repositories/playlistStreamsRepository.impl';
 
 export class TrendingSongsDto {
   songs: SongDto[];
@@ -128,8 +131,19 @@ export class SongsController {
     const streamRepository: StreamRepository = new StreamRepository(
       DataSourceSingleton.getInstance(),
     );
+    const playlistStreamRepository: IPlaylistStreamRepository =
+      new PlaylistStreamsRepository(DataSourceSingleton.getInstance());
+    const playlistRepository: PlaylistRepository = new PlaylistRepository(
+      DataSourceSingleton.getInstance(),
+    );
     const service = new LoggingApplicationServiceDecorator(
-      new AddStreamToSongService(streamRepository),
+      new AddStreamToSongService(
+        streamRepository,
+        playlistStreamRepository,
+        this.ormArtistRepository,
+        this.ormSongRepository,
+        playlistRepository,
+      ),
       new NestLogger(),
     );
     service.execute(streamDto);

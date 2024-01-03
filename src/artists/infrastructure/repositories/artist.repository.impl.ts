@@ -14,6 +14,16 @@ export class OrmArtistRepository
     super(ArtistEntity, dataSource.manager);
     this.ormArtistMapper = new ArtistsMapper();
   }
+  async saveStream(id: string) {
+    const artist = await this.findOne({ where: { id } });
+
+    if (!artist) {
+      throw new Error(`Artista con ID ${id} no encontrado`);
+    }
+    artist.reproductions += 1;
+
+    await this.save(artist);
+  }
 
   async browseArtistsName(query: string): Promise<Artist[]> {
     const artistsResponse = await this.createQueryBuilder('artist')
