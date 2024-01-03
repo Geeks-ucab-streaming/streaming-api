@@ -3,7 +3,7 @@ import { FindSongsByArtistIdService } from "src/songs/application/services/getSo
 
 
 
-describe('GetSongByIdService', () => {
+describe('GetSongByArtistIdService', () => {
 
 test('should return a song by the id of an artist', async () => {
 //ARRANGE
