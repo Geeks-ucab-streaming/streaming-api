@@ -36,6 +36,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       if(domainEntity.Gender){
         ormEntity.gender= domainEntity.Gender.Gender;
       }
+  
       return await ormEntity;
   }
 
@@ -66,6 +67,11 @@ export class UsersMapper implements Imapper<User, UserEntity> {
 
     if(ormEntity.gender){
       user.updateUsersGender(UserGender.create(ormEntity.gender));
+    }
+    if(ormEntity.tokenDeviceUser){
+      ormEntity.tokenDeviceUser.map((token) => {
+        user.Token.push(TokenEntity.create(token.token,ormEntity.id));
+      });
     }
 
     return Promise.resolve(user);

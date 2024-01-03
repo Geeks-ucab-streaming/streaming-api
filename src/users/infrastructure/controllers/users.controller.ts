@@ -5,10 +5,10 @@ import {
   Get,
   Param,
   UseGuards,
-  Patch, Req, NotFoundException,
+  Patch, Req, NotFoundException, Headers,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
 import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.application.service';
 import { PhonesService } from 'src/phones/application/services/register-users-phone.application.service';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
@@ -31,12 +31,15 @@ import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { jwtcontanst } from '../../application/constants/jwt.constansts';
+import { OrmTokenRepository } from '../repositories/token.repository.impl';
+import { TokenMapper } from '../mappers/token.mapper';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
 export class UsersController {
   private findByPhoneUserService: findByPhoneUserService;
   private usersMapper: UsersMapper = new UsersMapper();
+  private tokenMapper:TokenMapper = new TokenMapper();
   private userRepository: OrmUserRepository = new OrmUserRepository(
     this.usersMapper,
   );
@@ -45,6 +48,8 @@ export class UsersController {
     DataSourceSingleton.getInstance(),
     this.ormPhoneMapper,
   );
+  private tokenRepository = new OrmTokenRepository(this.tokenMapper);
+
   private lineRepository: OrmLineRepository = new OrmLineRepository(
     DataSourceSingleton.getInstance(),
   );
@@ -76,8 +81,14 @@ export class UsersController {
 
   //Registro de Usuario con su número de teléfono
   @ApiTags('Users')
+  @ApiHeader({
+    name: 'device_token',
+    description: 'Token device from firebase',
+  })
   @Post('/auth/sign-up/movistar')
-  async createUserMovistar(@Body() body: CreateUserDto) {
+  async createUserMovistar(@Body() body: CreateUserDto, @Headers() headers:Headers) {
+    const device_token = headers['device_token']
+    body.token = device_token
     const phoneService = this.findByPhoneUserService;
     const serviceMovistar = new LoggingApplicationServiceDecorator(
       new SignUserUpMovistar(
@@ -85,6 +96,7 @@ export class UsersController {
         phoneService,
         this.usersMapper,
         this.phoneDtoMapper,
+        this.tokenRepository,
         this.userRepository,
       ),
       new NestLogger(),
@@ -114,8 +126,15 @@ export class UsersController {
   }
 
   @ApiTags('Users')
+  @ApiHeader({
+    name: 'device_token',
+    description: 'Token device from firebase',
+  })
   @Post('/auth/sign-up/digitel')
-  async createUserDigitel(@Req() req: Request, @Body() body: CreateUserDto) {
+  async createUserDigitel(@Body() body: CreateUserDto , @Headers() headers:Headers) {
+    const device_token = headers['device_token']
+    body.token = device_token
+
     const phoneService = this.findByPhoneUserService;
     const service = new LoggingApplicationServiceDecorator(
       new SignUserUpDigitel(
@@ -123,6 +142,7 @@ export class UsersController {
         phoneService,
         this.usersMapper,
         this.phoneDtoMapper,
+        this.tokenRepository,
         this.userRepository,
       ),
       new NestLogger(),
@@ -136,7 +156,7 @@ export class UsersController {
       if(result.IsSuccess){
         let dto: CreateUserDto = new CreateUserDto();
         dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
-        const sign = await this.signin(dto);
+        const sign = await this.signin(dto,);
         return {
           data:{
             token : sign.data.token
@@ -151,6 +171,10 @@ export class UsersController {
 
   //Inicio de Sesión
   @ApiTags('Users')
+  @ApiHeader({
+    name: 'device_token',
+    description: 'Token device from firebase',
+  })
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
@@ -174,7 +198,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Get('/user/:id')
-  async findUser(@Req() req:Request) {
+  async findUser(@Req() req:Request, @Headers() headers:Headers) {
     //await this.userRepository.findAll();
 
     const token = req.headers['authorization']?.split(' ')[1] ?? '';

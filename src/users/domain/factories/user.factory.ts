@@ -9,18 +9,19 @@ import { userName } from "../userAggregate/value-objects/userName";
 import { UserBirthDate } from "../userAggregate/value-objects/userBirthDate";
 import { UserGender } from "../userAggregate/value-objects/userGender";
 import { UserEntity } from "src/users/infrastructure/entities/users.entity";
+import { TokenEntity } from '../userAggregate/entities/token';
 
 
 export class UserFactory {
  
   public static userFactoryMethod(phoneId: string, phoneNumber: string, 
-    linesPhoneId: string, linesName: string): User {
-  
+    linesPhoneId: string, linesName: string, token:string): User {
+    const userUUID = uuidv4();
     let usuario = User.create(
-      userId.create(uuidv4())
+      userId.create(userUUID)
     , UserPhoneFactory.phoneFactoryMethod(new PhoneParameterObject(phoneId,phoneNumber,linesPhoneId,linesName))
     , userSuscriptionState.create("premium",new Date(Date.now()))
-    , null        
+    , [TokenEntity.create(token,userUUID)]
      ) 
     return usuario;
   }
