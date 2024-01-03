@@ -62,12 +62,14 @@ export class AllArtistInfoDto {
   id: string;
   name: string;
   image: Buffer;
+  genre: string;
   albums: {
     id: string;
     image: Buffer;
   }[];
   songs: {
     id: string;
+    name: string;
     duration: string;
     image: Buffer;
     artists: {

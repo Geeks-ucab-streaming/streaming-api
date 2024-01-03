@@ -13,7 +13,6 @@ import {
   GetArtistProfilesApplicationServiceDto,
 } from 'src/artists/application/services/get-artist-profile.application.service';
 import { Artist } from 'src/artists/domain/artist';
-import { ArtistsMapper } from '../mappers/artist.mapper';
 import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
@@ -28,6 +27,8 @@ import { FindSongsByArtistIdService } from 'src/songs/application/services/getSo
 import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
 import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
+import { GetArtistGenreService } from 'src/artists/application/services/GetArtistGenre.service';
+import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
 @Controller('api/artists')
 export class ArtistController {
   private readonly ormArtistRepository: OrmArtistRepository;
@@ -86,7 +87,7 @@ export class ArtistController {
   }
   @ApiTags('Artist')
   @Get('/:ArtistId')
-  async getArtist(@Param('ArtistId') id): Promise<Result<AllArtistInfoDto>> {
+  async getArtist(@Param('ArtistId') id): Promise<AllArtistInfoDto> {
     const dto: GetArtistProfilesApplicationServiceDto = { id };
     // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
     //Mapeamos y retornamos.
@@ -112,6 +113,9 @@ export class ArtistController {
         new NestLogger(),
       ),
     );
+
+    const getArtistGenre: GetArtistGenre = GetArtistGenre.getInstance();
+
     const result = await service.execute(dto);
 
     if (result.IsSuccess) {
@@ -124,14 +128,18 @@ export class ArtistController {
           let allArtistInfo: AllArtistInfoDto = {
             id: '',
             name: '',
+            genre: '',
             image: null,
             albums: [],
             songs: [],
           };
 
+          const genre = await getArtistGenre.execute(artistSongsResponse.Value);
+
           allArtistInfo.id = result.Value.Id.Value;
-          allArtistInfo.name = result.Value.Id.Value;
+          allArtistInfo.name = result.Value.Name.Value;
           allArtistInfo.image = result.Value.Image;
+          allArtistInfo.genre = genre;
           if (artistAlbumsResponse.Value.length >= 1) {
             for (const album of artistAlbumsResponse.Value) {
               allArtistInfo.albums.push({
@@ -163,13 +171,14 @@ export class ArtistController {
               }
               allArtistInfo.songs.push({
                 id: song.Id.Value,
+                name: song.Name,
                 duration: song.DurationString,
                 image: song.Image,
                 artists: artistsAux,
               });
             }
           }
-          return Result.success<AllArtistInfoDto>(allArtistInfo);
+          return Result.success<AllArtistInfoDto>(allArtistInfo).Value;
         } else throw new Error(artistAlbumsResponse.Error.message);
       } else throw new Error(artistSongsResponse.Error.message);
     } else throw new Error(result.Error.message);
