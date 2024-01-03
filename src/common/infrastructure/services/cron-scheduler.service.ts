@@ -29,17 +29,20 @@ private tokenRepository: OrmTokenRepository = new OrmTokenRepository(this.tokenM
       users.map((user) => {
       const daysUntilExpiration = calculateDaysToEndSubscription.daysToEndSubscription(user.SuscriptionState.suscription_date)
         return user.Token.map(async (tokens) => {
-          await this.notifier.send({
-            //EXAMPLE FOR NOTIFICATION
-            notification: {
-              title: 'Subscripcion por vencer',
-              body: 'Su subscripcion se vencera en ' + daysUntilExpiration + ' dias',
-            },
+          if(daysUntilExpiration <= 0) {
+            await this.notifier.send({
+              //EXAMPLE FOR NOTIFICATION
+              notification: {
+                title: 'Subscripcion por vencer',
+                body: 'Su subscripcion se vencera en ' + daysUntilExpiration + ' dias',
+              },
 
-            token: [tokens.token],
-          });
-          return tokens.token;
+              token: [tokens.token],
+            });
+            return tokens.token;
+          }
         });
+
 
       });
 
