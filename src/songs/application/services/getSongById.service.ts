@@ -5,6 +5,7 @@ import { Artist } from 'src/artists/domain/artist';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { Result } from 'src/common/domain/logic/Result';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 export interface GetSongByIdServiceDto {
   id?: string;
 }
@@ -18,6 +19,9 @@ export class GetSongByIdService
 
   async execute(dto?: GetSongByIdServiceDto): Promise<Result<Song>> {
     const song = await this.songsRepository.findById(dto.id);
-    return Result.success<Song>(song);
+    if (song) return Result.success<Song>(song);
+    return Result.fail<Song>(new DomainException<Song>(song,`No se encontró la canción de ID: ${dto.id}`,`No se encontró la canción de ID: ${dto.id}`,404)
+
+    );
   }
 }

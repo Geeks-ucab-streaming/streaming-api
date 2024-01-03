@@ -17,7 +17,7 @@ import { ArtistsMapper } from '../mappers/artist.mapper';
 import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
-import { DataSourceSingleton } from 'src/core/infrastructure/dataSourceSingleton';
+import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
 import { ApiTags } from '@nestjs/swagger';
 import { GetTrendingArtistsService } from 'src/artists/application/services/FindTrendingArtists.service';
@@ -48,7 +48,7 @@ export class ArtistController {
 
   @ApiTags('ArtistTrending')
   @Get('/top_artists')
-  async getArtistTrending(): Promise<Result<TrendingArtistsDto>> {
+  async getArtistTrending(): Promise<TrendingArtistsDto> {
     const service = new ErrorApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new GetTrendingArtistsService(this.ormArtistRepository),
@@ -67,7 +67,7 @@ export class ArtistController {
         });
       }
       console.log(result);
-      return Result.success<TrendingArtistsDto>(trendingArtists);
+      return Result.success<TrendingArtistsDto>(trendingArtists).Value;
     } else throw Error(result.Error.message);
   }
 

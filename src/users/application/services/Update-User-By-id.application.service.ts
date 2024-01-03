@@ -3,7 +3,7 @@ import { User } from "src/users/domain/userAggregate/user";
 import { userName } from "src/users/domain/userAggregate/value-objects/userName";
 import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/userBirthDate";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
-import { userSuscriptionState } from "src/users/domain/userAggregate/entities/userSuscriptionState";
+import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 import { NotFoundException } from "@nestjs/common";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { Result } from "src/common/domain/logic/Result";
@@ -27,7 +27,7 @@ export class UpdateUserById implements IApplicationService<UpdateUser, UserDto> 
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userSuscriptionState.create(usuarioParametrizado.userToUpdate.suscriptionState, /*CAMBIAR POR LO REAL*/new Date(Date.now())),
+      userSuscriptionState.create("premium", /*CAMBIAR POR LO REAL*/new Date(Date.now())),
       null,
       )
 

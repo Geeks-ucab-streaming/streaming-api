@@ -12,6 +12,7 @@ import { Result } from 'src/common/domain/logic/Result';
 import { Line } from 'src/phones/domain/phoneAggregate/value-objects/line';
 import { UserPhoneFactory } from 'src/users/domain/factories/user-phone.factory';
 import { PhoneParameterObject } from 'src/phones/domain/parameterObjects/phoneParameterObject';
+import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 
 
 export class PhonesService implements IApplicationService<string,Phone> {
@@ -28,14 +29,15 @@ export class PhonesService implements IApplicationService<string,Phone> {
   
   async execute(userPhone: string): Promise<Result<Phone>> {
     if(!this.valiateisUsableOperator.execute(userPhone)) 
-      Result.fail<Phone>(new PhoneInvalidExceptions(userPhone));
+      return Result.fail<Phone>(new DomainException<string>(userPhone,'Line is not valid','Line is not valid',400));
 
     const prefixEntity = await this.repoLines.finderCriteria(userPhone.toString().substring(0,3));
     const line: Line = Line.create(prefixEntity.linePhone.id,prefixEntity.linePhone.name);
     
-    if(!this.valiateisLineValid.execute(line))
-      throw new LineInvalidExceptions(line);
-
+    if(!this.valiateisLineValid.execute(line)){
+        return Result.fail<Phone>(new DomainException<PrefixEntity>(prefixEntity,'Line is not valid','Line is not valid',400))
+    }
+      //throw new LineInvalidExceptions(line);
     const createdPhone = (await this.repo.createPhone(UserPhoneFactory.phoneFactoryMethod(new PhoneParameterObject(uuidv4(),userPhone,line.id,line.name))));
 
     return createdPhone;

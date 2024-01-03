@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntityRepository, ILike, Repository } from 'typeorm';
 import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
@@ -14,6 +14,47 @@ export class OrmSongRepository
     super(SongEntity, dataSource.manager);
     this.songMapper = new SongsMapper();
   }
+  async findTrendingSongs(): Promise<Song[]> {
+    const songsResponse = await this.createQueryBuilder('song')
+      .leftJoinAndSelect('song.song_artist', 'song_artist')
+      .leftJoinAndSelect('song_artist.artist', 'artist')
+      .orderBy('song.reproductions', 'DESC')
+      .limit(4)
+      .getMany();
+
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
+    return await Promise.all(songs);
+  }
+
+  async browseSongsName(query: string): Promise<Song[]> {
+    const subquery = await this.createQueryBuilder('song')
+      .innerJoin(
+        'song.song_artist',
+        'songArtist',
+        'song.id = songArtist.songId',
+      )
+      .innerJoin('Artists', 'a', 'a.id = songArtist.artistId')
+      .where('song.name ILIKE :query', { query: `%${query}%` })
+      .orWhere('a.name ILIKE :query', { query: `%${query}%` })
+      .select('song.id')
+      .getMany();
+
+    let values = [];
+    subquery.forEach((sub) => values.push(sub.id));
+
+    console.log(values);
+
+    const songsResponse = await this.createQueryBuilder('song')
+      .leftJoinAndSelect('song.song_artist', 'song_artist')
+      .leftJoinAndSelect('song_artist.artist', 'artist')
+      .where('song.id IN (:...values)', { values })
+      .getMany();
+
+    const songs: Promise<Song>[] = [];
+    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
+    return await Promise.all(songs);
+  }
   async findOrmEntityById(id: string): Promise<SongEntity> {
     return this.findOneBy({ id });
   }
@@ -24,7 +65,10 @@ export class OrmSongRepository
       .where('song.id = :id', { id: id })
       .getOne();
 
-    const song: Song = (await this.songMapper.ToDomain(songResponse)) as Song;
+    let song: Song;
+    if (songResponse) {
+      song = (await this.songMapper.ToDomain(songResponse)) as Song;
+    }
     return song;
   }
   async findByArtistId(artistId: string): Promise<Song[]> {

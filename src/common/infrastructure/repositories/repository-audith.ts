@@ -10,3 +10,4 @@ export class audith_repo extends Repository<Audith> implements IaudithRepository
     return JSON.parse(JSON.stringify(this.audith));
 }
 }
+

@@ -7,4 +7,7 @@ export class CreateUserDto {
   @ApiProperty()
   phone: string;
 
+  @IsString()
+  token: string;
+
 }

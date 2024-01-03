@@ -1,14 +1,15 @@
 import { User } from "src/users/domain/userAggregate/user";
 import { UserEntity } from "../entities/users.entity";
-import { Imapper } from "src/core/application/IMapper";
+import { Imapper } from "src/common/Application/IMapper";
 import { userId } from "src/users/domain/userAggregate/value-objects/userId";
 import { userName } from "src/users/domain/userAggregate/value-objects/userName";
 import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/userBirthDate";
-import { userSuscriptionState } from "src/users/domain/userAggregate/entities/userSuscriptionState";
+import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { phoneMapper } from "src/phones/infrastructure/mapper/phone.mapper";
 import { TokenEntity } from '../../domain/userAggregate/entities/token';
-import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
+import { userEmail } from 'src/users/domain/userAggregate/value-objects/userEmail';
+
 
 export class UsersMapper implements Imapper<User, UserEntity> {
 
@@ -19,15 +20,26 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       ormEntity.id = domainEntity.Id.Id;
       ormEntity.suscriptionState = domainEntity.SuscriptionState.SuscriptionState;
       ormEntity.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
-      ormEntity.subscription_date = domainEntity.SuscriptionState.suscription_date;
-      /*ormEntity.name = domainEntity.Name.Name;
-      ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
-      ormEntity.gender= domainEntity.Gender.Gender;*/
-      return ormEntity;
+      if(domainEntity.Email){
+        ormEntity.email = domainEntity.Email.Email;
+      }
+      
+      if(domainEntity.Name){
+        ormEntity.name = domainEntity.Name.Name;
+      }
+
+      if(domainEntity.BirthDate){
+        ormEntity.birth_date = domainEntity.BirthDate.BirthDate;
+      }
+
+      if(domainEntity.Gender){
+        ormEntity.gender= domainEntity.Gender.Gender;
+      }
+  
+      return await ormEntity;
   }
 
   async ToDomain(ormEntity: UserEntity): Promise<User> {
-    let usersDate = new Date(ormEntity.birth_date);
     let tokenArray: TokenEntity[] = [];
     /*ormEntity.tokenDeviceUser.map((token) => {
       tokenArray.push(TokenEntity.create(token.token));
@@ -37,12 +49,30 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       await this.mapperPhone.ToDomain(ormEntity.phone),
       userSuscriptionState.create(ormEntity.suscriptionState, /*CAMBIAR POR LA FECHA REAL*/ormEntity.subscription_date),
       tokenArray,
-      userEmail.create(ormEntity.email),
-      userName.create(ormEntity.name),
-      UserBirthDate.create(usersDate, usersDate.getFullYear()),
-      UserGender.create(ormEntity.gender),
     );  
-    console.log(user,"el usuerio del mapper")
+
+    if(ormEntity.email){
+      user.updateUsersEmail(userEmail.create(ormEntity.email));
+    }
+    
+    if(ormEntity.name){
+      user.updateUsersName(userName.create(ormEntity.name));
+    }
+
+    if(ormEntity.birth_date){
+      let birthDate = new Date(ormEntity.birth_date);
+      user.updateUsersBirthDate(UserBirthDate.create(birthDate, birthDate.getFullYear()));
+    }
+
+    if(ormEntity.gender){
+      user.updateUsersGender(UserGender.create(ormEntity.gender));
+    }
+    if(ormEntity.tokenDeviceUser){
+      ormEntity.tokenDeviceUser.map((token) => {
+        user.Token.push(TokenEntity.create(token.token,ormEntity.id));
+      });
+    }
+
     return Promise.resolve(user);
   }
 

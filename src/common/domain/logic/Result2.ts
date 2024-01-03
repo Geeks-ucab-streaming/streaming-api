@@ -6,13 +6,18 @@ export class Result<T> {
   public readonly value?: T;
   public readonly statusCode?: number;
   public readonly message?: string;
-  public readonly error?: string;
+  public readonly error?: Error;
 
-  private constructor(value: T, error: DomainException<T>) {
+  private constructor(
+    statusCode: number,
+    message?: string,
+    error?: Error,
+    value?: T,
+  ) {
+    this.statusCode = statusCode;
     if (error) {
-      this.statusCode = Number(error.httpStatus) || 500;
-      this.message = error?.message ? error?.message : 'Unknown.';
-      this.error = 'Internal Domain Error';
+      this.message = message || 'Unknown.';
+      this.error = error;
     } else {
       this.value = value;
     }
@@ -36,14 +41,14 @@ export class Result<T> {
   /**Crea un objeto result exitoso con su valor.
    * @param error Excepción encapsulada
    * @returns Result */
-  static success<T>(value: T): Result<T> {
-    return new Result(value, null);
+  static success<T>(value: T, statusCode: number): Result<T> {
+    return new Result(statusCode, null, null, value);
   }
 
   /**Crea un objeto result de falla.
    * @param error Excepción encapsulada
    * @returns Result */
-  static fail<T>(error: Error): Result<T> {
-    return new Result<T>(null, error as DomainException<T>);
+  static fail<T>(statusCode: number, message: string, error: Error): Result<T> {
+    return new Result<T>(statusCode, message, error, null);
   }
 }

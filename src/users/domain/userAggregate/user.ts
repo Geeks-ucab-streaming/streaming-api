@@ -2,7 +2,7 @@ import { UserBirthDate } from "./value-objects/userBirthDate";
 import { userName } from "./value-objects/userName";
 import { UserGender } from "./value-objects/userGender";
 import { userId } from "./value-objects/userId";
-import { userSuscriptionState } from "./entities/userSuscriptionState";
+import { userSuscriptionState } from "./value-objects/userSuscriptionState";
 import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { AggregateRoot } from "src/common/domain/aggregate-root";
 import { UserCreated } from "../events/user-created";
@@ -26,7 +26,7 @@ export class User extends AggregateRoot<userId> {
   private gender: UserGender;
   private suscriptionState: userSuscriptionState;
   //AQUI DEBE IR LA FECHA DE LA SUSCRIPCION O ADENTRO DEL CREATE
-  private phone: Phone ;
+  private phone: Phone;
   private token : TokenEntity[];
 
   //OJO: Evaluar el protected en la definición del constructor
