@@ -28,7 +28,7 @@ export class CronSuscriptionExpiredService {
       const daysUntilExpiration = calculateDaysToEndSubscription.daysToEndSubscription(user.SuscriptionState.suscription_date)
       if (daysUntilExpiration > 30) {
         const dtoUser = await this.userMapperDto.domainTo(user);
-        this.changeSuscriptionStateService.execute( {id: dtoUser.id, newState: "vencido"});
+        await this.changeSuscriptionStateService.execute( {id: dtoUser.id, newState: "vencido"});
         return user.Token.map(async (tokens) => {
           await this.notifier.send({
             //EXAMPLE FOR NOTIFICATION
