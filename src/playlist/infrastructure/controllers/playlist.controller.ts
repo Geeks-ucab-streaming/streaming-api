@@ -95,11 +95,15 @@ export class PlaylistController {
       ).Value;
 
       let playlistCreators: Artist[] = [];
+      let playlistCreatorsResponse: Result<Artist[]>;
 
       if (playlistResponse.IsAlbum)
-        playlistCreators = await this.findArtistsInCollectionService.execute(
-          playlistResponse.PlaylistCreator,
-        );
+        playlistCreatorsResponse =
+          await this.findArtistsInCollectionService.execute(
+            playlistResponse.PlaylistCreator,
+          );
+      if (playlistCreatorsResponse.IsSuccess)
+        playlistCreators = playlistCreatorsResponse.Value;
       console.log(playlistResponse.IsAlbum);
 
       let creators: { creatorId: string; creatorName: string }[] = [];
@@ -124,8 +128,12 @@ export class PlaylistController {
       let playlistSongs: SongDto[] = [];
 
       for (const song of songs) {
-        const artists: Artist[] =
+        const artistsResponse: Result<Artist[]> =
           await this.findArtistsInCollectionService.execute(song.Artists);
+        let artists: Artist[] = [];
+
+        if (artistsResponse.IsSuccess) artists = artistsResponse.Value;
+
         let artistsSong: { id: string; name: string }[] = [];
         for (const artist of artists) {
           artistsSong.push({

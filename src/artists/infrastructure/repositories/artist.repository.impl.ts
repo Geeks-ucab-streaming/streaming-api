@@ -14,7 +14,7 @@ export class OrmArtistRepository
     super(ArtistEntity, dataSource.manager);
     this.ormArtistMapper = new ArtistsMapper();
   }
-  async saveStream(id: string) {
+  async saveStream(id: string): Promise<boolean> {
     const artist = await this.findOne({ where: { id } });
 
     if (!artist) {
@@ -22,7 +22,9 @@ export class OrmArtistRepository
     }
     artist.reproductions += 1;
 
-    await this.save(artist);
+    const saved = await this.save(artist);
+    if (saved) return true;
+    else return false;
   }
 
   async browseArtistsName(query: string): Promise<Artist[]> {
@@ -42,16 +44,17 @@ export class OrmArtistRepository
       .orderBy('artist.reproductions', 'DESC')
       .getMany();
 
-    let artists: Artist[] = [];
-    for (const artist of ormArtists) {
-      artists.push(await this.ormArtistMapper.ToDomain(artist));
-    }
-
-    return artists;
+    if (ormArtists) {
+      let artists: Artist[] = [];
+      for (const artist of ormArtists) {
+        artists.push(await this.ormArtistMapper.ToDomain(artist));
+      }
+      return artists;
+    } else return null;
   }
   async findAllArtists(): Promise<Artist[]> {
     const ormArtist = await this.find();
-    if (!ormArtist) throw new Error('Method not implemented.');
+    if (!ormArtist) return null;
     const artists: Artist[] = [];
     for (const item of ormArtist) {
       const artist = await this.ormArtistMapper.ToDomain(item);
@@ -62,7 +65,7 @@ export class OrmArtistRepository
   }
   async findArtistById(id: ArtistID): Promise<Artist> {
     const ormArtist = await this.findOne({ where: { id: id.Value } });
-    if (!ormArtist) throw new Error('Method not implemented.');
+    if (!ormArtist) return null;
     return (await this.ormArtistMapper.ToDomain(ormArtist)) as Artist;
   }
   async saveAggregate(aggregate: Artist): Promise<void> {
@@ -74,7 +77,7 @@ export class OrmArtistRepository
     const artist = await this.findArtistById(id);
     if (!artist) {
       // throw new InvalidPatientException();
-      throw new Error('Method not implemented.');
+      return null;
     }
     return artist;
   }
@@ -88,11 +91,12 @@ export class OrmArtistRepository
       .where('artist.id IN (:...ids)', { ids })
       .getMany();
 
-    const artists: Promise<Artist>[] = [];
-    artistsResponse.forEach((artist) =>
-      artists.push(this.ormArtistMapper.ToDomain(artist)),
-    );
-
-    return Promise.all(artists);
+    if (artistsResponse) {
+      const artists: Promise<Artist>[] = [];
+      artistsResponse.forEach((artist) =>
+        artists.push(this.ormArtistMapper.ToDomain(artist)),
+      );
+      return Promise.all(artists);
+    } else return null;
   }
 }

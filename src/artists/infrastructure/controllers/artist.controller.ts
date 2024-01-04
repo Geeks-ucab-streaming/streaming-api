@@ -29,6 +29,8 @@ import { FindAlbumByArtistIDService } from 'src/playlist/application/services/Fi
 import { Playlist } from 'src/playlist/domain/playlist';
 import { GetArtistGenreService } from 'src/artists/application/services/GetArtistGenre.service';
 import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
+import { MyResponse } from 'src/common/infrastructure/Response';
 @Controller('api/artists')
 export class ArtistController {
   private readonly ormArtistRepository: OrmArtistRepository;
@@ -49,7 +51,7 @@ export class ArtistController {
 
   @ApiTags('ArtistTrending')
   @Get('/top_artists')
-  async getArtistTrending(): Promise<TrendingArtistsDto> {
+  async getArtistTrending(): Promise<MyResponse<TrendingArtistsDto>> {
     const service = new ErrorApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new GetTrendingArtistsService(this.ormArtistRepository),
@@ -67,14 +69,14 @@ export class ArtistController {
           image: artist.Image,
         });
       }
-      console.log(result);
-      return Result.success<TrendingArtistsDto>(trendingArtists).Value;
-    } else throw Error(result.Error.message);
+      return MyResponse.success(trendingArtists);
+    }
+    MyResponse.fail(result.statusCode, result.message, result.error);
   }
 
   @ApiTags('Artist')
   @Get()
-  async findAll(): Promise<Result<Artist[]>> {
+  async findAll(): Promise<MyResponse<Artist[]>> {
     //Creamos el servicio de aplicación.
     const service = new ErrorApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
@@ -83,11 +85,13 @@ export class ArtistController {
       ),
     );
     const result = await service.execute();
-    return result;
+    return MyResponse.fromResult(result);
   }
   @ApiTags('Artist')
   @Get('/:ArtistId')
-  async getArtist(@Param('ArtistId') id): Promise<AllArtistInfoDto> {
+  async getArtist(
+    @Param('ArtistId') id,
+  ): Promise<MyResponse<AllArtistInfoDto>> {
     const dto: GetArtistProfilesApplicationServiceDto = { id };
     // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
     //Mapeamos y retornamos.
@@ -178,31 +182,19 @@ export class ArtistController {
               });
             }
           }
-          return Result.success<AllArtistInfoDto>(allArtistInfo).Value;
-        } else throw new Error(artistAlbumsResponse.Error.message);
-      } else throw new Error(artistSongsResponse.Error.message);
-    } else throw new Error(result.Error.message);
+          return MyResponse.success(allArtistInfo);
+        } else
+          MyResponse.fail(
+            artistAlbumsResponse.statusCode,
+            artistAlbumsResponse.message,
+            artistAlbumsResponse.error,
+          );
+      } else
+        MyResponse.fail(
+          artistSongsResponse.statusCode,
+          artistSongsResponse.message,
+          artistSongsResponse.error,
+        );
+    } else MyResponse.fail(result.statusCode, result.message, result.error);
   }
 }
-
-//   private findOneArtistService: FindOneArtistService;
-//   private findAllArtistService: FindAllArtistService;
-//   private findSongsByArtistIdService: GetSongByArtistId;
-//   private readonly ormSongRepository: OrmArtistRepository;
-//   constructor() {}
-
-//   @Get()
-//   async findAll(): Promise<Artist[]> {
-//     return await this.findAllArtistService.execute();
-//   }
-//   @ApiTags('Artist')
-//   @Get('/:id')
-//   findById(@Param('id') id: string): Promise<Artist> {
-//     return this.findOneArtistService.execute(id);
-//   }
-//   @ApiTags('Artist')
-//   @Get('/ArtistsSongsByArtistId/:id')
-//   findSongsById(@Param('id') id: string): Promise<any> {
-//     return this.findSongsByArtistIdService.execute(id);
-//   }
-// }

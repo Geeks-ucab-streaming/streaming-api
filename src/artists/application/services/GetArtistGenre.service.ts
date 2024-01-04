@@ -18,7 +18,9 @@ export class GetArtistGenreService
   }
   async execute(id: string): Promise<Result<string>> {
     const songs = await this.songsRepository.findByArtistId(id);
-    const genre = this.getArtistGenreService.execute(songs);
-    return Result.success<string>(genre);
+    if (songs) {
+      const genre = this.getArtistGenreService.execute(songs);
+      return Result.success<string>(genre);
+    } else return null;
   }
 }

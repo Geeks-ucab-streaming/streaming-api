@@ -2,6 +2,7 @@ import { IApplicationService } from 'src/common/Application/application-service/
 import { Result } from 'src/common/domain/logic/Result';
 import { Artist } from 'src/artists/domain/artist';
 import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 
 export class BrowseArtistService
   implements IApplicationService<String, Artist[]>
@@ -12,8 +13,19 @@ export class BrowseArtistService
   }
 
   async execute(query: string): Promise<Result<Artist[]>> {
-    return Result.success<Artist[]>(
-      await this.artistRepository.browseArtistsName(query),
-    );
+    const response = await this.artistRepository.browseArtistsName(query);
+    if (response)
+      return Result.success<Artist[]>(
+        await this.artistRepository.browseArtistsName(query),
+      );
+    else
+      return Result.fail<Artist[]>(
+        new DomainException<Artist[]>(
+          void 0,
+          `No se encontraron artistas por: ${query}`,
+          'DomainException',
+          404,
+        ),
+      );
   }
 }
