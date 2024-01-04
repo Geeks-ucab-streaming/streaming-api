@@ -197,7 +197,7 @@ export class UsersController {
   //Obtener usuario en base a su ID
   @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
-  @Get('/user/:id')
+  @Get('/user')
   async findUser(@Req() req:Request, @Headers() headers:Headers) {
     //await this.userRepository.findAll();
 
