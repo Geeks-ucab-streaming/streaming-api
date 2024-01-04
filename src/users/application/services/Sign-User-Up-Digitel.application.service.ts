@@ -11,12 +11,15 @@ import { UserFactory } from "src/users/domain/factories/user.factory";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { Result } from '../../../common/domain/logic/Result';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
+import { ITokenUserRepository } from '../../domain/tokenUser.repository';
+import { TokenEntity } from '../../domain/userAggregate/entities/token';
 
 export class SignUserUpDigitel implements IApplicationService<CreateUserDto,User>{
   constructor(private phone:PhonesService,
     private findByPhoneUserService: IApplicationService<string, User>,
     private IMapper: Imapper<User,UserEntity>,
     private IMapperPhone: Imapper<Phone,PhoneDto>,
+    private readonly tokenRepository: ITokenUserRepository,
     private readonly repo: IUserRepository,
     ){}
 
@@ -24,7 +27,7 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,User
     return this.constructor.name;
   }
 
-  async execute(usersDto: CreateUserDto){
+  async execute(usersDto: CreateUserDto):Promise<Result<User>>{
     const users = await this.findByPhoneUserService.execute(usersDto.phone); 
     if(users.Value){
       throw new NotFoundException ("User Alredy exists");
@@ -39,7 +42,9 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,User
     let phoneDigitelDto = await this.IMapperPhone.domainTo(phoneDigitel.Value);
     usersDto.phone = phoneDigitelDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneDigitelDto.id, phoneDigitelDto.phoneNumber, 
-      phoneDigitelDto.linePhoneId, phoneDigitelDto.lineName));
+      phoneDigitelDto.linePhoneId, phoneDigitelDto.lineName,usersDto.token));
+    const tokenEntity = TokenEntity.create(usersDto.token,savedUser.value.Id.Id);
+    await this.tokenRepository.saveToken(tokenEntity)
     return savedUser;
   }
 }
