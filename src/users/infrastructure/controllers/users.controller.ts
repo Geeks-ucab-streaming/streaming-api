@@ -199,10 +199,9 @@ export class UsersController {
   @ApiTags('Users')
   @Get('/user')
   async findUser(@Req() req:Request, @Headers() headers:Headers) {
-    //await this.userRepository.findAll();
 
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
-    const id = this.jwtService.decode(token)?.data;
+    const id = await this.jwtService.decode(token).id;
     const user = await this.findUserById.execute(id);
     if (!user.value) throw new NotFoundException('User not found');
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
