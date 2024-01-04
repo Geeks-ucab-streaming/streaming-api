@@ -9,32 +9,35 @@ import { Result } from '../domain/logic/Result';
 export class MyResponse<T> {
   public readonly data?: T;
   public readonly statusCode: number;
-  public readonly error?: { statusCode: string; message: string };
+  public readonly error?: Error;
+  public readonly message?: string;
 
   private constructor(
-    data: T,
     statusCode: number,
-    error?: { statusCode: string; message: string },
+    data?: T,
+    error?: Error,
+    message?: string,
   ) {
-    this.data = data;
+    data ? (this.data = data) : null;
     this.statusCode = statusCode;
-    this.error = error;
+    error ? (this.error = error) : null;
+    this.message ? (this.message = this.message) : null;
   }
 
   static fromResult<T>(result: Result<T>): MyResponse<T> {
     if (result.IsSuccess) {
-      return new MyResponse(result.Value, result.statusCode || 200);
+      return new MyResponse(result.statusCode || 200, result.Value);
     } else {
       this.handleError(result.statusCode, result.message, result.error);
     }
   }
 
   static success<T>(data: T, statusCode?: number | 200): MyResponse<T> {
-    return new MyResponse(data, statusCode ? statusCode : 200);
+    return new MyResponse(statusCode ? statusCode : 200, data);
   }
 
-  static fail(statusCode: number, message: string, error?: any) {
-    return this.handleError(statusCode, message, error);
+  static fail<T>(statusCode: number, message: string, error?: any) {
+    this.handleError(statusCode, message, error);
   }
   static handleError(statusCode: number, message: string, error?: any) {
     switch (statusCode) {
@@ -44,7 +47,7 @@ export class MyResponse<T> {
         throw new ForbiddenException(message, error);
       case 404:
         throw new NotFoundException(message, error);
-      case 500:
+      default:
         throw new InternalServerErrorException(message, error);
     }
   }
