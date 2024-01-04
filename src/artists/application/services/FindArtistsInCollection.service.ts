@@ -15,7 +15,7 @@ export class FindArtistsInCollectionService
 
   async execute(ids: string[]): Promise<Result<Artist[]>> {
     const response = await this.artistRepository.findArtistsInCollection(ids);
-    if (response) return;
+    if (response) return Result.success(response);
     else
       return Result.fail<Artist[]>(
         new DomainException<Artist[]>(

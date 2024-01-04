@@ -6,6 +6,7 @@ import { Playlist } from 'src/playlist/domain/playlist';
 import { CalculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { Result } from '../../../common/domain/logic/Result';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 
 export class QueryDto {
   query: string;
@@ -32,17 +33,28 @@ export class BrowseAlbumPlaylistService
   }
 
   async execute(dto: QueryDto): Promise<Result<Playlist[]>> {
-    const playlists: Playlist[] = await this.playlistRepository.browsePlaylists(
+    const response: Playlist[] = await this.playlistRepository.browsePlaylists(
       dto.query,
       dto.album,
     );
-    for (const playlist of playlists) {
-      await this.calculateDurationService.execute(
-        playlist,
-        this.songRepository,
-      );
+    if (response) {
+      const playlists = response;
+      for (const playlist of playlists) {
+        await this.calculateDurationService.execute(
+          playlist,
+          this.songRepository,
+        );
+      }
+      console.log(playlists);
+      return Result.success<Playlist[]>(playlists);
     }
-    console.log(playlists);
-    return Result.success<Playlist[]>(playlists);
+    return Result.fail(
+      new DomainException(
+        void 0,
+        `No se encontraron ${dto.album ? 'albums' : 'playlists'} para: ${
+          dto.query
+        }`,
+      ),
+    );
   }
 }

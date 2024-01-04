@@ -30,23 +30,27 @@ export class PlaylistRepository
     console.log(playlistsResponse);
     console.log('AQUI');
 
-    let playlists: Playlist[] = [];
-    if (playlistsResponse.length > 0)
-      for (const playlist of playlistsResponse) {
-        playlists.push(await this.playlistMapper.ToDomain(playlist));
-      }
-    console.log(playlists);
-    return playlists;
+    if (playlistsResponse) {
+      let playlists: Playlist[] = [];
+      if (playlistsResponse.length > 0)
+        for (const playlist of playlistsResponse) {
+          playlists.push(await this.playlistMapper.ToDomain(playlist));
+        }
+      console.log(playlists);
+      return playlists;
+    }
+    return null;
   }
-  async saveStream(id: string) {
+  async saveStream(id: string): Promise<boolean> {
     const playlist = await this.findOne({ where: { id } });
 
-    if (!playlist) {
-      throw new Error(`El playlist con ID ${id} no se encontró`);
-    }
-    playlist.reproductions += 1;
+    if (playlist) {
+      playlist.reproductions += 1;
 
-    await this.save(playlist);
+      const res = await this.save(playlist);
+      if (res) return true;
+    }
+    return false;
   }
   async findTopPlaylists(): Promise<Playlist[]> {
     let playlists: Playlist[] = [];
@@ -59,12 +63,13 @@ export class PlaylistRepository
       .orderBy('playlist.reproductions')
       .getMany();
 
-    console.log(playlistsResponse);
-
-    for (const playlist of playlistsResponse) {
-      playlists.push(await this.playlistMapper.ToDomain(playlist));
+    if (playlistsResponse) {
+      for (const playlist of playlistsResponse) {
+        playlists.push(await this.playlistMapper.ToDomain(playlist));
+      }
+      return playlists;
     }
-    return playlists;
+    return null;
   }
 
   async findTopAlbums(): Promise<Playlist[]> {
@@ -79,11 +84,13 @@ export class PlaylistRepository
       .orderBy('playlist.reproductions')
       .getMany();
 
-    for (const playlist of playlistsResponse) {
-      playlists.push(await this.playlistMapper.ToDomain(playlist));
+    if (playlistsResponse) {
+      for (const playlist of playlistsResponse) {
+        playlists.push(await this.playlistMapper.ToDomain(playlist));
+      }
+      return playlists;
     }
-    console.log(playlists);
-    return playlists;
+    return null;
   }
 
   async findPlaylistById(id: string): Promise<Playlist> {
@@ -99,8 +106,11 @@ export class PlaylistRepository
       .where('playlist.id = :playlistId', { playlistId: id })
       .getOne();
 
-    const playlist = await this.playlistMapper.ToDomain(playlistResponse);
-    return playlist;
+    if (playlistResponse) {
+      const playlist = await this.playlistMapper.ToDomain(playlistResponse);
+      return playlist;
+    }
+    return null;
   }
   async findPlaylistsByArtistId(id: string): Promise<Playlist[]> {
     const playlistsResponse: PlaylistEntity[] = await this.createQueryBuilder(
@@ -115,12 +125,13 @@ export class PlaylistRepository
       .where('artist.id = :artistId', { artistId: id })
       .getMany();
 
-    console.log(playlistsResponse);
-
-    let playlists: Playlist[] = [];
-    for (const playlist of playlistsResponse) {
-      playlists.push(await this.playlistMapper.ToDomain(playlist));
+    if (playlistsResponse) {
+      let playlists: Playlist[] = [];
+      for (const playlist of playlistsResponse) {
+        playlists.push(await this.playlistMapper.ToDomain(playlist));
+      }
+      return playlists;
     }
-    return playlists;
+    return null;
   }
 }

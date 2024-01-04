@@ -6,6 +6,7 @@ import { Playlist } from 'src/playlist/domain/playlist';
 import { CalculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { Result } from '../../../common/domain/logic/Result';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 
 export class FindTopAlbumsService
   implements IApplicationService<void, Playlist[]>
@@ -28,10 +29,19 @@ export class FindTopAlbumsService
 
   async execute(): Promise<Result<Playlist[]>> {
     const albums: Playlist[] = await this.playlistRepository.findTopAlbums();
-    for (const album of albums) {
-      await this.calculateDurationService.execute(album, this.songRepository);
+    if (albums) {
+      for (const album of albums) {
+        await this.calculateDurationService.execute(album, this.songRepository);
+      }
+      return Result.success<Playlist[]>(albums);
     }
-    console.log(albums);
-    return Result.success<Playlist[]>(albums);
+    return Result.fail(
+      new DomainException(
+        void 0,
+        `No se encontraron albums`,
+        'Not Found Exception',
+        404,
+      ),
+    );
   }
 }
