@@ -30,9 +30,10 @@ export class OrmArtistRepository
       .orWhere('artist.name ILIKE :query', { query: `%${query}%` })
       .getMany();
     const artists: Promise<Artist>[] = [];
-    artistsResponse.forEach((artist) =>
-      artists.push(this.ormArtistMapper.ToDomain(artist)),
-    );
+    if (artistsResponse.length > 0)
+      artistsResponse.forEach((artist) =>
+        artists.push(this.ormArtistMapper.ToDomain(artist)),
+      );
     return await Promise.all(artists);
   }
 
@@ -40,9 +41,6 @@ export class OrmArtistRepository
     const ormArtists = await this.createQueryBuilder('artist')
       .orderBy('artist.reproductions', 'DESC')
       .getMany();
-
-    console.log(ormArtists);
-    console.log('---------------------------------');
 
     let artists: Artist[] = [];
     for (const artist of ormArtists) {

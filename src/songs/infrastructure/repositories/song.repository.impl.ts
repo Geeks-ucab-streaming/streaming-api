@@ -53,17 +53,20 @@ export class OrmSongRepository
     let values = [];
     subquery.forEach((sub) => values.push(sub.id));
 
-    console.log(values);
-
-    const songsResponse = await this.createQueryBuilder('song')
-      .leftJoinAndSelect('song.song_artist', 'song_artist')
-      .leftJoinAndSelect('song_artist.artist', 'artist')
-      .where('song.id IN (:...values)', { values })
-      .getMany();
-
-    const songs: Promise<Song>[] = [];
-    songsResponse.forEach((song) => songs.push(this.songMapper.ToDomain(song)));
-    return await Promise.all(songs);
+    if (values.length > 0) {
+      const songsResponse = await this.createQueryBuilder('song')
+        .leftJoinAndSelect('song.song_artist', 'song_artist')
+        .leftJoinAndSelect('song_artist.artist', 'artist')
+        .where('song.id IN (:...values)', { values })
+        .getMany();
+      const songs: Promise<Song>[] = [];
+      if (songsResponse)
+        songsResponse.forEach((song) =>
+          songs.push(this.songMapper.ToDomain(song)),
+        );
+      return await Promise.all(songs);
+    }
+    return null;
   }
   async findOrmEntityById(id: string): Promise<SongEntity> {
     return this.findOneBy({ id });

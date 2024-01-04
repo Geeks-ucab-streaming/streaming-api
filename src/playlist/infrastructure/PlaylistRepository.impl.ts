@@ -15,6 +15,29 @@ export class PlaylistRepository
     super(PlaylistEntity, dataSource.manager);
     this.playlistMapper = new PlaylistMapper();
   }
+  async browsePlaylists(query: string, album: boolean): Promise<Playlist[]> {
+    const playlistsResponse = await this.createQueryBuilder('playlist')
+      .leftJoinAndSelect('playlist.playlistCreator', 'playlistCreator')
+      .leftJoinAndSelect('playlistCreator.artist', 'artist')
+      .leftJoinAndSelect('playlist.playlistSong', 'playlistSong')
+      .leftJoinAndSelect('playlistSong.song', 'song')
+      .where('(playlist.name ILIKE :query OR artist.name ILIKE :query)', {
+        query: `%${query}%`,
+      })
+      .andWhere('playlist.isAlbum = :isAlbum', { isAlbum: album })
+      .getMany();
+
+    console.log(playlistsResponse);
+    console.log('AQUI');
+
+    let playlists: Playlist[] = [];
+    if (playlistsResponse.length > 0)
+      for (const playlist of playlistsResponse) {
+        playlists.push(await this.playlistMapper.ToDomain(playlist));
+      }
+    console.log(playlists);
+    return playlists;
+  }
   async saveStream(id: string) {
     const playlist = await this.findOne({ where: { id } });
 
@@ -22,8 +45,6 @@ export class PlaylistRepository
       throw new Error(`El playlist con ID ${id} no se encontró`);
     }
     playlist.reproductions += 1;
-
-    console.log('LLEGOOO A PLAYLIST');
 
     await this.save(playlist);
   }
