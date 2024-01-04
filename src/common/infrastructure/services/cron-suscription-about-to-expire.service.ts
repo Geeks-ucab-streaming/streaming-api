@@ -17,8 +17,6 @@ import { UsersForDtoMapper } from 'src/users/infrastructure/mappers/UserForDto.m
 export class CronSchedulerService {
   private usersMapper: UsersMapper = new UsersMapper();
   private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
-  private tokenMapper: TokenMapper = new TokenMapper();
-private tokenRepository: OrmTokenRepository = new OrmTokenRepository(this.tokenMapper);
   private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
   private userMapperDto = new UsersForDtoMapper();
   constructor() {
@@ -30,17 +28,20 @@ private tokenRepository: OrmTokenRepository = new OrmTokenRepository(this.tokenM
       users.map((user) => {
       const daysUntilExpiration = calculateDaysToEndSubscription.daysToEndSubscription(user.SuscriptionState.suscription_date)
         return user.Token.map(async (tokens) => {
-          await this.notifier.send({
-            //EXAMPLE FOR NOTIFICATION
-            notification: {
-              title: 'Subscripcion por vencer',
-              body: 'Su subscripcion se vencera en ' + daysUntilExpiration + ' dias',
-            },
+          if(daysUntilExpiration <= 0) {
+            await this.notifier.send({
+              //EXAMPLE FOR NOTIFICATION
+              notification: {
+                title: 'Subscripcion por vencer',
+                body: 'Su subscripcion se vencera en ' + daysUntilExpiration + ' dias',
+              },
 
-            token: [tokens.token],
-          });
-          return tokens.token;
+              token: [tokens.token],
+            });
+            return tokens.token;
+          }
         });
+
 
       });
 

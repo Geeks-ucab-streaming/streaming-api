@@ -15,7 +15,7 @@ import { ChangeSusbscriptionStateService } from 'src/users/application/services/
 export class CronSuscriptionExpiredService {
   private usersMapper: UsersMapper = new UsersMapper()
   private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
-  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);;
+  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
   private userMapperDto: UsersForDtoMapper = new UsersForDtoMapper();
   private changeSuscriptionStateService: ChangeSusbscriptionStateService = new ChangeSusbscriptionStateService(this.userRepository);
 
