@@ -24,7 +24,7 @@ export class User extends AggregateRoot<userId> {
   private gender: UserGender;
   private suscriptionState: userSuscriptionState;
   //AQUI DEBE IR LA FECHA DE LA SUSCRIPCION O ADENTRO DEL CREATE
-  private phone: Phone ;
+  private phone: Phone;
   private token : TokenEntity[];
 
   //OJO: Evaluar el protected en la definición del constructor

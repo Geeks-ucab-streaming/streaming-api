@@ -19,6 +19,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       const ormEntity:UserEntity = new UserEntity();
       ormEntity.id = domainEntity.Id.Id;
       ormEntity.suscriptionState = domainEntity.SuscriptionState.SuscriptionState;
+      ormEntity.subscription_date = domainEntity.SuscriptionState.suscription_date;
       ormEntity.phone= await this.mapperPhone.domainTo(domainEntity.Phone);
       if(domainEntity.Email){
         ormEntity.email = domainEntity.Email.Email;
@@ -35,6 +36,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
       if(domainEntity.Gender){
         ormEntity.gender= domainEntity.Gender.Gender;
       }
+  
       return await ormEntity;
   }
 
@@ -65,6 +67,11 @@ export class UsersMapper implements Imapper<User, UserEntity> {
 
     if(ormEntity.gender){
       user.updateUsersGender(UserGender.create(ormEntity.gender));
+    }
+    if(ormEntity.tokenDeviceUser){
+      ormEntity.tokenDeviceUser.map((token) => {
+        user.Token.push(TokenEntity.create(token.token,ormEntity.id));
+      });
     }
 
     return Promise.resolve(user);

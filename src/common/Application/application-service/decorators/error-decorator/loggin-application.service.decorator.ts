@@ -15,7 +15,7 @@ export class LoggingApplicationServiceDecorator<
     this.logger = logger;
   }
 
-  async execute(dto?: D): Promise<Result<R>> {
+  async execute(dto?: D, token?:string): Promise<Result<R>> {
     this.logger.log(
       this.constructor.name,
       this.applicationService.name + ' - Data: {' + JSON.stringify(dto) + '}',

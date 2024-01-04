@@ -12,12 +12,15 @@ import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { Result } from '../../../common/domain/logic/Result';
 import { UserSnapShot } from "src/users/domain/parameterObjects/user-snapshot";
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
+import { ITokenUserRepository } from '../../domain/tokenUser.repository';
+import { TokenEntity } from '../../domain/userAggregate/entities/token';
 
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,User>{
   constructor(private phone:PhonesService,
     private findByPhoneUserService: IApplicationService<string, User>,
     private IMapper: Imapper<User,UserEntity>,
     private IMapperPhone: Imapper<Phone,PhoneDto>,
+    private readonly tokenRepository: ITokenUserRepository,
     private readonly repo: IUserRepository,
     ){}
 
@@ -43,7 +46,9 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
     let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
     usersDto.phone = phoneMovistarDto.phoneNumber;
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber, 
-      phoneMovistarDto.linePhoneId, phoneMovistarDto.lineName));
+      phoneMovistarDto.linePhoneId, phoneMovistarDto.lineName,usersDto.token));
+    const tokenEntity = TokenEntity.create(usersDto.token,savedUser.value.Id.Id);
+    await this.tokenRepository.saveToken(tokenEntity)
     return savedUser;
   }
 }

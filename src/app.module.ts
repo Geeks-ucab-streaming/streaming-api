@@ -10,10 +10,11 @@ import { PlaylistController } from './playlist/infrastructure/controllers/playli
 import { UsersController } from './users/infrastructure/controllers/users.controller';
 import { ArtistController } from './artists/infrastructure/controllers/artist.controller';
 import { TransmitWsGateway } from './songs/infrastructure/sockets/transmit-ws.gateway';
-import { CronSchedulerService } from './common/infrastructure/services/cron-scheduler.service';
+import { CronSuscriptionExpiredService } from './common/infrastructure/services/cron-scheduler-suscription-expired';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AlbumController } from './playlist/infrastructure/controllers/album.controller';
 import { CommonController } from './common/infrastructure/Common.controller';
+import { CronSchedulerService } from './common/infrastructure/services/cron-suscription-about-to-expire.service';
 console.log(config);
 console.log(`./deploy/.env.${process.env.NODE_ENV}`);
 @Module({
@@ -39,6 +40,6 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     AlbumController,
     CommonController,
   ],
-  providers: [AppService, CronSchedulerService, TransmitWsGateway],
+  providers: [AppService, CronSuscriptionExpiredService, TransmitWsGateway],
 })
 export class AppModule {}

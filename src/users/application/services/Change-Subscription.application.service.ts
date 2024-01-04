@@ -10,7 +10,7 @@ interface changeSubscriptionDto {
     newState: string;
     }
 
-export class changeSusbscriptionStateService implements IApplicationService<changeSubscriptionDto, User> {
+export class ChangeSusbscriptionStateService implements IApplicationService<changeSubscriptionDto, User> {
     private notifiers: NotificationHandler<userSubscriptionDto>[] = [];
     constructor(private readonly repo: IUserRepository) {}
     get name(): string {
@@ -20,7 +20,7 @@ export class changeSusbscriptionStateService implements IApplicationService<chan
     async execute(newState: changeSubscriptionDto ): Promise<Result<User>>{
       const user = await this.repo.findById(newState.id);
       const beforeNotification = user.SuscriptionState.SuscriptionState;
-      user.SuscriptionState.SuscriptionState = newState.newState    
+      user.SuscriptionState.SuscriptionState = newState.newState;    
       await this.repo.updateUser(user); 
 
         const dto: userSubscriptionDto = {
