@@ -170,7 +170,7 @@ export class ArtistController {
                 }
               }
               allArtistInfo.songs.push({
-                id: song.Id.Value,
+                songId: song.Id.Value,
                 name: song.Name,
                 duration: song.DurationString,
                 image: song.Image,
