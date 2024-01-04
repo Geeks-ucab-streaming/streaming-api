@@ -17,8 +17,6 @@ import { UsersForDtoMapper } from 'src/users/infrastructure/mappers/UserForDto.m
 export class CronSchedulerService {
   private usersMapper: UsersMapper = new UsersMapper();
   private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
-  private tokenMapper: TokenMapper = new TokenMapper();
-private tokenRepository: OrmTokenRepository = new OrmTokenRepository(this.tokenMapper);
   private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
   private userMapperDto = new UsersForDtoMapper();
   constructor() {

@@ -15,7 +15,7 @@ import { ChangeSusbscriptionStateService } from 'src/users/application/services/
 export class CronSuscriptionExpiredService {
   private usersMapper: UsersMapper = new UsersMapper()
   private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
-  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);;
+  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
   private userMapperDto: UsersForDtoMapper = new UsersForDtoMapper();
   private changeSuscriptionStateService: ChangeSusbscriptionStateService = new ChangeSusbscriptionStateService(this.userRepository);
 
@@ -28,7 +28,7 @@ export class CronSuscriptionExpiredService {
       const daysUntilExpiration = calculateDaysToEndSubscription.daysToEndSubscription(user.SuscriptionState.suscription_date)
       if (daysUntilExpiration > 30) {
         const dtoUser = await this.userMapperDto.domainTo(user);
-        this.changeSuscriptionStateService.execute( {id: dtoUser.id, newState: "vencido"});
+        await this.changeSuscriptionStateService.execute( {id: dtoUser.id, newState: "vencido"});
         return user.Token.map(async (tokens) => {
           await this.notifier.send({
             //EXAMPLE FOR NOTIFICATION
