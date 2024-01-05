@@ -16,34 +16,42 @@ import { UsersForDtoMapper } from 'src/users/infrastructure/mappers/UserForDto.m
 @Injectable()
 export class CronSchedulerService {
   private usersMapper: UsersMapper = new UsersMapper();
-  private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
-  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
+  private userRepository: OrmUserRepository = new OrmUserRepository(
+    this.usersMapper,
+  );
+  private notifier: SubscriptionNotifier<admin.messaging.Messaging> =
+    new SubscriptionNotifier<admin.messaging.Messaging>(
+      new FirebaseNotificationSender(),
+      this.userRepository,
+    );
   private userMapperDto = new UsersForDtoMapper();
-  constructor() {
-  }
+  constructor() {}
 
-  @Cron('*/60 * * * * *')
+  @Cron('* * */60 * * *')
   async send() {
-      const users = await this.userRepository.findAll();
-      users.map((user) => {
-      const daysUntilExpiration = calculateDaysToEndSubscription.daysToEndSubscription(user.SuscriptionState.suscription_date)
-        return user.Token.map(async (tokens) => {
-          if(daysUntilExpiration <= 0) {
-            await this.notifier.send({
-              //EXAMPLE FOR NOTIFICATION
-              notification: {
-                title: 'Subscripcion por vencer',
-                body: 'Su subscripcion se vencera en ' + daysUntilExpiration + ' dias',
-              },
+    const users = await this.userRepository.findAll();
+    users.map((user) => {
+      const daysUntilExpiration =
+        calculateDaysToEndSubscription.daysToEndSubscription(
+          user.SuscriptionState.suscription_date,
+        );
+      return user.Token.map(async (tokens) => {
+        if (daysUntilExpiration <= 0) {
+          await this.notifier.send({
+            //EXAMPLE FOR NOTIFICATION
+            notification: {
+              title: 'Subscripcion por vencer',
+              body:
+                'Su subscripcion se vencera en ' +
+                daysUntilExpiration +
+                ' dias',
+            },
 
-              token: [tokens.token],
-            });
-            return tokens.token;
-          }
-        });
-
-
+            token: [tokens.token],
+          });
+          return tokens.token;
+        }
       });
-
+    });
   }
 }
