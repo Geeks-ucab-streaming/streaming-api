@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { Result } from 'src/common/domain/logic/Result';
@@ -24,11 +25,25 @@ export class FindAlbumByArtistIDService
   }
 
   async execute(id: string): Promise<Result<Playlist[]>> {
-    const playlists: Playlist[] =
+    const response: Playlist[] =
       await this.albumRepository.findPlaylistsByArtistId(id);
-    for (const playlist of playlists) {
-      await this.calculateDurationService.execute(playlist, this.songRepository);
+    if (response) {
+      const playlists: Playlist[] = response;
+      for (const playlist of playlists) {
+        await this.calculateDurationService.execute(
+          playlist,
+          this.songRepository,
+        );
+      }
+      return Result.success<Playlist[]>(playlists);
     }
-    return Result.success<Playlist[]>(playlists);
+    return Result.fail(
+      new DomainException(
+        void 0,
+        `No se encontró ningún album para el id de artista: ${id}`,
+        'Not Found Exception',
+        404,
+      ),
+    );
   }
 }

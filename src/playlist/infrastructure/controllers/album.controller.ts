@@ -15,6 +15,7 @@ import { FindArtistsInCollectionService } from 'src/artists/application/services
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 import { FindTopAlbumsService } from 'src/playlist/application/services/FindTopAlbums.service';
 import { Result } from 'src/common/domain/logic/Result';
+import { MyResponse } from 'src/common/infrastructure/Response';
 
 @Controller('api/album')
 export class AlbumController {
@@ -39,7 +40,7 @@ export class AlbumController {
 
   @ApiTags('TopAlbum')
   @Get('/top_album')
-  async findTopAlbums(): Promise<TopPlaylistDto> {
+  async findTopAlbums(): Promise<MyResponse<TopPlaylistDto>> {
     this.findTopAlbumsService = new FindTopAlbumsService(
       this.repository,
       this.songRepository,
@@ -58,7 +59,12 @@ export class AlbumController {
         });
       }
 
-      return topAlbumsInfo;
-    } else throw new Error(albumsResult.Error.message);
+      return MyResponse.success(topAlbumsInfo);
+    } else
+      MyResponse.fail(
+        albumsResult.statusCode,
+        albumsResult.message,
+        albumsResult.error,
+      );
   }
 }

@@ -3,11 +3,22 @@ dotenv.config({ path: `./deploy/.env.${process.env.NODE_ENV}` });
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { swagger } from './docs/swagger.docs';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   swagger(app);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
+
   //Cron job
 
   //firebaase configuration

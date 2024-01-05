@@ -67,16 +67,7 @@ export class AllArtistInfoDto {
     id: string;
     image: Buffer;
   }[];
-  songs: {
-    id: string;
-    name: string;
-    duration: string;
-    image: Buffer;
-    artists: {
-      id: string;
-      name: string;
-    }[];
-  }[];
+  songs: SongDto[];
 }
 
 export class userProfileDto {

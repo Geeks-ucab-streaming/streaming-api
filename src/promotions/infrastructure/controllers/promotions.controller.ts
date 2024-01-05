@@ -8,6 +8,8 @@ import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSinglet
 import { ApiTags } from '@nestjs/swagger';
 import { PromotionDto } from 'src/dtos';
 import { FindRandomPromotionsService } from 'src/promotions/application/services/FindRandomPromotion.service';
+import { Result } from 'src/common/domain/logic/Result';
+import { MyResponse } from 'src/common/infrastructure/Response';
 
 @Controller('api/promotion')
 export class PromotionsController {
@@ -32,26 +34,26 @@ export class PromotionsController {
   }
   @ApiTags('Promotions')
   @Get()
-  async findRandomPromotion(): Promise<PromotionDto> {
-    const promotion: Promotion =
+  async findRandomPromotion(): Promise<MyResponse<PromotionDto>> {
+    const response: Result<Promotion> =
       await this.findRandomPromotionsService.execute();
-    return promotion;
+    if (response.IsSuccess) {
+      const promotion = response.Value;
+      return MyResponse.success(promotion);
+    }
+    MyResponse.fail(response.statusCode, response.message, response.error);
   }
-  // async findAll(): Promise<PromotionDto[]> {
-  //   let promos: PromotionDto[] = [];
-  //   const promotions: Promotion[] =
-  //     await this.findAllPromotionsService.execute();
-  //   for (const promo of promotions) {
-  //     promos.push({ id: promo.id, image: promo.image });
-  //   }
-  //   return promos;
-  // }
+
   @ApiTags('Promotions')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<PromotionDto> {
-    const promotion: Promotion =
+  async findById(@Param('id') id: string): Promise<MyResponse<PromotionDto>> {
+    const response: Result<Promotion> =
       await this.findOnePromotionsService.execute(id);
-    let promo: PromotionDto = { id: promotion.id, image: promotion.image };
-    return promo;
+    if (response.IsSuccess) {
+      const promotion: Promotion = response.Value;
+      let promo: PromotionDto = { id: promotion.id, image: promotion.image };
+      return MyResponse.success(promo);
+    }
+    MyResponse.fail(response.statusCode, response.message, response.error);
   }
 }
