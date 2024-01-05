@@ -12,7 +12,7 @@ export class Result<T> {
     if (error) {
       this.statusCode = Number(error.httpStatus) || 500;
       this.message = error?.message ? error?.message : 'Unknown.';
-      this.error = 'Internal Domain Error';
+      this.error = error.errorCode ? error.errorCode : 'Internal Domain Error';
     } else {
       this.value = value;
     }

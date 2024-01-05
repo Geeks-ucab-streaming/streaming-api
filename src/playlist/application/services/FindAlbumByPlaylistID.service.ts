@@ -1,4 +1,5 @@
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { Result } from 'src/common/domain/logic/Result';
@@ -29,7 +30,20 @@ export class FindAlbumByPlaylistIDService
   async execute(id: string): Promise<Result<Playlist>> {
     const playlist: Playlist =
       await this.playlistRepository.findPlaylistById(id);
-    await this.calculateDurationService.execute(playlist, this.songRepository);
-    return Result.success<Playlist>(playlist);
+    if (playlist) {
+      await this.calculateDurationService.execute(
+        playlist,
+        this.songRepository,
+      );
+      return Result.success<Playlist>(playlist);
+    }
+    return Result.fail(
+      new DomainException(
+        void 0,
+        `No se encontró album/playlist para el id: ${id}`,
+        'Not Found Exception',
+        404,
+      ),
+    );
   }
 }

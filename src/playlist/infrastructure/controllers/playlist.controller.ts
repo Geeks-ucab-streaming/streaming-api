@@ -14,6 +14,7 @@ import { Song } from 'src/songs/domain/song';
 import { FindArtistsInCollectionService } from 'src/artists/application/services/FindArtistsInCollection.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 import { Result } from '../../../common/domain/logic/Result';
+import { MyResponse } from 'src/common/infrastructure/Response';
 
 @Controller('api/playlist')
 export class PlaylistController {
@@ -38,7 +39,7 @@ export class PlaylistController {
 
   @ApiTags('TopPlaylist')
   @Get('/top_playlist')
-  async findTopPlaylists(): Promise<TopPlaylistDto> {
+  async findTopPlaylists(): Promise<MyResponse<TopPlaylistDto>> {
     this.findTopPlaylistsService = new FindTopPlaylistsService(
       this.repository,
       this.songRepository,
@@ -60,22 +61,33 @@ export class PlaylistController {
         });
       }
 
-      return topPlaylistsInfo;
-    } else throw new Error(playlistsResponse.Error.message);
+      return MyResponse.success(topPlaylistsInfo);
+    } else
+      MyResponse.fail(
+        playlistsResponse.statusCode,
+        playlistsResponse.message,
+        playlistsResponse.error,
+      );
   }
 
   @ApiTags('Playlist')
   @Get('/FindByArtistID/:id')
-  async findByArtistId(@Param('id') id: string): Promise<Playlist[]> {
+  async findByArtistId(
+    @Param('id') id: string,
+  ): Promise<MyResponse<Playlist[]>> {
     this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
       this.repository,
       this.songRepository,
     );
-    return (await this.findPlaylistByArtistIdService.execute(id)).Value;
+    const response = await this.findPlaylistByArtistIdService.execute(id);
+    if (response.IsSuccess) {
+      return MyResponse.fromResult(response);
+    }
+    MyResponse.fail(response.statusCode, response.message, response.error);
   }
   @ApiTags('Playlist')
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<PlaylistDto> {
+  async findById(@Param('id') id: string): Promise<MyResponse<PlaylistDto>> {
     this.findPlaylistByIdService = new FindAlbumByPlaylistIDService(
       this.repository,
       this.songRepository,
@@ -93,24 +105,31 @@ export class PlaylistController {
       const playlistResponse: Playlist = (
         await this.findPlaylistByIdService.execute(id)
       ).Value;
-
       let playlistCreators: Artist[] = [];
-
-      if (playlistResponse.IsAlbum)
-        playlistCreators = await this.findArtistsInCollectionService.execute(
-          playlistResponse.PlaylistCreator,
-        );
-      console.log(playlistResponse.IsAlbum);
-
       let creators: { creatorId: string; creatorName: string }[] = [];
-      for (const creator of playlistCreators) {
-        creators.push({
-          creatorId: creator.Id.Value,
-          creatorName: creator.Name.Value,
-        });
+
+      if (playlistResponse.IsAlbum) {
+        const playlistCreatorsResponse: Result<Artist[]> =
+          await this.findArtistsInCollectionService.execute(
+            playlistResponse.PlaylistCreator,
+          );
+        if (playlistCreatorsResponse.IsSuccess) {
+          playlistCreators = playlistCreatorsResponse.Value;
+          console.log(playlistResponse.IsAlbum);
+
+          for (const creator of playlistCreators) {
+            creators.push({
+              creatorId: creator.Id.Value,
+              creatorName: creator.Name.Value,
+            });
+          }
+        } else
+          MyResponse.fail(
+            playlistCreatorsResponse.statusCode,
+            playlistCreatorsResponse.message,
+            playlistCreatorsResponse.error,
+          );
       }
-      console.log('=========================');
-      console.log(creators);
 
       let songsId: string[] = [];
 
@@ -118,29 +137,47 @@ export class PlaylistController {
         songsId.push(song);
       }
 
-      const songs: Song[] =
+      const songsResponse: Result<Song[]> =
         await this.findSongsInCollectionService.execute(songsId);
 
       let playlistSongs: SongDto[] = [];
+      if (songsResponse.IsSuccess) {
+        const songs: Song[] = songsResponse.Value;
+        for (const song of songs) {
+          const artistsResponse: Result<Artist[]> =
+            await this.findArtistsInCollectionService.execute(song.Artists);
+          let artists: Artist[] = [];
 
-      for (const song of songs) {
-        const artists: Artist[] =
-          await this.findArtistsInCollectionService.execute(song.Artists);
-        let artistsSong: { id: string; name: string }[] = [];
-        for (const artist of artists) {
-          artistsSong.push({
-            id: artist.Id.Value,
-            name: artist.Name.Value,
+          if (artistsResponse.IsSuccess) {
+            artists = artistsResponse.Value;
+          } else
+            MyResponse.fail(
+              artistsResponse.statusCode,
+              artistsResponse.message,
+              artistsResponse.error,
+            );
+
+          let artistsSong: { id: string; name: string }[] = [];
+          for (const artist of artists) {
+            artistsSong.push({
+              id: artist.Id.Value,
+              name: artist.Name.Value,
+            });
+          }
+          playlistSongs.push({
+            songId: song.Id.Value.toString(),
+            name: song.Name,
+            image: song.Image,
+            duration: song.DurationString,
+            artists: artistsSong,
           });
         }
-        playlistSongs.push({
-          songId: song.Id.Value.toString(),
-          name: song.Name,
-          image: song.Image,
-          duration: song.DurationString,
-          artists: artistsSong,
-        });
-      }
+      } else
+        MyResponse.fail(
+          songsResponse.statusCode,
+          songsResponse.message,
+          songsResponse.error,
+        );
 
       const playlist: PlaylistDto = {
         id: playlistResponse.Id.Value,
@@ -150,8 +187,12 @@ export class PlaylistController {
         creators: creators,
         songs: playlistSongs,
       };
-
-      return playlist;
-    } else throw new Error(playlistResult.Error.message);
+      return MyResponse.success(playlist);
+    } else
+      MyResponse.fail(
+        playlistResult.statusCode,
+        playlistResult.message,
+        playlistResult.error,
+      );
   }
 }

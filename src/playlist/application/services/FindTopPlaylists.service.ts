@@ -1,4 +1,5 @@
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 
 import { IFindService } from 'src/common/domain/ifind.service';
 import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
@@ -30,12 +31,22 @@ export class FindTopPlaylistsService
   async execute(): Promise<Result<Playlist[]>> {
     const playlists: Playlist[] =
       await this.playlistRepository.findTopPlaylists();
-    for (const playlist of playlists) {
-      await this.calculateDurationService.execute(
-        playlist,
-        this.songRepository,
-      );
+    if (playlists) {
+      for (const playlist of playlists) {
+        await this.calculateDurationService.execute(
+          playlist,
+          this.songRepository,
+        );
+      }
+      return Result.success<Playlist[]>(playlists);
     }
-    return Result.success<Playlist[]>(playlists);
+    return Result.fail(
+      new DomainException(
+        void 0,
+        `No se encontraron playlists`,
+        'Not Found Exception',
+        404,
+      ),
+    );
   }
 }

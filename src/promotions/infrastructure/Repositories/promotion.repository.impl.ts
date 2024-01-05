@@ -18,43 +18,53 @@ export class OrmPromotionRepository
   async findById(id: string): Promise<Promotion> {
     const promotion = await this.findOne({ where: { id: id } });
 
-    const promoImage = await this.getPromoImageService.execute(
-      promotion.image_reference,
-    );
+    if (promotion) {
+      const promoImage = await this.getPromoImageService.execute(
+        promotion.image_reference,
+      );
 
-    const promotionWithImage: Promotion = { ...promotion, image: promoImage };
+      const promotionWithImage: Promotion = { ...promotion, image: promoImage };
 
-    return promotionWithImage;
+      return promotionWithImage;
+    }
+    return null;
 
     // return promotion ? promotion : null;
   }
   async findAll(): Promise<Promotion[]> {
     let promotions = await this.find();
 
-    if (Array.isArray(promotions)) {
-      const promotionPromises = promotions.map(async (promotion) => {
-        const image = await this.getPromoImageService.execute(
-          promotion.image_reference.toLowerCase(),
-        );
+    if (promotions) {
+      if (Array.isArray(promotions)) {
+        const promotionPromises = promotions.map(async (promotion) => {
+          const image = await this.getPromoImageService.execute(
+            promotion.image_reference.toLowerCase(),
+          );
 
-        const promotionWithImage: Promotion = Object.assign(promotion, {
-          image: image,
+          const promotionWithImage: Promotion = Object.assign(promotion, {
+            image: image,
+          });
+
+          return promotionWithImage;
         });
-
-        return promotionWithImage;
-      });
-      return Promise.all(promotionPromises);
+        return Promise.all(promotionPromises);
+      }
     }
+    return null;
   }
 
   async findRandomPromotion(): Promise<Promotion> {
     let promotion = await this.createQueryBuilder('entity')
       .orderBy('RANDOM()')
       .getOne();
-    const image = await this.getPromoImageService.execute(
-      promotion.image_reference.toLowerCase(),
-    );
-    const promoWithImage: Promotion = { ...promotion, image: image };
-    return promoWithImage;
+
+    if (promotion) {
+      const image = await this.getPromoImageService.execute(
+        promotion.image_reference.toLowerCase(),
+      );
+      const promoWithImage: Promotion = { ...promotion, image: image };
+      return promoWithImage;
+    }
+    return null;
   }
 }

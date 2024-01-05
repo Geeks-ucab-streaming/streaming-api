@@ -8,5 +8,5 @@ export interface IArtistsRepository {
   // findArtistById(id: string): Promise<Artist>;
   findArtistsInCollection(ids: string[]): Promise<Artist[]>;
   browseArtistsName(query: string): Promise<Artist[]>;
-  saveStream(id: string);
+  saveStream(id: string): Promise<boolean>;
 }
