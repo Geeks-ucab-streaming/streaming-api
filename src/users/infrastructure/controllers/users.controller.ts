@@ -140,8 +140,6 @@ export class UsersController {
       new SignUserUpDigitel(
         this.phonesService,
         phoneService,
-        this.usersMapper,
-        this.phoneDtoMapper,
         this.tokenRepository,
         this.userRepository,
       ),
