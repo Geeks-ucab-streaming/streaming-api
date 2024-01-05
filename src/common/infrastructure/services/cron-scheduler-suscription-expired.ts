@@ -13,22 +13,35 @@ import { ChangeSusbscriptionStateService } from 'src/users/application/services/
 
 @Injectable()
 export class CronSuscriptionExpiredService {
-  private usersMapper: UsersMapper = new UsersMapper()
-  private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
-  private notifier: SubscriptionNotifier<admin.messaging.Messaging> = new SubscriptionNotifier<admin.messaging.Messaging>(new FirebaseNotificationSender(), this.userRepository);
+  private usersMapper: UsersMapper = new UsersMapper();
+  private userRepository: OrmUserRepository = new OrmUserRepository(
+    this.usersMapper,
+  );
+  private notifier: SubscriptionNotifier<admin.messaging.Messaging> =
+    new SubscriptionNotifier<admin.messaging.Messaging>(
+      new FirebaseNotificationSender(),
+      this.userRepository,
+    );
   private userMapperDto: UsersForDtoMapper = new UsersForDtoMapper();
-  private changeSuscriptionStateService: ChangeSusbscriptionStateService = new ChangeSusbscriptionStateService(this.userRepository);
+  private changeSuscriptionStateService: ChangeSusbscriptionStateService =
+    new ChangeSusbscriptionStateService(this.userRepository);
 
   constructor() {}
 
-  @Cron('*/10 * * * * *')
+  @Cron('* * */10 * * *')
   public async send() {
-      const users = await this.userRepository.findAll();
-      users.map(async (user) => {
-      const daysUntilExpiration = calculateDaysToEndSubscription.daysToEndSubscription(user.SuscriptionState.suscription_date)
+    const users = await this.userRepository.findAll();
+    users.map(async (user) => {
+      const daysUntilExpiration =
+        calculateDaysToEndSubscription.daysToEndSubscription(
+          user.SuscriptionState.suscription_date,
+        );
       if (daysUntilExpiration > 30) {
         const dtoUser = await this.userMapperDto.domainTo(user);
-        await this.changeSuscriptionStateService.execute( {id: dtoUser.id, newState: "vencido"});
+        await this.changeSuscriptionStateService.execute({
+          id: dtoUser.id,
+          newState: 'vencido',
+        });
         return user.Token.map(async (tokens) => {
           await this.notifier.send({
             //EXAMPLE FOR NOTIFICATION
@@ -43,6 +56,5 @@ export class CronSuscriptionExpiredService {
         });
       }
     });
-
   }
 }
