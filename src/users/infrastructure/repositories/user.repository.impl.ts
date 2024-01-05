@@ -73,8 +73,6 @@ export class OrmUserRepository
         phoneNumber: criteria.PhoneNumber.phoneNumber,
       })
       .getOne();
-    //! HAY QUE IMPLEMENTAR LOS MAPPERS PARA PASAR DE ENTITY A CLASE DE DOMINIO
-    //RECORDAR QUE SE DEBE TRASLADAR DE ALGUNA MANERA EL RESULTADO DE LA CONSULTA A LA ENTIDAD USER Y PHONENUMBER COMO VO
       return user ? await this.userMapper.ToDomain(user): null
   }
 }
