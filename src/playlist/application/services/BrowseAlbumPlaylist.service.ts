@@ -36,6 +36,8 @@ export class BrowseAlbumPlaylistService
     const response: Playlist[] = await this.playlistRepository.browsePlaylists(
       dto.query,
       dto.album,
+      5,
+      0,
     );
     if (response) {
       const playlists = response;

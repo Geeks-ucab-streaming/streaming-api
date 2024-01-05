@@ -18,6 +18,8 @@ import { Artist } from 'src/artists/domain/artist';
 import { BrowseArtistService } from 'src/artists/application/services/browseArtists.service';
 import { BrowseAlbumPlaylistService } from 'src/playlist/application/services/BrowseAlbumPlaylist.service';
 import { Playlist } from 'src/playlist/domain/playlist';
+import { MyResponse } from './Response';
+import { PaginationDto } from './Dtos/pagination.dto';
 
 export class QueryDto {
   artists?: { id: string; name: string; image: Buffer }[];
@@ -46,7 +48,7 @@ export class CommonController {
 
   @ApiTags('Browser')
   @Get('/:query')
-  async find(@Param('query') query: string): Promise<QueryDto> {
+  async find(@Param('query') query: string): Promise<MyResponse<QueryDto>> {
     const browseSongsService = new LoggingApplicationServiceDecorator(
       new BrowseSongsService(this.ormSongRepository),
       new NestLogger(),
@@ -66,28 +68,21 @@ export class CommonController {
       ),
       new NestLogger(),
     );
-    console.log('antes de las consultas');
     const songsResult: Result<Song[]> = await browseSongsService.execute(query);
-    console.log('pasa canciones');
     const artistsResult: Result<Artist[]> =
       await browseArtistsService.execute(query);
-    console.log('pasa artistas');
-
     const playlistsResult: Result<Playlist[]> =
       await browsePlaylistsService.execute({ query, album: false });
-    console.log('pasa playlists');
-
     const albumsResult: Result<Playlist[]> =
       await browsePlaylistsService.execute({ query, album: true });
-    console.log('pasa albums');
 
+    const queryResult: QueryDto = {
+      songs: [],
+      artists: [],
+      playlists: [],
+      albums: [],
+    };
     if (songsResult.IsSuccess) {
-      const queryResult: QueryDto = {
-        songs: [],
-        artists: [],
-        playlists: [],
-        albums: [],
-      };
       if (songsResult.Value) {
         for (const song of songsResult.Value) {
           let artistsAux: { id: string; name: string }[] = [];
@@ -141,10 +136,21 @@ export class CommonController {
                 image: album.Playlist_Image,
               });
             }
-            return queryResult;
-          } else throw new Error(albumsResult.Error.message);
-        } else throw new Error(playlistsResult.Error.message);
-      } else throw new Error(artistsResult.Error.message);
-    } else throw new Error(songsResult.Error.message);
+          }
+        }
+      }
+    }
+    if (
+      queryResult.albums.length > 0 ||
+      queryResult.artists.length > 0 ||
+      queryResult.songs.length > 0 ||
+      queryResult.playlists.length > 0
+    )
+      return MyResponse.success(queryResult);
+    MyResponse.fail(
+      404,
+      'No se encontró ningún resultado',
+      'Not Found Exception',
+    );
   }
 }

@@ -27,9 +27,15 @@ export class OrmArtistRepository
     else return false;
   }
 
-  async browseArtistsName(query: string): Promise<Artist[]> {
+  async browseArtistsName(
+    query: string,
+    limit: number,
+    offset: number,
+  ): Promise<Artist[]> {
     const artistsResponse = await this.createQueryBuilder('artist')
       .orWhere('artist.name ILIKE :query', { query: `%${query}%` })
+      .limit(limit)
+      .skip(offset)
       .getMany();
     const artists: Promise<Artist>[] = [];
     if (artistsResponse.length > 0)

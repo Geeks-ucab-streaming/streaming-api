@@ -30,6 +30,7 @@ import { StreamRepository } from 'src/common/infrastructure/repositories/streams
 import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
 import { IPlaylistStreamRepository } from 'src/common/domain/repositories/IPlaylistStreamRepository';
 import { PlaylistStreamsRepository } from 'src/common/infrastructure/repositories/playlistStreamsRepository.impl';
+import { MyResponse } from 'src/common/infrastructure/Response';
 
 export class TrendingSongsDto {
   songs: SongDto[];
@@ -54,7 +55,7 @@ export class SongsController {
 
   @ApiTags('Trending Songs')
   @Get('/trending')
-  async findTrendingSongs(): Promise<TrendingSongsDto> {
+  async findTrendingSongs(): Promise<MyResponse<TrendingSongsDto>> {
     const service = new LoggingApplicationServiceDecorator(
       new GetTrendingSongsService(this.ormSongRepository),
       new NestLogger(),
@@ -74,10 +75,12 @@ export class SongsController {
           };
           const artistResponse: Result<Artist> =
             await findArtistByIdService.execute(dto);
-          artistsAux.push({
-            id: artistResponse.Value.Id.Value,
-            name: artistResponse.Value.Name.Value,
-          });
+          if (artistResponse.IsSuccess) {
+            artistsAux.push({
+              id: artistResponse.Value.Id.Value,
+              name: artistResponse.Value.Name.Value,
+            });
+          }
         }
         TrendingSongs.songs.push({
           songId: song.Id.Value,
@@ -87,13 +90,18 @@ export class SongsController {
           artists: artistsAux,
         });
       }
-      return TrendingSongs;
-    } else throw new Error(songsResponse.Error.message);
+      return MyResponse.success(TrendingSongs);
+    } else
+      MyResponse.fail(
+        songsResponse.statusCode,
+        songsResponse.message,
+        songsResponse.error,
+      );
   }
 
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<Result<Song>> {
+  async findById(@Param('id') id: string): Promise<MyResponse<Song>> {
     // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
     // const song: Song = await this.getSongByIdService.execute(id);
     // return song;
@@ -103,24 +111,30 @@ export class SongsController {
       new NestLogger(),
     );
     const result = await service.execute(dto);
-    return result;
+    return MyResponse.fromResult(result);
   }
 
   @ApiTags('Songs')
   @Get('/artist/:artistId')
-  findByArtistId(@Param('artistId') id: string): Promise<Result<Song[]>> {
+  async findByArtistId(
+    @Param('artistId') id: string,
+  ): Promise<MyResponse<Song[]>> {
     this.findSongsByArtistIdService = new FindSongsByArtistIdService(
       this.ormSongRepository,
     );
-    return this.findSongsByArtistIdService.execute(id);
+    const result = await this.findSongsByArtistIdService.execute(id);
+    return MyResponse.fromResult(result);
   }
   @ApiTags('Songs')
   @Get('/playlist/:playlistId')
-  findByPlaylistId(@Param('playlistId') id: string): Promise<Song[]> {
+  async findByPlaylistId(
+    @Param('playlistId') id: string,
+  ): Promise<MyResponse<Song[]>> {
     this.getSongBPlaylistIdService = new GetSongBPlaylistIdService(
       this.ormSongRepository,
     );
-    return this.getSongBPlaylistIdService.execute(id);
+    const result = await this.getSongBPlaylistIdService.execute(id);
+    return MyResponse.fromResult(result);
   }
 
   @ApiTags('StreamedSong')

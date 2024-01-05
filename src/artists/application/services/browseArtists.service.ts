@@ -13,10 +13,10 @@ export class BrowseArtistService
   }
 
   async execute(query: string): Promise<Result<Artist[]>> {
-    const response = await this.artistRepository.browseArtistsName(query);
+    const response = await this.artistRepository.browseArtistsName(query, 5, 0);
     if (response)
       return Result.success<Artist[]>(
-        await this.artistRepository.browseArtistsName(query),
+        await this.artistRepository.browseArtistsName(query, 5, 0),
       );
     else
       return Result.fail<Artist[]>(

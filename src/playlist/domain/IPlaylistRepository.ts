@@ -6,5 +6,10 @@ export interface IPlaylistRepository {
   findTopPlaylists(): Promise<Playlist[]>;
   findTopAlbums(): Promise<Playlist[]>;
   saveStream(id: string): Promise<boolean>;
-  browsePlaylists(query: string, album: boolean): Promise<Playlist[]>;
+  browsePlaylists(
+    query: string,
+    album: boolean,
+    limit: number,
+    offset: number,
+  ): Promise<Playlist[]>;
 }
