@@ -1,6 +1,5 @@
 import { GetSongBPlaylistIdService } from "src/songs/application/services/getSongsByPlaylistId.service";
 import { Dummy_Songs_Repo } from "../stub/Dummy_Songs_Repo";
-import { Playlist } from "src/playlist/domain/playlist";
 
 export class OMGetSongByPlaylistIdService {
 
@@ -20,4 +19,3 @@ export class OMGetSongByPlaylistIdService {
         return dto;
     }
 }
-

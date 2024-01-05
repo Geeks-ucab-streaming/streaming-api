@@ -3,8 +3,8 @@ import { Dummy_Songs_Repo } from "../stub/Dummy_Songs_Repo";
 
 export class OMGetSongsInCollectionService {
 
-public static getCollectionValid(): string {
-  const dto= "POP,ROCK,CLASSIC";
+public static getCollectionValid(): string[] {
+  const dto= ["1","2"];
 
  
  return dto;
@@ -21,9 +21,9 @@ const repo= new Dummy_Songs_Repo();
 return new GetSongsInCollectionService(repo);
 }
 
-public static GetCollectionnotValid(): string {
+public static GetCollectionnotValid(): string[] {
 
-    const dto="";
+    const dto=["-1"];
 
     return dto;
 }

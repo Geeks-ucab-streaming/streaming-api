@@ -1,6 +1,6 @@
 import {Repository } from "typeorm";
-import { Audith } from "../infrastructure/entities/audith.service.entity";
-import { IaudithRepository } from "../Application/audith-handler/Iaudith";
+import { Audith } from "../entities/audith.service.entity";
+import { IaudithRepository } from "src/common/Application/audith-handler/Iaudith";
 
 export class audith_repo extends Repository<Audith> implements IaudithRepository{
  audith_repo:Audith;
