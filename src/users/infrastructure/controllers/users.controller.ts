@@ -171,10 +171,6 @@ export class UsersController {
 
   //Inicio de Sesión
   @ApiTags('Users')
-  @ApiHeader({
-    name: 'device_token',
-    description: 'Token device from firebase',
-  })
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
