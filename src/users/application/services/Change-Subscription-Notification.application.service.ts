@@ -23,8 +23,6 @@ export class SubscriptionNotifier<D> implements NotificationHandler<userSubscrip
         ) {}
 
     async send(dto: userSubscriptionDto ): Promise<Result<void>>{
-        
-        //TODO: SE DEBE BUSCAR TODOS LOS TOKENS DE DISPOSITVOS DE USUARIOS SUSCRITOS A NOTIFICACIONES
         await this.admin.sendNotification(dto.token,dto.notification.title, dto.notification.body,);
         return Result.success<void>(void 0);
     }

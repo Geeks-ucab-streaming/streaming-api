@@ -36,7 +36,7 @@ export class CronSchedulerService {
           user.SuscriptionState.suscription_date,
         );
       return user.Token.map(async (tokens) => {
-        if (daysUntilExpiration <= 0 || true ) {
+        if (daysUntilExpiration < 30 && daysUntilExpiration >= 25 ) {
           await this.notifier.send({
             //EXAMPLE FOR NOTIFICATION
             notification: {

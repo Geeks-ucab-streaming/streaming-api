@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsDate, IsOptional, IsEmail } from "class-validator";
+import { IsString, IsDate, IsOptional, IsEmail, IsIn } from 'class-validator';
+import { Check } from 'typeorm';
 
 export class  UpdateUserDto{
 
@@ -21,6 +22,7 @@ export class  UpdateUserDto{
   @ApiProperty()
   @IsOptional()
   @IsString()
+  @IsIn(['M', 'F'], { message: 'Value must be M or F' })
   gender?: string;
 
 }

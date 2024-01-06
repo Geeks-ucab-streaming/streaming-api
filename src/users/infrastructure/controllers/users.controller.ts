@@ -214,12 +214,18 @@ export class UsersController {
   //Actualizar usuario en base a su ID
   @ApiTags('Users')
   @Patch('/user/:id')
-  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+  async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     this.updateUserParameterObjetc = new UpdateUser(
       id,
       body,
       this.userMapperForDomainAndDtos,
     );
-    return this.updateUserById.execute(this.updateUserParameterObjetc);
+    const result = await  this.updateUserById.execute(this.updateUserParameterObjetc);
+    return {
+      data: result.value,
+      statusCode: result.statusCode || 200,
+      message: result.message,
+
+    }
   }
 }
