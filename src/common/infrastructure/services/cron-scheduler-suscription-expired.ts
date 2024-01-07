@@ -52,6 +52,7 @@ export class CronSuscriptionExpiredService {
 
             token: [tokens.token],
           });
+
           return tokens.token;
         });
       }
