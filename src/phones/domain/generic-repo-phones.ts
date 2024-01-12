@@ -5,5 +5,5 @@ export interface IgenericRepo<T,R>{
 }
 
 export interface IPhoneRepository<R>{
-    createPhone(dto: R): Promise<Result<R>>;
+    createPhone(dto: R, runner:any): Promise<Result<R>>;
   }

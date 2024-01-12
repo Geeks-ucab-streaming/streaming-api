@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { PhoneEntity } from '../../infrastructure/entities/phones.entity';
 import { IPhoneRepository } from 'src/phones/domain/generic-repo-phones';
 import { Phone } from '../../domain/phoneAggregate/phone';
@@ -20,7 +20,7 @@ export class OrmPhoneRepository
     this.phoneMapper = phoneMapper;
   }
 
-  async createPhone(phone: Phone): Promise<Result<Phone>> {
+  async createPhone(phone: Phone, runner?: QueryRunner): Promise<Result<Phone>> {
     const isExistPhone = await this.findOneBy({
       phoneNumber: phone.PhoneNumber.phoneNumber,
     });
@@ -32,7 +32,7 @@ export class OrmPhoneRepository
     }
     const phoneToOrm = await this.phoneMapper.domainTo(phone);
     const phoneCreated = await this.phoneMapper.ToDomain(
-      await this.save(phoneToOrm),
+      await runner.manager.save(phoneToOrm),
     );
     return Result.success<Phone>(phoneCreated);
   }

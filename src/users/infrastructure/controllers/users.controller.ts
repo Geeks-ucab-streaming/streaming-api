@@ -33,6 +33,7 @@ import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { jwtcontanst } from '../../application/constants/jwt.constansts';
 import { OrmTokenRepository } from '../repositories/token.repository.impl';
 import { TokenMapper } from '../mappers/token.mapper';
+import { TransactionHandlerImplementation } from '../../../common/infrastructure/transaction_handler_implementation';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -43,6 +44,7 @@ export class UsersController {
   private userRepository: OrmUserRepository = new OrmUserRepository(
     this.usersMapper,
   );
+  private transactionHandler  = new TransactionHandlerImplementation(DataSourceSingleton.getInstance().createQueryRunner())
   private ormPhoneMapper: phoneMapper = new phoneMapper();
   private phoneRepository: OrmPhoneRepository = new OrmPhoneRepository(
     DataSourceSingleton.getInstance(),
@@ -68,6 +70,7 @@ export class UsersController {
     this.phonesService = new PhonesService(
       this.phoneRepository,
       this.lineRepository,
+      this.transactionHandler,
     );
     this.findByPhoneUserService = new findByPhoneUserService(
       this.userRepository,
@@ -98,6 +101,7 @@ export class UsersController {
         this.phoneDtoMapper,
         this.tokenRepository,
         this.userRepository,
+        this.transactionHandler,
       ),
       new NestLogger(),
     );
@@ -114,6 +118,7 @@ export class UsersController {
       let dto: CreateUserDto = new CreateUserDto();
       dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
       const sign = await this.signin(dto);
+
       return {
         data:{
           token : sign.data.token
@@ -157,7 +162,7 @@ export class UsersController {
         const sign = await this.signin(dto,);
         return {
           data:{
-            token : sign.data.token
+            token : sign.data?.token
           },
           statusCode: result.statusCode,
         };
@@ -175,8 +180,11 @@ export class UsersController {
 
     if (!data.IsSuccess) {
       return {
-        message: data,
-        token:null
+        data: {
+          message: data.message,
+          error : data.error,
+        },
+        statusCode: data.statusCode || 200,
       }
     }
     const jwt = this.jwtService.sign({id: data.Value.Id.Id}, {secret: jwtcontanst.secret, expiresIn: '24h'});

@@ -10,10 +10,10 @@ import { IUserRepository } from "src/users/domain/IUserRepository";
 import { UserFactory } from "src/users/domain/factories/user.factory";
 import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { Result } from '../../../common/domain/logic/Result';
-import { UserSnapShot } from "src/users/domain/parameterObjects/user-snapshot";
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ITokenUserRepository } from '../../domain/tokenUser.repository';
 import { TokenEntity } from '../../domain/userAggregate/entities/token';
+import { ItransactionHandler } from '../../../common/Application/transaction_handler/transaction_handler';
 
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,User>{
   constructor(private phone:PhonesService,
@@ -22,6 +22,7 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
     private IMapperPhone: Imapper<Phone,PhoneDto>,
     private readonly tokenRepository: ITokenUserRepository,
     private readonly repo: IUserRepository,
+    private readonly transactionHandler: ItransactionHandler
     ){}
 
   get name(): string {
@@ -29,6 +30,7 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
   }
 
   async execute(usersDto: CreateUserDto):Promise<Result<User>>{
+    await this.transactionHandler.startTransaction()
 
     const users = await this.findByPhoneUserService.execute(usersDto.phone); 
     if(users.Value){
@@ -36,9 +38,13 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
     }
 
     let phoneMovistar = await this.phone.execute(usersDto.phone);
-    if(!phoneMovistar.IsSuccess) return Result.fail<User>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
+    if(!phoneMovistar.IsSuccess) {
+      await this.transactionHandler.rollbackTransaction()
+      return Result.fail<User>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
+    }
 
     if(!phoneMovistar.Value.validatePrefixMovistar()){
+      await this.transactionHandler.rollbackTransaction()
       return Result.fail<User>(new Error("Phone prefix is not from Movistar"));
     }
 
