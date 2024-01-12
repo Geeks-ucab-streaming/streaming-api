@@ -90,7 +90,7 @@ export class ArtistController {
   @ApiTags('Artist')
   @Get('/:ArtistId')
   async getArtist(
-    @Param('ArtistId') id,
+    @Param('ArtistId') id:string,
   ): Promise<MyResponse<AllArtistInfoDto>> {
     const dto: GetArtistProfilesApplicationServiceDto = { id };
     // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
