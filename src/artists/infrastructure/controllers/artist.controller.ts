@@ -27,9 +27,7 @@ import { FindSongsByArtistIdService } from 'src/songs/application/services/getSo
 import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
 import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
-import { GetArtistGenreService } from 'src/artists/application/services/GetArtistGenre.service';
 import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
-import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 import { MyResponse } from 'src/common/infrastructure/Response';
 @Controller('api/artists')
 export class ArtistController {
