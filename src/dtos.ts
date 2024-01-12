@@ -32,6 +32,7 @@ export class PlaylistDto {
   name: string;
   duration: string;
   image: Buffer;
+  streams: number;
   creators?: {
     creatorId: string;
     creatorName: string;
