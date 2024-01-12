@@ -1,16 +1,11 @@
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { PhonesService } from "src/phones/application/services/register-users-phone.application.service";
-import {Imapper} from '../../../common/Application/IMapper';
 import { User } from "src/users/domain/userAggregate/user";
-import { UserEntity } from "src/users/infrastructure/entities/users.entity";
 import { NotFoundException } from "@nestjs/common";
-import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { IUserRepository } from "src/users/domain/IUserRepository";
 import { UserFactory } from "src/users/domain/factories/user.factory";
-import { PhoneDto } from "src/phones/application/dtos/phone.dto";
 import { Result } from '../../../common/domain/logic/Result';
-import { UserSnapShot } from "src/users/domain/parameterObjects/user-snapshot";
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ITokenUserRepository } from '../../domain/tokenUser.repository';
 import { TokenEntity } from '../../domain/userAggregate/entities/token';
@@ -18,8 +13,6 @@ import { TokenEntity } from '../../domain/userAggregate/entities/token';
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,User>{
   constructor(private phone:PhonesService,
     private findByPhoneUserService: IApplicationService<string, User>,
-    private IMapper: Imapper<User,UserEntity>,
-    private IMapperPhone: Imapper<Phone,PhoneDto>,
     private readonly tokenRepository: ITokenUserRepository,
     private readonly repo: IUserRepository,
     ){}
@@ -42,11 +35,11 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
       return Result.fail<User>(new Error("Phone prefix is not from Movistar"));
     }
 
-    if(!phoneMovistar.IsSuccess) return Result.fail<User>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
-    let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
-    usersDto.phone = phoneMovistarDto.phoneNumber;
-    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber, 
-      phoneMovistarDto.linePhoneId, phoneMovistarDto.lineName,usersDto.token));
+    if(!phoneMovistar.IsSuccess) 
+    return Result.fail<User>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
+
+    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistar.Value.Id.Id, phoneMovistar.Value.PhoneNumber.phoneNumber,
+      phoneMovistar.Value.LinePhone.id, phoneMovistar.Value.LinePhone.name, usersDto.token, "premium"));
     const tokenEntity = TokenEntity.create(usersDto.token,savedUser.value.Id.Id);
     await this.tokenRepository.saveToken(tokenEntity)
     return savedUser;

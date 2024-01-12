@@ -6,6 +6,7 @@ import { Imapper } from 'src/common/Application/IMapper';
 
 export class UpdateUser {
   public id: string;
+  public suscriptionState: string;
   public userToUpdate: UpdateUserDto;
   public mapper: Imapper<User, UserDto>;
 
@@ -21,6 +22,10 @@ export class UpdateUser {
 
   set Id(id: string) {
     this.id = id;
+  }
+
+  set SuscriptionState(suscriptionState: string) {
+    this.suscriptionState = suscriptionState;
   }
 
   set UserToUpdate(userToUpdate: UpdateUserDto) {

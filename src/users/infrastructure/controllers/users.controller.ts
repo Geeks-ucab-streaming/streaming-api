@@ -33,6 +33,7 @@ import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { jwtcontanst } from '../../application/constants/jwt.constansts';
 import { OrmTokenRepository } from '../repositories/token.repository.impl';
 import { TokenMapper } from '../mappers/token.mapper';
+import { CancelUsersSubscription } from 'src/users/application/services/Cancel-Users-Subscription.service';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -40,43 +41,30 @@ export class UsersController {
   private findByPhoneUserService: findByPhoneUserService;
   private usersMapper: UsersMapper = new UsersMapper();
   private tokenMapper:TokenMapper = new TokenMapper();
-  private userRepository: OrmUserRepository = new OrmUserRepository(
-    this.usersMapper,
-  );
+  private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
   private ormPhoneMapper: phoneMapper = new phoneMapper();
-  private phoneRepository: OrmPhoneRepository = new OrmPhoneRepository(
-    DataSourceSingleton.getInstance(),
-    this.ormPhoneMapper,
-  );
+  private phoneRepository: OrmPhoneRepository = new OrmPhoneRepository(DataSourceSingleton.getInstance(),this.ormPhoneMapper,);
   private tokenRepository = new OrmTokenRepository(this.tokenMapper);
-
-  private lineRepository: OrmLineRepository = new OrmLineRepository(
-    DataSourceSingleton.getInstance(),
-  );
+  private lineRepository: OrmLineRepository = new OrmLineRepository(DataSourceSingleton.getInstance());
   private phonesService: PhonesService;
   private jwtService: JwtService = new JwtService();
-  private signUserUpMovistar: SignUserUpMovistar;
-  private signUserUpDigitel: SignUserUpDigitel;
   private signUserIn: SignUserIn;
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: UpdateUser;
   private userMapperForDomainAndDtos: UsersForDtoMapper;
   private phoneDtoMapper: PhoneAndDtoMapper;
+  private cancelUsersSubscription: CancelUsersSubscription;
 
   constructor() {
-    this.phonesService = new PhonesService(
-      this.phoneRepository,
-      this.lineRepository,
-    );
-    this.findByPhoneUserService = new findByPhoneUserService(
-      this.userRepository,
-    );
+    this.phonesService = new PhonesService(this.phoneRepository,this.lineRepository);
+    this.findByPhoneUserService = new findByPhoneUserService(this.userRepository);
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findUserById = new FindUserById(this.userRepository);
     this.updateUserById = new UpdateUserById(this.userRepository);
     this.userMapperForDomainAndDtos = new UsersForDtoMapper();
     this.phoneDtoMapper = new PhoneAndDtoMapper();
+    this.cancelUsersSubscription = new CancelUsersSubscription(this.userRepository);
   }
 
   //Registro de Usuario con su número de teléfono
@@ -94,8 +82,6 @@ export class UsersController {
       new SignUserUpMovistar(
         this.phonesService,
         phoneService,
-        this.usersMapper,
-        this.phoneDtoMapper,
         this.tokenRepository,
         this.userRepository,
       ),
@@ -211,8 +197,15 @@ export class UsersController {
       birthDate: (await userPayload).birth_date,
       gender: (await userPayload).gender,
     };
+  }
 
-
+  //Cancelar la suscripción de un usuario
+  @ApiTags('Users')
+  @Post('/subscription/cancel')
+  async cancelSubscription(@Req() req:Request, @Headers() headers:Headers) {
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const id = await this.jwtService.decode(token).id;
+    
   }
 
   //Actualizar usuario en base a su ID

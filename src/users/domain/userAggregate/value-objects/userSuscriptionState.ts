@@ -13,16 +13,9 @@ export class userSuscriptionState implements IValueObject<userSuscriptionState>{
     public get suscription_date(): Date {
         return this._suscription_date;
     }
-    public set suscription_date(value: Date) {
-        this._suscription_date = value;
-    }
 
     public get SuscriptionState(): string {
         return this.suscriptionState;
-    }
-
-    public set SuscriptionState(suscriptionState: string) { 
-        this.suscriptionState = suscriptionState as SubscriptionEnum;
     }
 
     static create(suscriptionState: string, subscriptionDate: Date): userSuscriptionState {
