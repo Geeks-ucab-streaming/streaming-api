@@ -98,7 +98,7 @@ export class CommonController {
             });
           }
           queryResult.songs.push({
-            songId: song.Id.Value,
+            id: song.Id.Value,
             name: song.Name,
             duration: song.DurationString,
             image: song.Image,
