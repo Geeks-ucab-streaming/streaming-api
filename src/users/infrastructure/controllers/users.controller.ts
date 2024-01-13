@@ -125,6 +125,7 @@ export class UsersController {
     };*/
 
     const result = await serviceMovistar.execute(body);
+
     if(result.IsSuccess){
       let dto: CreateUserDto = new CreateUserDto();
       dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
