@@ -27,7 +27,6 @@ import { UpdateUserById } from 'src/users/application/services/Update-User-By-id
 import { ParameterObjectUser } from 'src/users/application/ParameterObjects/updateUser';
 import { UsersForDtoMapper } from '../mappers/UserForDto.mapper';
 import { SignUserUpDigitel } from 'src/users/application/services/Sign-User-Up-Digitel.application.service';
-import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { jwtcontanst } from '../../application/constants/jwt.constansts';
@@ -63,6 +62,25 @@ export class UsersController {
     this.updateUserById = new UpdateUserById(this.userRepository);
     this.userMapperForDomainAndDtos = new UsersForDtoMapper();
     this.cancelUsersSubscription = new CancelUsersSubscription(this.userRepository);
+  }
+
+  //Generar Token para usuario invitado
+  @ApiTags('Users')
+  @ApiHeader({
+    name: 'device_token',
+    description: 'Token device from firebase',
+  })
+  @Post('/auth/login/guest')
+  async createGuest(@Headers() headers:Headers) {
+    const device_token = headers['device_token'];
+    const jwt = this.jwtService.sign({id: "asdfgh123456"}, {secret: jwtcontanst.secret, expiresIn: '24h'});
+
+    return {
+      data:{
+        token : jwt
+      },
+      statusCode: 200,
+    };
   }
 
   //Registro de Usuario con su número de teléfono
@@ -207,7 +225,7 @@ export class UsersController {
     return {
       data: result.value,
       statusCode: result.statusCode || 200,
-      message: result.message,
+      message: "User's subscription canceled",
     }
   }
 
