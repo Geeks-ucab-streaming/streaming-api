@@ -37,7 +37,7 @@ export class TrendingSongsDto {
   songs: SongDto[];
 }
 
-@Controller('api/songs')
+@Controller('api/song')
 export class SongsController {
   private getSongByIdService: GetSongByIdService;
   private getSongBPlaylistIdService: GetSongBPlaylistIdService;

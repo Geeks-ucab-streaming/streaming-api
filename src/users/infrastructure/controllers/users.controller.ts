@@ -106,7 +106,7 @@ export class UsersController {
     name: 'device_token',
     description: 'Token device from firebase',
   })
-  @Post('/auth/login/guest')
+  @Post('/auth/log-in/guest')
   async createGuest(@Headers() headers: Headers) {
     const device_token = headers['device_token'];
     const jwt = this.jwtService.sign(
