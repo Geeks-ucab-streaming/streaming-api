@@ -176,7 +176,7 @@ export class UsersController {
           data:{
             token : sign.data?.token
           },
-          statusCode: result.statusCode ,
+          statusCode: 200 ,
         };
       }else{
         return result
@@ -186,7 +186,7 @@ export class UsersController {
 
   //Inicio de Sesión
   @ApiTags('Users')
-  @Post('/auth/log-in')
+  @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
 
