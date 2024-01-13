@@ -30,7 +30,7 @@ import { Playlist } from 'src/playlist/domain/playlist';
 import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
 import { MyResponse } from 'src/common/infrastructure/Response';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
-@Controller('api/artists')
+@Controller('api/artist')
 export class ArtistController {
   private readonly ormArtistRepository: OrmArtistRepository;
   private readonly ormSongsRepository: OrmSongRepository;
@@ -89,9 +89,9 @@ export class ArtistController {
   @ApiTags('Artist')
   @Get('/:ArtistId')
   async getArtist(
-    @Param('ArtistId') id:string,
+    @Param('ArtistId') id: string,
   ): Promise<MyResponse<AllArtistInfoDto>> {
-    const iddto=ArtistID.create(id);
+    const iddto = ArtistID.create(id);
     const dto: GetArtistProfilesApplicationServiceDto = { id: iddto };
     // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
     //Mapeamos y retornamos.
@@ -162,7 +162,7 @@ export class ArtistController {
                     name: result.Value.Name.Value,
                   });
                 } else {
-                  const dtoArtist=ArtistID.create(artist);
+                  const dtoArtist = ArtistID.create(artist);
                   const dto: GetArtistProfilesApplicationServiceDto = {
                     id: dtoArtist,
                   };
