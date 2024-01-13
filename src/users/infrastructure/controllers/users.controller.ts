@@ -45,7 +45,6 @@ export class UsersController {
     this.usersMapper,
   );
   private transactionHandler  = new TransactionHandlerImplementation(DataSourceSingleton.getInstance().createQueryRunner())
-  private userRepository: OrmUserRepository = new OrmUserRepository(this.usersMapper);
   private ormPhoneMapper: phoneMapper = new phoneMapper();
   private phoneRepository: OrmPhoneRepository = new OrmPhoneRepository(DataSourceSingleton.getInstance(),this.ormPhoneMapper,);
   private tokenRepository = new OrmTokenRepository(this.tokenMapper);
@@ -60,7 +59,7 @@ export class UsersController {
   private cancelUsersSubscription: CancelUsersSubscription;
 
   constructor() {
-    this.phonesService = new PhonesService(this.phoneRepository,this.lineRepository);
+    this.phonesService = new PhonesService(this.phoneRepository,this.lineRepository,this.transactionHandler);
     this.findByPhoneUserService = new findByPhoneUserService(this.userRepository);
     this.phonesService = new PhonesService(
       this.phoneRepository,
@@ -159,6 +158,7 @@ export class UsersController {
         phoneService,
         this.tokenRepository,
         this.userRepository,
+        this.transactionHandler,
       ),
       new NestLogger(),
     );

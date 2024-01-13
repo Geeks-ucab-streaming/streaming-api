@@ -45,7 +45,7 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,User
     }
 
     const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneDigitel.Value.Id.Id, phoneDigitel.Value.PhoneNumber.phoneNumber,
-      phoneDigitel.Value.LinePhone.id, phoneDigitel.Value.LinePhone.name, usersDto.token),this.transactionHandler);
+      phoneDigitel.Value.LinePhone.id, phoneDigitel.Value.LinePhone.name, usersDto.token,'premium'),this.transactionHandler);
     const tokenEntity = TokenEntity.create(usersDto.token,savedUser.value.Id.Id);
     await this.tokenRepository.saveToken(tokenEntity,this.transactionHandler)
     await this.transactionHandler.commitTransaction()

@@ -18,8 +18,6 @@ import { ItransactionHandler } from '../../../common/domain/transaction_handler/
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,User>{
   constructor(private phone:PhonesService,
     private findByPhoneUserService: IApplicationService<string, User>,
-    private IMapper: Imapper<User,UserEntity>,
-    private IMapperPhone: Imapper<Phone,PhoneDto>,
     private readonly tokenRepository: ITokenUserRepository,
     private readonly repo: IUserRepository,
     private readonly transactionHandler: ItransactionHandler
@@ -47,11 +45,8 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
       await this.transactionHandler.rollbackTransaction()
       return Result.fail<User>(new Error("Phone prefix is not from Movistar"));
     }
-
-    let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
-    usersDto.phone = phoneMovistarDto.phoneNumber;
-    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber,
-      phoneMovistarDto.linePhoneId, phoneMovistarDto.lineName,usersDto.token),this.transactionHandler);
+    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistar.Value.Id.Id, phoneMovistar.Value.PhoneNumber.phoneNumber,
+      phoneMovistar.Value.LinePhone.id, phoneMovistar.Value.LinePhone.name, usersDto.token, "premium"),this.transactionHandler);
     const tokenEntity = TokenEntity.create(usersDto.token,savedUser.value.Id.Id);
     await this.tokenRepository.saveToken(tokenEntity,this.transactionHandler)
     await this.transactionHandler.commitTransaction()

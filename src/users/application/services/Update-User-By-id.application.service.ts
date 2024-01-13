@@ -23,9 +23,8 @@ export class UpdateUserById implements IApplicationService<ParameterObjectUser<U
     throw new Error("Method not implemented.");
   }
 
-  async execute(usuarioParametrizado: UpdateUser): Promise<Result<UserDto>>{
-    await this.transactionHandler.startTransaction()
   async execute(usuarioParametrizado: ParameterObjectUser<UpdateUserDto>): Promise<Result<UserDto>>{
+    await this.transactionHandler.startTransaction()
     const user = await this.repo.findById(usuarioParametrizado.id);
     
     if (!user){
