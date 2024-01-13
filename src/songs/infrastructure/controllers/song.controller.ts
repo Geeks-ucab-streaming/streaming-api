@@ -12,7 +12,7 @@ import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSinglet
 import { ApiTags } from '@nestjs/swagger';
 import { GetSongBPlaylistIdService } from 'src/songs/application/services/getSongsByPlaylistId.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
-import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
+import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/loggin-application.service.decorator';
 import { Result } from 'src/common/domain/logic/Result';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { TransmitWsGateway } from '../sockets/transmit-ws.gateway';
