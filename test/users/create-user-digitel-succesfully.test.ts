@@ -18,10 +18,10 @@ describe('Create user into the system', () => {
       userRepository.createUser(user);
 
       const tokenRepository = new TokenRepositoryMock();
-     const lineRepository = new LineRepositoryMock();
+      const lineRepository = new LineRepositoryMock();
       const phoneRepository = new PhoneRepositoryMock();
 
-        const createPhonesService = new PhonesService(
+      const createPhonesService = new PhonesService(
         /*this.phoneRepository,
         this.lineRepository,
       );

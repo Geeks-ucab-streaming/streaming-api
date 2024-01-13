@@ -7,6 +7,7 @@ import { TokenEntity } from '../../domain/userAggregate/entities/token';
 import { Imapper } from '../../../common/Application/IMapper';
 
 import { User } from '../../domain/userAggregate/user';
+import { TransactionHandlerImplementation } from '../../../common/infrastructure/transaction_handler_implementation';
 
 
 export class OrmTokenRepository  extends Repository<TokenDeviceUserEntity> implements ITokenUserRepository {
@@ -26,10 +27,10 @@ export class OrmTokenRepository  extends Repository<TokenDeviceUserEntity> imple
       .then((tokens) => tokens.map((token) => token.token));
      }
 
-  async saveToken(token: TokenEntity): Promise<void> {
+  async saveToken(token: TokenEntity, runner?: TransactionHandlerImplementation): Promise<void> {
     const tokenOrm = await this.tokenMapper.domainTo(token)
-
-    await this.save(tokenOrm)
+    const runnerTransaction = runner.getRunner()
+    await runnerTransaction.manager.save(tokenOrm)
     return void 0;
   }
 

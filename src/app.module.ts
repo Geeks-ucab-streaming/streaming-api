@@ -40,6 +40,6 @@ console.log(`./deploy/.env.${process.env.NODE_ENV}`);
     AlbumController,
     CommonController,
   ],
-  providers: [AppService, CronSchedulerService, TransmitWsGateway],
+  providers: [AppService, /*CronSchedulerService*/ TransmitWsGateway],
 })
 export class AppModule {}
