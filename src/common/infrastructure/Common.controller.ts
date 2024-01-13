@@ -20,6 +20,7 @@ import { BrowseAlbumPlaylistService } from 'src/playlist/application/services/Br
 import { Playlist } from 'src/playlist/domain/playlist';
 import { MyResponse } from './Response';
 import { PaginationDto } from './Dtos/pagination.dto';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 
 export class QueryDto {
   artists?: { id: string; name: string; image: Buffer }[];
@@ -87,8 +88,9 @@ export class CommonController {
         for (const song of songsResult.Value) {
           let artistsAux: { id: string; name: string }[] = [];
           for (const artist of song.Artists) {
+            const dtoArtist = ArtistID.create(artist);
             const dto: GetArtistProfilesApplicationServiceDto = {
-              id: artist,
+              id: dtoArtist,
             };
             const artistResult: Result<Artist> =
               await getArtistservice.execute(dto);
