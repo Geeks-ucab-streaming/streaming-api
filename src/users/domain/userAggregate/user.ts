@@ -16,6 +16,7 @@ import { UserBirthDateUpdated } from "../events/user-birthDate-updated";
 import { UserGenderUpdated } from "../events/user-gender-updated";
 import { InvalidUserException } from "../exceptions/invalid-user.exception";
 import { TokenEntity } from './entities/token';
+import { UserSuscriptionUpdated } from "../events/user-suscription-updated";
 
 export class User extends AggregateRoot<userId> {
   private name: userName;
@@ -73,6 +74,10 @@ export class User extends AggregateRoot<userId> {
     this.apply(UserEmailUpdated.create(this.Id, email));
   }
 
+  public updateUsersSuscriptionState (suscription: userSuscriptionState) {
+    this.apply(UserSuscriptionUpdated.create(this.Id, suscription));
+  }
+
   public updateUsersName (name: userName) {
     this.apply(UserNameUpdated.create(this.Id, name));
   }
@@ -87,8 +92,8 @@ export class User extends AggregateRoot<userId> {
 
   static validateRangeBirthDate(birthDate: UserBirthDate, yearBirthUser:number): UserBirthDate {
   if (birthDate){
-    if (birthDate.BirthDate <= calculateHowOldYouAre.ValidateYear(birthDate.BirthDate) && birthDate.BirthDate >= calculateHowYoungYouAre.ValidateYear(birthDate.BirthDate)) {
-      return birthDate; //Retorna la fecha de nacimiento si cumple con la condición
+    if (birthDate.BirthDate >= calculateHowOldYouAre.ValidateYear(new Date(Date.now())) && birthDate.BirthDate <= calculateHowYoungYouAre.ValidateYear(new Date(Date.now()))) {
+    return birthDate; //Retorna la fecha de nacimiento si cumple con la condición
     }
    }
    return null;
@@ -118,6 +123,10 @@ export class User extends AggregateRoot<userId> {
         case UserBirthDateUpdated:
             const userBirthDateUpdated: UserBirthDateUpdated = event as UserBirthDateUpdated;
             this.birth_date = userBirthDateUpdated.birthDate;
+            break;
+        case UserSuscriptionUpdated:
+            const userSuscriptionUpdated: UserSuscriptionUpdated= event as UserSuscriptionUpdated;
+            this.suscriptionState = userSuscriptionUpdated.suscription;
             break;
         default:
           throw new Error("Event not implemented.");
