@@ -55,7 +55,7 @@ export class SongsController {
   }
 
   @ApiTags('Trending Songs')
-  @Get('/trending')
+  @Get('/top_songs')
   async findTrendingSongs(): Promise<MyResponse<TrendingSongsDto>> {
     const service = new LoggingApplicationServiceDecorator(
       new GetTrendingSongsService(this.ormSongRepository),
@@ -71,7 +71,7 @@ export class SongsController {
       for (const song of songsResponse.Value) {
         let artistsAux: { id: string; name: string }[] = [];
         for (const artist of song.Artists) {
-          const dtoArtist=ArtistID.create(artist);
+          const dtoArtist = ArtistID.create(artist);
           const dto: GetArtistProfilesApplicationServiceDto = {
             id: dtoArtist,
           };

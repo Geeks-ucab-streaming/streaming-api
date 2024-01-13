@@ -38,7 +38,7 @@ export class PlaylistController {
   }
 
   @ApiTags('TopPlaylist')
-  @Get('/top_playlist')
+  @Get('/top_playlists')
   async findTopPlaylists(): Promise<MyResponse<TopPlaylistDto>> {
     this.findTopPlaylistsService = new FindTopPlaylistsService(
       this.repository,

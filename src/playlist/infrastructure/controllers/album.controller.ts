@@ -38,7 +38,7 @@ export class AlbumController {
   }
 
   @ApiTags('TopAlbum')
-  @Get('/top_album')
+  @Get('/top_albums')
   async findTopAlbums(): Promise<MyResponse<TopPlaylistDto>> {
     this.findTopAlbumsService = new FindTopAlbumsService(
       this.repository,
