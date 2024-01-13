@@ -5,7 +5,10 @@ import {
   Get,
   Param,
   UseGuards,
-  Patch, Req, NotFoundException, Headers,
+  Patch,
+  Req,
+  NotFoundException,
+  Headers,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { ApiBearerAuth, ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
@@ -39,7 +42,7 @@ import { TokenMapper } from '../mappers/token.mapper';
 export class UsersController {
   private findByPhoneUserService: findByPhoneUserService;
   private usersMapper: UsersMapper = new UsersMapper();
-  private tokenMapper:TokenMapper = new TokenMapper();
+  private tokenMapper: TokenMapper = new TokenMapper();
   private userRepository: OrmUserRepository = new OrmUserRepository(
     this.usersMapper,
   );
@@ -86,9 +89,12 @@ export class UsersController {
     description: 'Token device from firebase',
   })
   @Post('/auth/sign-up/movistar')
-  async createUserMovistar(@Body() body: CreateUserDto, @Headers() headers:Headers) {
-    const device_token = headers['device_token']
-    body.token = device_token
+  async createUserMovistar(
+    @Body() body: CreateUserDto,
+    @Headers() headers: Headers,
+  ) {
+    const device_token = headers['device_token'];
+    body.token = device_token;
     const phoneService = this.findByPhoneUserService;
     const serviceMovistar = new LoggingApplicationServiceDecorator(
       new SignUserUpMovistar(
@@ -101,7 +107,7 @@ export class UsersController {
       ),
       new NestLogger(),
     );
-   /* const result = await service.execute(body);
+    /* const result = await service.execute(body);
     
     const userPayload = this.userMapperForDomainAndDtos.domainTo(result.Value);
     return {
@@ -110,18 +116,18 @@ export class UsersController {
     };*/
 
     const result = await serviceMovistar.execute(body);
-    if(result.IsSuccess){
+    if (result.IsSuccess) {
       let dto: CreateUserDto = new CreateUserDto();
       dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
       const sign = await this.signin(dto);
       return {
-        data:{
-          token : sign.data.token
+        data: {
+          token: sign.data.token,
         },
         statusCode: result.statusCode || 200,
       };
-    }else{
-      return result
+    } else {
+      return result;
     }
   }
 
@@ -131,9 +137,12 @@ export class UsersController {
     description: 'Token device from firebase',
   })
   @Post('/auth/sign-up/digitel')
-  async createUserDigitel(@Body() body: CreateUserDto , @Headers() headers:Headers) {
-    const device_token = headers['device_token']
-    body.token = device_token
+  async createUserDigitel(
+    @Body() body: CreateUserDto,
+    @Headers() headers: Headers,
+  ) {
+    const device_token = headers['device_token'];
+    body.token = device_token;
 
     const phoneService = this.findByPhoneUserService;
     const service = new LoggingApplicationServiceDecorator(
@@ -151,40 +160,43 @@ export class UsersController {
     return {
       id: (await userPayload).id,
       phone: (await userPayload).phone.phoneNumber,*/
-      if(result.IsSuccess){
-        let dto: CreateUserDto = new CreateUserDto();
-        dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
-        const sign = await this.signin(dto,);
-        return {
-          data:{
-            token : sign.data.token
-          },
-          statusCode: result.statusCode,
-        };
-      }else{
-        return result
-      }
+    if (result.IsSuccess) {
+      let dto: CreateUserDto = new CreateUserDto();
+      dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
+      const sign = await this.signin(dto);
+      return {
+        data: {
+          token: sign.data.token,
+        },
+        statusCode: result.statusCode,
+      };
+    } else {
+      return result;
     }
-
+  }
 
   //Inicio de Sesión
   @ApiTags('Users')
-  @Post('/auth/login')
+  @Post('/auth/log-in')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
 
     if (!data.IsSuccess) {
       return {
         message: data,
-        token:null
-      }
+        token: null,
+      };
     }
-    const jwt = this.jwtService.sign({id: data.Value.Id.Id}, {secret: jwtcontanst.secret, expiresIn: '24h'});
+    const jwt = this.jwtService.sign(
+      { id: data.Value.Id.Id },
+      { secret: jwtcontanst.secret, expiresIn: '24h' },
+    );
 
     return {
-      data:{
-        token:jwt
-      },statusCode:data.statusCode || 200
+      data: {
+        token: jwt,
+      },
+      statusCode: data.statusCode || 200,
     };
   }
 
@@ -192,8 +204,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Get('/user')
-  async findUser(@Req() req:Request, @Headers() headers:Headers) {
-
+  async findUser(@Req() req: Request, @Headers() headers: Headers) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const id = await this.jwtService.decode(token).id;
     const user = await this.findUserById.execute(id);
@@ -207,8 +218,6 @@ export class UsersController {
       birthDate: (await userPayload).birth_date,
       gender: (await userPayload).gender,
     };
-
-
   }
 
   //Actualizar usuario en base a su ID
@@ -220,12 +229,13 @@ export class UsersController {
       body,
       this.userMapperForDomainAndDtos,
     );
-    const result = await  this.updateUserById.execute(this.updateUserParameterObjetc);
+    const result = await this.updateUserById.execute(
+      this.updateUserParameterObjetc,
+    );
     return {
       data: result.value,
       statusCode: result.statusCode || 200,
       message: result.message,
-
-    }
+    };
   }
 }
