@@ -182,7 +182,6 @@ export class UsersController {
   ) {
     const device_token = headers['device_token'];
     body.token = device_token;
-
     const phoneService = this.findByPhoneUserService;
     const service = new LoggingApplicationServiceDecorator(
       new SignUserUpDigitel(
