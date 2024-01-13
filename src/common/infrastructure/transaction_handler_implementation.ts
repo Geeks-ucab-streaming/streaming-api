@@ -1,12 +1,10 @@
 import { ItransactionHandler } from '../domain/transaction_handler/transaction_handler';
 import { QueryRunner } from 'typeorm';
 
-export class TransactionHandlerImplementation implements ItransactionHandler{
-
+export class TransactionHandlerImplementation implements ItransactionHandler {
   private readonly _runner: QueryRunner;
   constructor(private readonly runner: QueryRunner) {
     this.runner = runner;
-
   }
   async startTransaction() {
     return this.runner.startTransaction();

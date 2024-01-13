@@ -106,7 +106,7 @@ export class UsersController {
     name: 'device_token',
     description: 'Token device from firebase',
   })
-  @Post('/auth/log-in/guest')
+  @Post('/auth/login/guest')
   async createGuest(@Headers() headers: Headers) {
     const device_token = headers['device_token'];
     const jwt = this.jwtService.sign(
@@ -212,7 +212,7 @@ export class UsersController {
 
   //Inicio de Sesión
   @ApiTags('Users')
-  @Post('/auth/log-in')
+  @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
 

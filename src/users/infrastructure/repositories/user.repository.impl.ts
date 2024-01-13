@@ -21,17 +21,23 @@ export class OrmUserRepository
     this.userMapper = userMapper;
   }
 
-  async createUser(user: User, runner?: TransactionHandlerImplementation): Promise<Result<User>> {
+  async createUser(
+    user: User,
+    runner?: TransactionHandlerImplementation,
+  ): Promise<Result<User>> {
     const createdUser = await this.userMapper.domainTo(user);
-    const runnerTransaction = runner.getRunner()
-    await runnerTransaction.manager.save(createdUser)//this.save(createdUser);
+    const runnerTransaction = runner.getRunner();
+    await runnerTransaction.manager.save(createdUser); //this.save(createdUser);
     return Result.success<User>(user);
   }
 
-  async updateUser(user: User, runner?: TransactionHandlerImplementation): Promise<Result<void>> {
+  async updateUser(
+    user: User,
+    runner?: TransactionHandlerImplementation,
+  ): Promise<Result<void>> {
     const updatedUser = await this.userMapper.domainTo(user);
-    const runnerTransaction = runner.getRunner()
-    await runnerTransaction.manager.save(updatedUser) //this.save(updatedUser);
+    const runnerTransaction = runner.getRunner();
+    await runnerTransaction.manager.save(updatedUser); //this.save(updatedUser);
     return Result.success<void>(void 0);
   }
 
@@ -68,10 +74,14 @@ export class OrmUserRepository
     return usersDomain;
   }
 
-  async finderCriteria(criteria: Partial<Phone>,runner?: TransactionHandlerImplementation): Promise<User | undefined> {
-    const runnerTransaction = runner.getRunner()
+  async finderCriteria(
+    criteria: Partial<Phone>,
+    runner?: TransactionHandlerImplementation,
+  ): Promise<User | undefined> {
+    const runnerTransaction = runner.getRunner();
     //
-    const user = await runnerTransaction.manager.createQueryBuilder<UserEntity>(UserEntity, 'user')
+    const user = await runnerTransaction.manager
+      .createQueryBuilder<UserEntity>(UserEntity, 'user')
       .innerJoinAndSelect('user.phone', 'phone')
       .innerJoinAndSelect('phone.linePhone', 'linePhone')
       .leftJoinAndSelect('user.tokenDeviceUser', 'tokenDeviceUser')
@@ -79,7 +89,6 @@ export class OrmUserRepository
         phoneNumber: criteria.PhoneNumber.phoneNumber,
       })
       .getOne();
-      return user ? await this.userMapper.ToDomain(user): null
+    return user ? await this.userMapper.ToDomain(user) : null;
   }
-
 }
