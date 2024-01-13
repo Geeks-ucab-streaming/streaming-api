@@ -106,8 +106,8 @@ export class UsersController {
     name: 'device_token',
     description: 'Token device from firebase',
   })
-  @Post('/auth/login/guest')
-  async createGuest(@Headers() headers: Headers) {
+  @Post('/auth/log-in/guest')
+  async createGuest(@Headers() headers:Headers) {
     const device_token = headers['device_token'];
     const jwt = this.jwtService.sign(
       { id: 'asdfgh123456' },
@@ -212,7 +212,7 @@ export class UsersController {
 
   //Inicio de Sesión
   @ApiTags('Users')
-  @Post('/auth/login')
+  @Post('/auth/log-in')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
 
@@ -276,17 +276,14 @@ export class UsersController {
   }
 
   //Actualizar usuario en base a su ID
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
-  @Patch('/user/:id')
-  async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    this.updateUserParameterObjetc = new ParameterObjectUser(
-      id,
-      body,
-      this.userMapperForDomainAndDtos,
-    );
-    const result = await this.updateUserById.execute(
-      this.updateUserParameterObjetc,
-    );
+  @Patch('/user')
+  async updateUser(@Req() req:Request, @Headers() headers:Headers, @Body() body: UpdateUserDto) {
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const id = await this.jwtService.decode(token).id;
+    this.updateUserParameterObjetc = new ParameterObjectUser(id,body,this.userMapperForDomainAndDtos);
+    const result = await this.updateUserById.execute(this.updateUserParameterObjetc);
     return {
       data: result.value,
       statusCode: result.statusCode || 200,
