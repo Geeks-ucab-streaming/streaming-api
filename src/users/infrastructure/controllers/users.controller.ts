@@ -34,7 +34,6 @@ import { jwtcontanst } from '../../application/constants/jwt.constansts';
 import { OrmTokenRepository } from '../repositories/token.repository.impl';
 import { TokenMapper } from '../mappers/token.mapper';
 import { CancelUsersSubscription } from 'src/users/application/services/Cancel-Users-Subscription.service';
-import { UserDto } from 'src/users/application/dtos/user.dto';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -53,9 +52,7 @@ export class UsersController {
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
   private updateUserParameterObjetc: ParameterObjectUser<UpdateUserDto>;
-  private cancelUserParameterObjetc: ParameterObjectUser<UserDto>;
   private userMapperForDomainAndDtos: UsersForDtoMapper;
-  private phoneDtoMapper: PhoneAndDtoMapper;
   private cancelUsersSubscription: CancelUsersSubscription;
 
   constructor() {
@@ -65,7 +62,6 @@ export class UsersController {
     this.findUserById = new FindUserById(this.userRepository);
     this.updateUserById = new UpdateUserById(this.userRepository);
     this.userMapperForDomainAndDtos = new UsersForDtoMapper();
-    this.phoneDtoMapper = new PhoneAndDtoMapper();
     this.cancelUsersSubscription = new CancelUsersSubscription(this.userRepository);
   }
 
@@ -157,10 +153,6 @@ export class UsersController {
 
   //Inicio de Sesión
   @ApiTags('Users')
-  @ApiHeader({
-    name: 'device_token',
-    description: 'Token device from firebase',
-  })
   @Post('/auth/login')
   async signin(@Body() body: CreateUserDto) {
     const data = await this.signUserIn.execute(body.phone);
@@ -202,29 +194,38 @@ export class UsersController {
   }
 
   //Cancelar la suscripción de un usuario
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Post('/subscription/cancel')
   async cancelSubscription(@Req() req:Request, @Headers() headers:Headers) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const id = await this.jwtService.decode(token).id;
-    /*this.cancelUserParameterObjetc = new ParameterObjectUser(
-      id,
-      req.body,
-      this.userMapperForDomainAndDtos,
-    );*/
-    console.log(req.body);
-    
+    const user = await this.findUserById.execute(id);
+    if (!user.value) 
+    throw new NotFoundException('User not found');
+    const result = await this.cancelUsersSubscription.execute(user.Value.Id);
+    return {
+      data: result.value,
+      statusCode: result.statusCode || 200,
+      message: result.message,
+    }
   }
 
   //Actualizar usuario en base a su ID
   @ApiTags('Users')
   @Patch('/user/:id')
-  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+  async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     this.updateUserParameterObjetc = new ParameterObjectUser(
       id,
       body,
       this.userMapperForDomainAndDtos,
     );
-    return this.updateUserById.execute(this.updateUserParameterObjetc);
+    const result = await this.updateUserById.execute(this.updateUserParameterObjetc);
+    return {
+      data: result.value,
+      statusCode: result.statusCode || 200,
+      message: result.message,
+
+    }
   }
 }

@@ -60,7 +60,6 @@ export class OrmUserRepository
         }
       }),
     );
-    console.log(usersDomain, 'los usuarios');
     return usersDomain;
   }
 

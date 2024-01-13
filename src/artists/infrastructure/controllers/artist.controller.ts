@@ -27,10 +27,9 @@ import { FindSongsByArtistIdService } from 'src/songs/application/services/getSo
 import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
 import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
-import { GetArtistGenreService } from 'src/artists/application/services/GetArtistGenre.service';
 import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
-import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 import { MyResponse } from 'src/common/infrastructure/Response';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 @Controller('api/artists')
 export class ArtistController {
   private readonly ormArtistRepository: OrmArtistRepository;
@@ -90,9 +89,10 @@ export class ArtistController {
   @ApiTags('Artist')
   @Get('/:ArtistId')
   async getArtist(
-    @Param('ArtistId') id,
+    @Param('ArtistId') id:string,
   ): Promise<MyResponse<AllArtistInfoDto>> {
-    const dto: GetArtistProfilesApplicationServiceDto = { id };
+    const iddto=ArtistID.create(id);
+    const dto: GetArtistProfilesApplicationServiceDto = { id: iddto };
     // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
     //Mapeamos y retornamos.
 
@@ -138,7 +138,7 @@ export class ArtistController {
             songs: [],
           };
 
-          const genre = await getArtistGenre.execute(artistSongsResponse.Value);
+          const genre = getArtistGenre.execute(artistSongsResponse.Value);
 
           allArtistInfo.id = result.Value.Id.Value;
           allArtistInfo.name = result.Value.Name.Value;
@@ -162,8 +162,9 @@ export class ArtistController {
                     name: result.Value.Name.Value,
                   });
                 } else {
+                  const dtoArtist=ArtistID.create(artist);
                   const dto: GetArtistProfilesApplicationServiceDto = {
-                    id: artist,
+                    id: dtoArtist,
                   };
                   const otherArtist: Result<Artist> =
                     await service.execute(dto);

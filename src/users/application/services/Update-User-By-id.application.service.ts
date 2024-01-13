@@ -4,13 +4,14 @@ import { userName } from "src/users/domain/userAggregate/value-objects/userName"
 import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/userBirthDate";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
-import { NotFoundException } from "@nestjs/common";
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { Result } from "src/common/domain/logic/Result";
 import { ParameterObjectUser } from "../ParameterObjects/updateUser";
 import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
 import { UserDto } from "../dtos/user.dto";
 import { UpdateUserDto } from "../dtos/update-user.dto";
+import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 
 export class UpdateUserById implements IApplicationService<ParameterObjectUser<UpdateUserDto>, UserDto> {
   constructor(
@@ -46,7 +47,11 @@ export class UpdateUserById implements IApplicationService<ParameterObjectUser<U
 
       if (usuarioParametrizado.userToHandle.birth_date) {
         let birthDate = new Date(usuarioParametrizado.userToHandle.birth_date);
-        userUpdated.updateUsersBirthDate(UserBirthDate.create(birthDate, birthDate.getFullYear()));
+        if(User.validateRangeBirthDate(UserBirthDate.create(birthDate, birthDate.getFullYear()), birthDate.getFullYear())){
+          userUpdated.updateUsersBirthDate(UserBirthDate.create(birthDate, birthDate.getFullYear()));
+        }else{
+          return Result.fail<UserDto>(new DomainException<UserDto>(void 0,'Invalid Birth Date','BirthDateError',400));
+        }
       }
 
     await this.repo.updateUser(userUpdated); //Guarda la instancia en la BD.

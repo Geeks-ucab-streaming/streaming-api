@@ -5,24 +5,23 @@ import { NotFoundException } from "@nestjs/common/exceptions/not-found.exception
 import { ParameterObjectUser } from "../ParameterObjects/updateUser";
 import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 import { UserDto } from "../dtos/user.dto";
+import { userId } from "src/users/domain/userAggregate/value-objects/userId";
 
-export class CancelUsersSubscription implements IApplicationService<ParameterObjectUser<UserDto>, void> {
-constructor(
-    private readonly repo: IUserRepository,
-  ) {}
+export class CancelUsersSubscription implements IApplicationService<userId, void> {
+constructor(private readonly repo: IUserRepository,) {}
+
   get name(): string {
     throw new Error("Method not implemented.");
   }
 
-  async execute(usuarioParametrizado: ParameterObjectUser<UserDto>): Promise<Result<void>>{
+  async execute(id: userId): Promise<Result<void>>{
 
-    const user = await this.repo.findById(usuarioParametrizado.id);
+    const user = await this.repo.findById(id.Id);
     if (!user) 
       throw new NotFoundException('User not found');
 
-    if (usuarioParametrizado.SuscriptionState) {
-     user.updateUsersSuscriptionState(userSuscriptionState.create("cancelado", user.SuscriptionState.suscription_date));  
-    }
+     user.updateUsersSuscriptionState(userSuscriptionState.create("eliminado", user.SuscriptionState.suscription_date));  
+     await this.repo.updateUser(user); //Guarda la instancia en la BD.
 
     return Result.success<void>(void 0);
   }

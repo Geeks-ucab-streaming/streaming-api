@@ -27,7 +27,7 @@ export class CronSchedulerService {
   private userMapperDto = new UsersForDtoMapper();
   constructor() {}
 
-  @Cron('* * */60 * * *')
+  @Cron('*/20 * * * * *')
   async send() {
     const users = await this.userRepository.findAll();
     users.map((user) => {
@@ -36,7 +36,7 @@ export class CronSchedulerService {
           user.SuscriptionState.suscription_date,
         );
       return user.Token.map(async (tokens) => {
-        if (daysUntilExpiration <= 0) {
+        if (daysUntilExpiration < 30 && daysUntilExpiration >= 25 ) {
           await this.notifier.send({
             //EXAMPLE FOR NOTIFICATION
             notification: {
@@ -49,6 +49,7 @@ export class CronSchedulerService {
 
             token: [tokens.token],
           });
+          console.log('enviando notificacion');
           return tokens.token;
         }
       });

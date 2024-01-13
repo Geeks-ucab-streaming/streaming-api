@@ -184,6 +184,7 @@ export class PlaylistController {
         name: playlistResponse.Name,
         duration: playlistResponse.DurationString,
         image: playlistResponse.Playlist_Image,
+        streams: playlistResponse.Streams,
         creators: creators,
         songs: playlistSongs,
       };

@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHeaders, ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
+import { Optional } from '@nestjs/common';
 
 export class CreateUserDto {
 
@@ -7,7 +8,8 @@ export class CreateUserDto {
   @ApiProperty()
   phone: string;
 
-  @IsString()
+  //@IsString()
+  @Optional()
   token: string;
 
 }

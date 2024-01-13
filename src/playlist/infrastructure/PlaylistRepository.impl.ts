@@ -15,7 +15,12 @@ export class PlaylistRepository
     super(PlaylistEntity, dataSource.manager);
     this.playlistMapper = new PlaylistMapper();
   }
-  async browsePlaylists(query: string, album: boolean): Promise<Playlist[]> {
+  async browsePlaylists(
+    query: string,
+    album: boolean,
+    limit: number,
+    offset: number,
+  ): Promise<Playlist[]> {
     const playlistsResponse = await this.createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.playlistCreator', 'playlistCreator')
       .leftJoinAndSelect('playlistCreator.artist', 'artist')
@@ -25,6 +30,8 @@ export class PlaylistRepository
         query: `%${query}%`,
       })
       .andWhere('playlist.isAlbum = :isAlbum', { isAlbum: album })
+      .limit(limit)
+      .offset(offset)
       .getMany();
 
     console.log(playlistsResponse);
