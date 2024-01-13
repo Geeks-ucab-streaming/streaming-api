@@ -31,6 +31,7 @@ import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistReposito
 import { IPlaylistStreamRepository } from 'src/common/domain/repositories/IPlaylistStreamRepository';
 import { PlaylistStreamsRepository } from 'src/common/infrastructure/repositories/playlistStreamsRepository.impl';
 import { MyResponse } from 'src/common/infrastructure/Response';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 
 export class TrendingSongsDto {
   songs: SongDto[];
@@ -70,8 +71,9 @@ export class SongsController {
       for (const song of songsResponse.Value) {
         let artistsAux: { id: string; name: string }[] = [];
         for (const artist of song.Artists) {
+          const dtoArtist=ArtistID.create(artist);
           const dto: GetArtistProfilesApplicationServiceDto = {
-            id: artist,
+            id: dtoArtist,
           };
           const artistResponse: Result<Artist> =
             await findArtistByIdService.execute(dto);

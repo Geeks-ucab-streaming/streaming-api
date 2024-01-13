@@ -28,7 +28,7 @@ export class CronSuscriptionExpiredService {
 
   constructor() {}
 
-  @Cron('* * */10 * * *')
+  @Cron('* * */100 * * *')
   public async send() {
     const users = await this.userRepository.findAll();
     users.map(async (user) => {

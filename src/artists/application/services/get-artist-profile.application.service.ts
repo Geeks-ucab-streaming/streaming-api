@@ -7,7 +7,7 @@ import { IArtistsRepository } from 'src/artists/domain/IArtistsRepository';
 import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 
 export interface GetArtistProfilesApplicationServiceDto {
-  id?: string;
+  id?: ArtistID;
 }
 export class GetArtistProfilesApplicationService
   implements
@@ -22,7 +22,7 @@ export class GetArtistProfilesApplicationService
     dto?: GetArtistProfilesApplicationServiceDto,
   ): Promise<Result<Artist>> {
     const artist = await this.artistRepository.findArtistById(
-      ArtistID.create(dto.id),
+      ArtistID.create(dto.id.Value),
     );
     if (artist) return Result.success<Artist>(artist);
     else
