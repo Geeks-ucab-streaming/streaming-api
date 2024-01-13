@@ -6,9 +6,10 @@ import { ParameterObjectUser } from "../ParameterObjects/updateUser";
 import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 import { UserDto } from "../dtos/user.dto";
 import { userId } from "src/users/domain/userAggregate/value-objects/userId";
+import { ItransactionHandler } from "src/common/domain/transaction_handler/transaction_handler";
 
 export class CancelUsersSubscription implements IApplicationService<userId, void> {
-constructor(private readonly repo: IUserRepository,) {}
+constructor(private readonly repo: IUserRepository,private readonly transactionHandler:ItransactionHandler) {}
 
   get name(): string {
     throw new Error("Method not implemented.");
@@ -21,7 +22,7 @@ constructor(private readonly repo: IUserRepository,) {}
       throw new NotFoundException('User not found');
 
      user.updateUsersSuscriptionState(userSuscriptionState.create("eliminado", user.SuscriptionState.suscription_date));  
-     await this.repo.updateUser(user); //Guarda la instancia en la BD.
+     await this.repo.updateUser(user, this.transactionHandler); //Guarda la instancia en la BD.
 
     return Result.success<void>(void 0);
   }

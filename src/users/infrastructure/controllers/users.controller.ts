@@ -73,7 +73,7 @@ export class UsersController {
     this.findUserById = new FindUserById(this.userRepository);
     this.updateUserById = new UpdateUserById(this.userRepository,this.transactionHandler);
     this.userMapperForDomainAndDtos = new UsersForDtoMapper();
-    this.cancelUsersSubscription = new CancelUsersSubscription(this.userRepository);
+    this.cancelUsersSubscription = new CancelUsersSubscription(this.userRepository, this.transactionHandler);
   }
 
   //Generar Token para usuario invitado

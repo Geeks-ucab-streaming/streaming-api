@@ -92,8 +92,8 @@ export class User extends AggregateRoot<userId> {
 
   static validateRangeBirthDate(birthDate: UserBirthDate, yearBirthUser:number): UserBirthDate {
   if (birthDate){
-    if (birthDate.BirthDate <= calculateHowOldYouAre.ValidateYear(birthDate.BirthDate) && birthDate.BirthDate >= calculateHowYoungYouAre.ValidateYear(birthDate.BirthDate)) {
-      return birthDate; //Retorna la fecha de nacimiento si cumple con la condición
+    if (birthDate.BirthDate >= calculateHowOldYouAre.ValidateYear(new Date(Date.now())) && birthDate.BirthDate <= calculateHowYoungYouAre.ValidateYear(new Date(Date.now()))) {
+    return birthDate; //Retorna la fecha de nacimiento si cumple con la condición
     }
    }
    return null;
