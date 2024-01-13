@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
-import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindAlbumByPlaylistID.service';
+import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindPlaylistByID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
@@ -38,7 +38,7 @@ export class PlaylistController {
   }
 
   @ApiTags('TopPlaylist')
-  @Get('/top_playlist')
+  @Get('/top_playlists')
   async findTopPlaylists(): Promise<MyResponse<TopPlaylistDto>> {
     this.findTopPlaylistsService = new FindTopPlaylistsService(
       this.repository,
@@ -165,7 +165,7 @@ export class PlaylistController {
             });
           }
           playlistSongs.push({
-            songId: song.Id.Value.toString(),
+            id: song.Id.Value.toString(),
             name: song.Name,
             image: song.Image,
             duration: song.DurationString,

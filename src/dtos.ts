@@ -41,7 +41,7 @@ export class PlaylistDto {
 }
 
 export class SongDto {
-  songId: string;
+  id: string;
   name: string;
   duration: string;
   image: Buffer;

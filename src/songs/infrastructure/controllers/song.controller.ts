@@ -37,7 +37,7 @@ export class TrendingSongsDto {
   songs: SongDto[];
 }
 
-@Controller('api/songs')
+@Controller('api/song')
 export class SongsController {
   private getSongByIdService: GetSongByIdService;
   private getSongBPlaylistIdService: GetSongBPlaylistIdService;
@@ -55,7 +55,7 @@ export class SongsController {
   }
 
   @ApiTags('Trending Songs')
-  @Get('/trending')
+  @Get('/top_songs')
   async findTrendingSongs(): Promise<MyResponse<TrendingSongsDto>> {
     const service = new LoggingApplicationServiceDecorator(
       new GetTrendingSongsService(this.ormSongRepository),
@@ -71,7 +71,7 @@ export class SongsController {
       for (const song of songsResponse.Value) {
         let artistsAux: { id: string; name: string }[] = [];
         for (const artist of song.Artists) {
-          const dtoArtist=ArtistID.create(artist);
+          const dtoArtist = ArtistID.create(artist);
           const dto: GetArtistProfilesApplicationServiceDto = {
             id: dtoArtist,
           };
@@ -85,7 +85,7 @@ export class SongsController {
           }
         }
         TrendingSongs.songs.push({
-          songId: song.Id.Value,
+          id: song.Id.Value,
           name: song.Name,
           image: song.Image,
           duration: song.DurationString,
