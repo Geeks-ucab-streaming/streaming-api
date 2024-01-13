@@ -13,7 +13,7 @@ import { Result } from '../../../common/domain/logic/Result';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ITokenUserRepository } from '../../domain/tokenUser.repository';
 import { TokenEntity } from '../../domain/userAggregate/entities/token';
-import { ItransactionHandler } from '../../../common/Application/transaction_handler/transaction_handler';
+import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
 
 export class SignUserUpMovistar implements IApplicationService<CreateUserDto,User>{
   constructor(private phone:PhonesService,
@@ -48,13 +48,13 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
       return Result.fail<User>(new Error("Phone prefix is not from Movistar"));
     }
 
-    if(!phoneMovistar.IsSuccess) return Result.fail<User>(new DomainException<string>(void 0,phoneMovistar.message,phoneMovistar.error,phoneMovistar.statusCode));
     let phoneMovistarDto = await this.IMapperPhone.domainTo(phoneMovistar.Value);
     usersDto.phone = phoneMovistarDto.phoneNumber;
-    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber, 
-      phoneMovistarDto.linePhoneId, phoneMovistarDto.lineName,usersDto.token));
+    const savedUser = await this.repo.createUser(UserFactory.userFactoryMethod(phoneMovistarDto.id, phoneMovistarDto.phoneNumber,
+      phoneMovistarDto.linePhoneId, phoneMovistarDto.lineName,usersDto.token),this.transactionHandler);
     const tokenEntity = TokenEntity.create(usersDto.token,savedUser.value.Id.Id);
-    await this.tokenRepository.saveToken(tokenEntity)
+    await this.tokenRepository.saveToken(tokenEntity,this.transactionHandler)
+    await this.transactionHandler.commitTransaction()
     return savedUser;
   }
 }

@@ -77,7 +77,7 @@ export class UsersController {
     );
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findUserById = new FindUserById(this.userRepository);
-    this.updateUserById = new UpdateUserById(this.userRepository);
+    this.updateUserById = new UpdateUserById(this.userRepository,this.transactionHandler);
     this.userMapperForDomainAndDtos = new UsersForDtoMapper();
     this.phoneDtoMapper = new PhoneAndDtoMapper();
   }
@@ -147,6 +147,7 @@ export class UsersController {
         phoneService,
         this.tokenRepository,
         this.userRepository,
+        this.transactionHandler,
       ),
       new NestLogger(),
     );

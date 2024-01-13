@@ -16,7 +16,7 @@ import { Line } from 'src/phones/domain/phoneAggregate/value-objects/line';
 import { UserPhoneFactory } from 'src/users/domain/factories/user-phone.factory';
 import { PhoneParameterObject } from 'src/phones/domain/parameterObjects/phoneParameterObject';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
-import { ItransactionHandler } from '../../../common/Application/transaction_handler/transaction_handler';
+import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
 
 
 export class PhonesService implements IApplicationService<string,Phone> {
@@ -43,7 +43,7 @@ export class PhonesService implements IApplicationService<string,Phone> {
         return Result.fail<Phone>(new DomainException<PrefixEntity>(prefixEntity,'Line is not valid','Line is not valid',400))
     }
       //throw new LineInvalidExceptions(line);
-    const createdPhone = (await this.repo.createPhone(UserPhoneFactory.phoneFactoryMethod(new PhoneParameterObject(uuidv4(),userPhone,line.id,line.name)),this.transactionHandler.getRunner()));
+    const createdPhone = (await this.repo.createPhone(UserPhoneFactory.phoneFactoryMethod(new PhoneParameterObject(uuidv4(),userPhone,line.id,line.name)),this.transactionHandler));
 
     return createdPhone;
   }

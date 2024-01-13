@@ -1,4 +1,4 @@
-import { ItransactionHandler } from '../Application/transaction_handler/transaction_handler';
+import { ItransactionHandler } from '../domain/transaction_handler/transaction_handler';
 import { QueryRunner } from 'typeorm';
 
 export class TransactionHandlerImplementation implements ItransactionHandler{
