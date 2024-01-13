@@ -5,7 +5,7 @@ import { ItransactionHandler } from '../../common/domain/transaction_handler/tra
 export interface IUserRepository {
   findById(id: string): Promise<User>;
   findAll(): Promise<User[]>;
-  finderCriteria(criteria: Partial<Phone>): Promise<User | undefined>;
+  finderCriteria(criteria: Partial<Phone>,runner?: ItransactionHandler): Promise<User | undefined>;
   createUser(user: User, runner?: ItransactionHandler): Promise<Result<User>>;
   updateUser(user: User, runner?: ItransactionHandler): Promise<Result<void>>;
 }

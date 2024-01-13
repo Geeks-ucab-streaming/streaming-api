@@ -60,7 +60,7 @@ export class UsersController {
 
   constructor() {
     this.phonesService = new PhonesService(this.phoneRepository,this.lineRepository,this.transactionHandler);
-    this.findByPhoneUserService = new findByPhoneUserService(this.userRepository);
+    this.findByPhoneUserService = new findByPhoneUserService(this.userRepository,this.transactionHandler);
     this.phonesService = new PhonesService(
       this.phoneRepository,
       this.lineRepository,
@@ -68,6 +68,7 @@ export class UsersController {
     );
     this.findByPhoneUserService = new findByPhoneUserService(
       this.userRepository,
+      this.transactionHandler,
     );
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
     this.findUserById = new FindUserById(this.userRepository);
@@ -125,12 +126,10 @@ export class UsersController {
     };*/
 
     const result = await serviceMovistar.execute(body);
-
     if(result.IsSuccess){
       let dto: CreateUserDto = new CreateUserDto();
       dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
       const sign = await this.signin(dto);
-
       return {
         data:{
           token : sign.data.token
@@ -164,15 +163,10 @@ export class UsersController {
       new NestLogger(),
     );
     const result = await service.execute(body);
-
-    /*const userPayload = this.userMapperForDomainAndDtos.domainTo(result.Value);
-    return {
-      id: (await userPayload).id,
-      phone: (await userPayload).phone.phoneNumber,*/
       if(result.IsSuccess){
         let dto: CreateUserDto = new CreateUserDto();
         dto.phone = result.Value.Phone.PhoneNumber.phoneNumber;
-        const sign = await this.signin(dto,);
+        const sign = await this.signin(dto);
         return {
           data:{
             token : sign.data?.token

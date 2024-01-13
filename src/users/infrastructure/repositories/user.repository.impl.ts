@@ -1,4 +1,4 @@
-import { Not, QueryRunner, Repository } from 'typeorm';
+import { Not, QueryRunner, Repository, SelectQueryBuilder } from 'typeorm';
 import { User } from '../../domain/userAggregate/user';
 import { UserEntity } from '../entities/users.entity';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
@@ -68,8 +68,10 @@ export class OrmUserRepository
     return usersDomain;
   }
 
-  async finderCriteria(criteria: Partial<Phone>): Promise<User | undefined> {
-    const user = await this.createQueryBuilder('user')
+  async finderCriteria(criteria: Partial<Phone>,runner?: TransactionHandlerImplementation): Promise<User | undefined> {
+    const runnerTransaction = runner.getRunner()
+    //
+    const user = await runnerTransaction.manager.createQueryBuilder<UserEntity>(UserEntity, 'user')
       .innerJoinAndSelect('user.phone', 'phone')
       .innerJoinAndSelect('phone.linePhone', 'linePhone')
       .leftJoinAndSelect('user.tokenDeviceUser', 'tokenDeviceUser')

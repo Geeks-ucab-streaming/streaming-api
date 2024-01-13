@@ -32,7 +32,7 @@ export class SignUserUpDigitel implements IApplicationService<CreateUserDto,User
       throw new NotFoundException ("User Alredy exists");
     }
 
-    let phoneDigitel = await this.phone.execute(usersDto.phone);void 0
+    let phoneDigitel = await this.phone.execute(usersDto.phone);
 
     if(!phoneDigitel.IsSuccess) {
       await this.transactionHandler.rollbackTransaction()

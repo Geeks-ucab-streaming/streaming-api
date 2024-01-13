@@ -9,7 +9,7 @@ export class TransactionHandlerImplementation implements ItransactionHandler{
 
   }
   async startTransaction() {
-    return await this.runner.startTransaction();
+    return this.runner.startTransaction();
   }
   async commitTransaction() {
     return await this.runner.commitTransaction();

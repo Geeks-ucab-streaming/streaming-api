@@ -28,8 +28,7 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
   }
 
   async execute(usersDto: CreateUserDto):Promise<Result<User>>{
-    await this.transactionHandler.startTransaction()
-
+    await this.transactionHandler.startTransaction();
     const users = await this.findByPhoneUserService.execute(usersDto.phone); 
     if(users.Value){
       throw new NotFoundException ("User Alredy exists");
@@ -49,7 +48,7 @@ export class SignUserUpMovistar implements IApplicationService<CreateUserDto,Use
       phoneMovistar.Value.LinePhone.id, phoneMovistar.Value.LinePhone.name, usersDto.token, "premium"),this.transactionHandler);
     const tokenEntity = TokenEntity.create(usersDto.token,savedUser.value.Id.Id);
     await this.tokenRepository.saveToken(tokenEntity,this.transactionHandler)
-    await this.transactionHandler.commitTransaction()
+    await this.transactionHandler.commitTransaction();
     return savedUser;
   }
 }
