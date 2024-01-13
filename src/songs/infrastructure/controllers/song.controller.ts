@@ -85,7 +85,7 @@ export class SongsController {
           }
         }
         TrendingSongs.songs.push({
-          songId: song.Id.Value,
+          id: song.Id.Value,
           name: song.Name,
           image: song.Image,
           duration: song.DurationString,
