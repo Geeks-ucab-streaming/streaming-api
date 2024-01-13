@@ -7,11 +7,12 @@ import { userSuscriptionState } from "src/users/domain/userAggregate/value-objec
 import { NotFoundException } from "@nestjs/common";
 import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
 import { Result } from "src/common/domain/logic/Result";
-import { UpdateUser } from "../ParameterObjects/updateUser";
+import { ParameterObjectUser } from "../ParameterObjects/updateUser";
 import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
 import { UserDto } from "../dtos/user.dto";
+import { UpdateUserDto } from "../dtos/update-user.dto";
 
-export class UpdateUserById implements IApplicationService<UpdateUser, UserDto> {
+export class UpdateUserById implements IApplicationService<ParameterObjectUser<UpdateUserDto>, UserDto> {
   constructor(
     private readonly repo: IUserRepository,
   ) {}
@@ -19,7 +20,7 @@ export class UpdateUserById implements IApplicationService<UpdateUser, UserDto> 
     throw new Error("Method not implemented.");
   }
 
-  async execute(usuarioParametrizado: UpdateUser): Promise<Result<UserDto>>{
+  async execute(usuarioParametrizado: ParameterObjectUser<UpdateUserDto>): Promise<Result<UserDto>>{
     const user = await this.repo.findById(usuarioParametrizado.id);
     
     if (!user) return Result.fail<UserDto>(new NotFoundException('user not found'))
@@ -27,24 +28,24 @@ export class UpdateUserById implements IApplicationService<UpdateUser, UserDto> 
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userSuscriptionState.create("premium", new Date(Date.now())),
+      userSuscriptionState.create(user.SuscriptionState.SuscriptionState, user.SuscriptionState.suscription_date),
       null,
       )
 
-      if (usuarioParametrizado.userToUpdate.name) {
-        userUpdated.updateUsersName(userName.create(usuarioParametrizado.userToUpdate.name));
+      if (usuarioParametrizado.userToHandle.name) {
+        userUpdated.updateUsersName(userName.create(usuarioParametrizado.userToHandle.name));
       }
   
-      if (usuarioParametrizado.userToUpdate.email) {
-        userUpdated.updateUsersEmail(userEmail.create(usuarioParametrizado.userToUpdate.email));
+      if (usuarioParametrizado.userToHandle.email) {
+        userUpdated.updateUsersEmail(userEmail.create(usuarioParametrizado.userToHandle.email));
       }
   
-      if (usuarioParametrizado.userToUpdate.gender) {
-        userUpdated.updateUsersGender(UserGender.create(usuarioParametrizado.userToUpdate.gender));
+      if (usuarioParametrizado.userToHandle.gender) {
+        userUpdated.updateUsersGender(UserGender.create(usuarioParametrizado.userToHandle.gender));
       }
 
-      if (usuarioParametrizado.userToUpdate.birth_date) {
-        let birthDate = new Date(usuarioParametrizado.userToUpdate.birth_date);
+      if (usuarioParametrizado.userToHandle.birth_date) {
+        let birthDate = new Date(usuarioParametrizado.userToHandle.birth_date);
         userUpdated.updateUsersBirthDate(UserBirthDate.create(birthDate, birthDate.getFullYear()));
       }
 

@@ -24,7 +24,7 @@ import { SignUserUpMovistar } from 'src/users/application/services/Sign-User-Up-
 import { SignUserIn } from 'src/users/application/services/Sign-User-In.application.service';
 import { FindUserById } from 'src/users/application/services/Find-User-By-Id.application.service';
 import { UpdateUserById } from 'src/users/application/services/Update-User-By-id.application.service';
-import { UpdateUser } from 'src/users/application/ParameterObjects/updateUser';
+import { ParameterObjectUser } from 'src/users/application/ParameterObjects/updateUser';
 import { UsersForDtoMapper } from '../mappers/UserForDto.mapper';
 import { SignUserUpDigitel } from 'src/users/application/services/Sign-User-Up-Digitel.application.service';
 import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
@@ -34,6 +34,7 @@ import { jwtcontanst } from '../../application/constants/jwt.constansts';
 import { OrmTokenRepository } from '../repositories/token.repository.impl';
 import { TokenMapper } from '../mappers/token.mapper';
 import { CancelUsersSubscription } from 'src/users/application/services/Cancel-Users-Subscription.service';
+import { UserDto } from 'src/users/application/dtos/user.dto';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -51,7 +52,8 @@ export class UsersController {
   private signUserIn: SignUserIn;
   private findUserById: FindUserById;
   private updateUserById: UpdateUserById;
-  private updateUserParameterObjetc: UpdateUser;
+  private updateUserParameterObjetc: ParameterObjectUser<UpdateUserDto>;
+  private cancelUserParameterObjetc: ParameterObjectUser<UserDto>;
   private userMapperForDomainAndDtos: UsersForDtoMapper;
   private phoneDtoMapper: PhoneAndDtoMapper;
   private cancelUsersSubscription: CancelUsersSubscription;
@@ -205,6 +207,12 @@ export class UsersController {
   async cancelSubscription(@Req() req:Request, @Headers() headers:Headers) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const id = await this.jwtService.decode(token).id;
+    /*this.cancelUserParameterObjetc = new ParameterObjectUser(
+      id,
+      req.body,
+      this.userMapperForDomainAndDtos,
+    );*/
+    console.log(req.body);
     
   }
 
@@ -212,7 +220,7 @@ export class UsersController {
   @ApiTags('Users')
   @Patch('/user/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    this.updateUserParameterObjetc = new UpdateUser(
+    this.updateUserParameterObjetc = new ParameterObjectUser(
       id,
       body,
       this.userMapperForDomainAndDtos,
