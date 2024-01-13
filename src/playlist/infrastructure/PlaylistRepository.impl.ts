@@ -119,6 +119,27 @@ export class PlaylistRepository
     }
     return null;
   }
+
+  async findAlbumById(id: string): Promise<Playlist> {
+    const playlistResponse: PlaylistEntity = await this.createQueryBuilder(
+      'playlist',
+    )
+      .leftJoinAndSelect('playlist.playlistCreator', 'playlistCreator')
+      .leftJoinAndSelect('playlistCreator.artist', 'artist')
+      .leftJoinAndSelect('playlist.playlistSong', 'playlistSong')
+      .leftJoinAndSelect('playlistSong.song', 'song')
+      .leftJoinAndSelect('song.song_artist', 'songArtist')
+      .leftJoinAndSelect('songArtist.artist', 'artist2')
+      .where('playlist.id = :playlistId', { playlistId: id })
+      .andWhere('playlist.isAlbum = :isAlbum', { isAlbum: true })
+      .getOne();
+
+    if (playlistResponse) {
+      const playlist = await this.playlistMapper.ToDomain(playlistResponse);
+      return playlist;
+    }
+    return null;
+  }
   async findPlaylistsByArtistId(id: string): Promise<Playlist[]> {
     const playlistsResponse: PlaylistEntity[] = await this.createQueryBuilder(
       'playlist',

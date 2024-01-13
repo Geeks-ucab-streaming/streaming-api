@@ -8,7 +8,7 @@ import { Playlist } from 'src/playlist/domain/playlist';
 import { CalculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 
-export class FindAlbumByPlaylistIDService
+export class FindAlbumByIDService
   implements IApplicationService<string, Playlist>
 {
   private readonly playlistRepository: IPlaylistRepository;
@@ -28,8 +28,7 @@ export class FindAlbumByPlaylistIDService
   }
 
   async execute(id: string): Promise<Result<Playlist>> {
-    const playlist: Playlist =
-      await this.playlistRepository.findPlaylistById(id);
+    const playlist: Playlist = await this.playlistRepository.findAlbumById(id);
     if (playlist) {
       await this.calculateDurationService.execute(
         playlist,
@@ -40,7 +39,7 @@ export class FindAlbumByPlaylistIDService
     return Result.fail(
       new DomainException(
         void 0,
-        `No se encontró album/playlist para el id: ${id}`,
+        `No se encontró album para el id: ${id}`,
         'Not Found Exception',
         404,
       ),

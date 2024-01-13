@@ -12,4 +12,5 @@ export interface IPlaylistRepository {
     limit: number,
     offset: number,
   ): Promise<Playlist[]>;
+  findAlbumById(id: string): Promise<Playlist>;
 }
