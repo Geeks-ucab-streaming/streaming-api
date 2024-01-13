@@ -1,21 +1,20 @@
 import { User } from 'src/users/domain/userAggregate/user';
-import { UserEntity } from 'src/users/infrastructure/entities/users.entity';
 import { UserDto } from '../dtos/user.dto';
-import { UpdateUserDto } from '../dtos/update-user.dto';
 import { Imapper } from 'src/common/Application/IMapper';
 
-export class UpdateUser {
+export class ParameterObjectUser<T> {
   public id: string;
-  public userToUpdate: UpdateUserDto;
+  public suscriptionState: string;
+  public userToHandle: T;
   public mapper: Imapper<User, UserDto>;
 
   constructor(
     id: string,
-    userToUpdate: UpdateUserDto,
+    userToHandle: T,
     mapper: Imapper<User, UserDto>,
   ) {
     this.id = id;
-    this.userToUpdate = userToUpdate;
+    this.userToHandle = userToHandle;
     this.mapper = mapper;
   }
 
@@ -23,7 +22,11 @@ export class UpdateUser {
     this.id = id;
   }
 
-  set UserToUpdate(userToUpdate: UpdateUserDto) {
-    this.userToUpdate = userToUpdate;
+  set SuscriptionState(suscriptionState: string) {
+    this.suscriptionState = suscriptionState;
+  }
+
+  set UserToUpdate(userToHandle: T) {
+    this.userToHandle = userToHandle;
   }
 }

@@ -1,7 +1,7 @@
 export class calculateHowYoungYouAre {
 
-  static ValidateYear(birthDate: Date): Date {
-   return new Date(birthDate.getFullYear() - 8,1,1);
+  static ValidateYear(currentDate: Date): Date {
+   return new Date(currentDate.getFullYear() - 8,1,1);
  }
 
 }

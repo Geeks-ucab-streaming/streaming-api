@@ -4,6 +4,7 @@ import { Result } from "src/common/domain/logic/Result";
 import { IUserRepository } from "src/users/domain/IUserRepository";
 import { User } from "src/users/domain/userAggregate/user";
 import { userSubscriptionDto } from "./Change-Subscription-Notification.application.service";
+import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 
 interface changeSubscriptionDto {
     id: string;
@@ -20,7 +21,7 @@ export class ChangeSusbscriptionStateService implements IApplicationService<chan
     async execute(newState: changeSubscriptionDto ): Promise<Result<User>>{
       const user = await this.repo.findById(newState.id);
       const beforeNotification = user.SuscriptionState.SuscriptionState;
-      user.SuscriptionState.SuscriptionState = newState.newState;    
+      user.updateUsersSuscriptionState(userSuscriptionState.create(newState.newState, user.SuscriptionState.suscription_date)); 
       await this.repo.updateUser(user); 
 
         const dto: userSubscriptionDto = {
