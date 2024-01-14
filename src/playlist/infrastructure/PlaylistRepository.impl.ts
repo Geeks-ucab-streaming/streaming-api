@@ -4,6 +4,7 @@ import { Playlist } from '../domain/playlist';
 import { PlaylistEntity } from './entities/playlist.entity';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { PlaylistMapper } from './mappers/playlist.mapper';
+import { PlaylistID } from '../domain/value-objects/PlaylistID-valueobject';
 
 export class PlaylistRepository
   extends Repository<PlaylistEntity>
@@ -34,9 +35,6 @@ export class PlaylistRepository
       .offset(offset)
       .getMany();
 
-    console.log(playlistsResponse);
-    console.log('AQUI');
-
     if (playlistsResponse) {
       let playlists: Playlist[] = [];
       if (playlistsResponse.length > 0)
@@ -48,8 +46,8 @@ export class PlaylistRepository
     }
     return null;
   }
-  async saveStream(id: string): Promise<boolean> {
-    const playlist = await this.findOne({ where: { id } });
+  async saveStream(id: PlaylistID): Promise<boolean> {
+    const playlist = await this.findOne({ where: { id: id.Value } });
 
     if (playlist) {
       playlist.reproductions += 1;
