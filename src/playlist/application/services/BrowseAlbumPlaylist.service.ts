@@ -8,7 +8,7 @@ import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { Result } from '../../../common/domain/logic/Result';
 import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 
-export class QueryDto {
+export interface QueryDto {
   query: string;
   album: boolean;
 }

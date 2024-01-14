@@ -28,7 +28,7 @@ import {
   FindSongsByArtistIdServiceDto,
 } from 'src/songs/application/services/getSongsByArtist.service';
 import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
-import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
+import { FindAlbumByArtistIDService, FindAlbumByArtistIDServiceDto } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
 import { MyResponse } from 'src/common/infrastructure/Response';
@@ -132,8 +132,13 @@ export class ArtistController {
       const artistSongsResponse: Result<Song[]> =
         await getSongsByArtistIdservice.execute(getSongByArtistIdDto);
       if (artistSongsResponse.IsSuccess) {
+        const getAlbumsByArtistIdServiceDto: FindAlbumByArtistIDServiceDto = {
+        id: result.Value.Id,
+        }
         const artistAlbumsResponse: Result<Playlist[]> =
-          await getAlbumsByArtistIdservice.execute(result.Value.Id.Value);
+          await getAlbumsByArtistIdservice.execute(
+            getAlbumsByArtistIdServiceDto,
+          );
         if (artistAlbumsResponse.IsSuccess) {
           let allArtistInfo: AllArtistInfoDto = {
             id: '',

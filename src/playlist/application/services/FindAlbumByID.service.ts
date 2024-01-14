@@ -1,15 +1,16 @@
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { DomainException } from 'src/common/domain/exceptions/domain-exception';
-import { IFindService } from 'src/common/domain/ifind.service';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { Result } from 'src/common/domain/logic/Result';
 import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { CalculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
+import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
-
+export interface FindAlbumByIDServiceDto {
+  id?: PlaylistID;
+}
 export class FindAlbumByIDService
-  implements IApplicationService<string, Playlist>
+  implements IApplicationService<FindAlbumByIDServiceDto, Playlist>
 {
   private readonly playlistRepository: IPlaylistRepository;
   private readonly songRepository: ISongRepository;
@@ -27,8 +28,8 @@ export class FindAlbumByIDService
     return this.constructor.name;
   }
 
-  async execute(id: string): Promise<Result<Playlist>> {
-    const playlist: Playlist = await this.playlistRepository.findAlbumById(id);
+  async execute(dto: FindAlbumByIDServiceDto): Promise<Result<Playlist>> {
+    const playlist: Playlist = await this.playlistRepository.findAlbumById(PlaylistID.create(dto.id.Value));
     if (playlist) {
       await this.calculateDurationService.execute(
         playlist,
@@ -39,7 +40,7 @@ export class FindAlbumByIDService
     return Result.fail(
       new DomainException(
         void 0,
-        `No se encontró album para el id: ${id}`,
+        `No se encontró album para el id: ${dto.id.Value}`,
         'Not Found Exception',
         404,
       ),

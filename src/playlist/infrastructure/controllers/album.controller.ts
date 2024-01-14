@@ -17,8 +17,9 @@ import { FindArtistsInCollectionService } from 'src/artists/application/services
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 import { Artist } from 'src/artists/domain/artist';
 import { Song } from 'src/songs/domain/song';
-import { FindAlbumByIDService } from 'src/playlist/application/services/FindAlbumByID.service';
+import { FindAlbumByIDService, FindAlbumByIDServiceDto } from 'src/playlist/application/services/FindAlbumByID.service';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 
 @Controller('api/album')
 export class AlbumController {
@@ -83,8 +84,10 @@ export class AlbumController {
     this.findSongsInCollectionService = new GetSongsInCollectionService(
       this.songRepository,
     );
+    const iddto= PlaylistID.create(id);
+    const dto: FindAlbumByIDServiceDto = { id: iddto };
     const AlbumResult: Result<Playlist> =
-      await this.findAlbumByIDService.execute(id);
+      await this.findAlbumByIDService.execute(dto);
 
     if (AlbumResult.IsSuccess) {
       const albumResponse: Playlist = AlbumResult.Value;
