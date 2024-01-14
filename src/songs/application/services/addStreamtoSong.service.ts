@@ -10,15 +10,18 @@ import {
   GetSongByIdServiceDto,
 } from './getSongById.service';
 import { Song } from 'src/songs/domain/song';
+import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 
-export class streamDto {
-  user: string;
-  song: string;
-  playlist?: string;
+export class StreamDto {
+  user: userId;
+  song: SongID;
+  playlist?: PlaylistID;
 }
 
 export class AddStreamToSongService
-  implements IApplicationService<streamDto, void>
+  implements IApplicationService<StreamDto, void>
 {
   private readonly streamsRepository: IStreamRepository;
   private readonly playlistStreamsRepository: IPlaylistStreamRepository;
@@ -42,7 +45,7 @@ export class AddStreamToSongService
   get name(): string {
     return this.constructor.name;
   }
-  async execute(dto: streamDto): Promise<Result<void>> {
+  async execute(dto: StreamDto): Promise<Result<void>> {
     const song: Song = await this.songRepository.findById(dto.song);
     await this.streamsRepository.saveSongStream(dto.user, dto.song);
     await this.songRepository.saveStream(dto.song);

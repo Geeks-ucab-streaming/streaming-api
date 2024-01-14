@@ -9,12 +9,16 @@ import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.re
 import { FindTopPlaylistsService } from 'src/playlist/application/services/FindTopPlaylists.service';
 import { PlaylistDto, SongDto, TopPlaylistDto } from 'src/dtos';
 import { Artist } from 'src/artists/domain/artist';
-import { GetSongsInCollectionService } from 'src/songs/application/services/getSongsInCollection.service';
+import {
+  GetSongsInCollectionService,
+  GetSongsInCollectionServiceDto,
+} from 'src/songs/application/services/getSongsInCollection.service';
 import { Song } from 'src/songs/domain/song';
 import { FindArtistsInCollectionService } from 'src/artists/application/services/FindArtistsInCollection.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 import { Result } from '../../../common/domain/logic/Result';
 import { MyResponse } from 'src/common/infrastructure/Response';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 
 @Controller('api/playlist')
 export class PlaylistController {
@@ -131,14 +135,20 @@ export class PlaylistController {
           );
       }
 
-      let songsId: string[] = [];
+      let songsId: SongID[] = [];
 
       for (const song of playlistResponse.PlaylistSong) {
         songsId.push(song);
       }
 
+      const findSongsInCollectionDto: GetSongsInCollectionServiceDto = {
+        songsId,
+      };
+
       const songsResponse: Result<Song[]> =
-        await this.findSongsInCollectionService.execute(songsId);
+        await this.findSongsInCollectionService.execute(
+          findSongsInCollectionDto,
+        );
 
       let playlistSongs: SongDto[] = [];
       if (songsResponse.IsSuccess) {

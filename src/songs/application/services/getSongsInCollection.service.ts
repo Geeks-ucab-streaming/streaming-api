@@ -4,17 +4,22 @@ import { IFindService } from 'src/common/domain/ifind.service';
 import { Result } from 'src/common/domain/logic/Result';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { Song } from 'src/songs/domain/song';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+
+export interface GetSongsInCollectionServiceDto {
+  songsId: SongID[];
+}
 
 export class GetSongsInCollectionService
-  implements IApplicationService<String[], Song[]>
+  implements IApplicationService<GetSongsInCollectionServiceDto, Song[]>
 {
   constructor(private readonly songsRepository: ISongRepository) {}
   get name(): string {
     return this.constructor.name;
   }
 
-  async execute(songsId: string[]): Promise<Result<Song[]>> {
-    const res = await this.songsRepository.findSongsInCollection(songsId);
+  async execute(dto: GetSongsInCollectionServiceDto): Promise<Result<Song[]>> {
+    const res = await this.songsRepository.findSongsInCollection(dto.songsId);
     if (res) return Result.success(res);
     return Result.fail(
       new DomainException(

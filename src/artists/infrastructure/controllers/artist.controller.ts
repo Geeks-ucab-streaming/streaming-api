@@ -23,7 +23,10 @@ import { GetTrendingArtistsService } from 'src/artists/application/services/Find
 import { AllArtistInfoDto, TrendingArtistsDto } from 'src/dtos';
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
 import { Song } from 'src/songs/domain/song';
-import { FindSongsByArtistIdService } from 'src/songs/application/services/getSongsByArtist.service';
+import {
+  FindSongsByArtistIdService,
+  FindSongsByArtistIdServiceDto,
+} from 'src/songs/application/services/getSongsByArtist.service';
 import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
 import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
@@ -123,8 +126,11 @@ export class ArtistController {
     const result = await service.execute(dto);
 
     if (result.IsSuccess) {
+      const getSongByArtistIdDto: FindSongsByArtistIdServiceDto = {
+        id: result.Value.Id,
+      };
       const artistSongsResponse: Result<Song[]> =
-        await getSongsByArtistIdservice.execute(result.Value.Id.Value);
+        await getSongsByArtistIdservice.execute(getSongByArtistIdDto);
       if (artistSongsResponse.IsSuccess) {
         const artistAlbumsResponse: Result<Playlist[]> =
           await getAlbumsByArtistIdservice.execute(result.Value.Id.Value);
