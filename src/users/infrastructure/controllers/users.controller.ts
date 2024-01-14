@@ -226,7 +226,8 @@ export class UsersController {
       };
     }
     const jwt = this.jwtService.sign(
-      { id: data.Value.Id.Id },
+      { id: data.Value.Id.Id, subscription: data.Value.SuscriptionState.SuscriptionState
+          ? data.Value.SuscriptionState.SuscriptionState : 'gratuito' },
       { secret: jwtcontanst.secret, expiresIn: '24h' },
     );
 
