@@ -10,7 +10,7 @@ import {
   NotFoundException,
   Headers,
 } from '@nestjs/common';
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { ApiBearerAuth, ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
 import { findByPhoneUserService } from '../../../phones/application/services/find-by-phone-user.application.service';
 import { PhonesService } from 'src/phones/application/services/register-users-phone.application.service';
@@ -22,7 +22,7 @@ import { OrmLineRepository } from 'src/phones/infrastructure/repositories/prefix
 import { JwtService } from '@nestjs/jwt';
 import { phoneMapper } from 'src/phones/infrastructure/mapper/phone.mapper';
 import { UsersMapper } from '../mappers/User.mapper';
-import { UpdateUserDto } from 'src/users/infrastructure/dtos/update-user.dto';
+import { UpdateUserDto } from 'src/users/application/dtos/update-user.dto';
 import { SignUserUpMovistar } from 'src/users/application/services/Sign-User-Up-Movistar.application.service';
 import { SignUserIn } from 'src/users/application/services/Sign-User-In.application.service';
 import { FindUserById } from 'src/users/application/services/Find-User-By-Id.application.service';

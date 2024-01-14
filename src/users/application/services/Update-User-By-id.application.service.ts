@@ -9,8 +9,8 @@ import { IApplicationService } from 'src/common/Application/application-service/
 import { Result } from 'src/common/domain/logic/Result';
 import { ParameterObjectUser } from '../ParameterObjects/updateUser';
 import { userEmail } from 'src/users/domain/userAggregate/value-objects/userEmail';
-import { UserDto } from '../../infrastructure/dtos/user.dto';
-import { UpdateUserDto } from '../../infrastructure/dtos/update-user.dto';
+import { UserDto } from '../dtos/user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
 

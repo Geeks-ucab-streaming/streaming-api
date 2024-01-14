@@ -5,7 +5,7 @@ import { userName } from 'src/users/domain/userAggregate/value-objects/userName'
 import { UserBirthDate } from 'src/users/domain/userAggregate/value-objects/userBirthDate';
 import { userSuscriptionState } from 'src/users/domain/userAggregate/value-objects/userSuscriptionState';
 import { UserGender } from 'src/users/domain/userAggregate/value-objects/userGender';
-import { UserDto } from 'src/users/infrastructure/dtos/user.dto';
+import { UserDto } from 'src/users/application/dtos/user.dto';
 import { PhoneAndDtoMapper } from 'src/phones/infrastructure/mapper/phoneAndDto.mapper';
 import { userEmail } from 'src/users/domain/userAggregate/value-objects/userEmail';
 

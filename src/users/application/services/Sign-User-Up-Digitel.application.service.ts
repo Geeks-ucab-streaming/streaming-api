@@ -1,5 +1,5 @@
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
-import { CreateUserDto } from '../../infrastructure/dtos/create-user.dto';
+import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from 'src/users/domain/userAggregate/user';
 import { NotFoundException } from '@nestjs/common';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';

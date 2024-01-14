@@ -1,5 +1,5 @@
 import { User } from 'src/users/domain/userAggregate/user';
-import { UserDto } from '../../infrastructure/dtos/user.dto';
+import { UserDto } from '../dtos/user.dto';
 import { Imapper } from 'src/common/Application/IMapper';
 
 export class ParameterObjectUser<T> {
