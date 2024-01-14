@@ -25,7 +25,7 @@ export class UpdateUserById implements IApplicationService<ParameterObjectUser<I
 
   async execute(usuarioParametrizado: ParameterObjectUser<IUpdateUserDto>): Promise<Result<IUserDto>>{
     await this.transactionHandler.startTransaction()
-    const user = await this.repo.findById(usuarioParametrizado.id);
+    const user = await this.repo.findById(usuarioParametrizado.id, this.transactionHandler);
     
     if (!user){
       return Result.fail<IUserDto>(new NotFoundException('user not found'))

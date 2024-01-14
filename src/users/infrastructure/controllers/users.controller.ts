@@ -88,7 +88,7 @@ export class UsersController {
       this.transactionHandler,
     );
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
-    this.findUserById = new FindUserById(this.userRepository);
+    this.findUserById = new FindUserById(this.userRepository,this.transactionHandler);
     this.updateUserById = new UpdateUserById(
       this.userRepository,
       this.transactionHandler,
@@ -226,7 +226,8 @@ export class UsersController {
       };
     }
     const jwt = this.jwtService.sign(
-      { id: data.Value.Id.Id },
+      { id: data.Value.Id.Id, subscription: data.Value.SuscriptionState.SuscriptionState
+          ? data.Value.SuscriptionState.SuscriptionState : 'gratuito' },
       { secret: jwtcontanst.secret, expiresIn: '24h' },
     );
 

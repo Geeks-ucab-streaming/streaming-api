@@ -41,8 +41,10 @@ export class OrmUserRepository
     return Result.success<void>(void 0);
   }
 
-  async findById(userId: string): Promise<User> {
-    const user = await this.createQueryBuilder('user')
+  async findById(userId: string, runner?: TransactionHandlerImplementation,): Promise<User> {
+    const runnerTransaction = runner.getRunner();
+    const user = await runnerTransaction.manager
+      .createQueryBuilder<UserEntity>(UserEntity, 'user')
       .innerJoinAndSelect('user.phone', 'phone')
       .innerJoinAndSelect('phone.linePhone', 'linePhone')
       .leftJoinAndSelect('user.tokenDeviceUser', 'tokenDeviceUser')
