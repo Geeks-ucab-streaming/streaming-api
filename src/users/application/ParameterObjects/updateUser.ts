@@ -1,5 +1,5 @@
 import { User } from 'src/users/domain/userAggregate/user';
-import { UserDto } from '../dtos/user.dto';
+import { UserDto } from '../../infrastructure/dtos/user.dto';
 import { Imapper } from 'src/common/Application/IMapper';
 
 export class ParameterObjectUser<T> {
@@ -8,11 +8,7 @@ export class ParameterObjectUser<T> {
   public userToHandle: T;
   public mapper: Imapper<User, UserDto>;
 
-  constructor(
-    id: string,
-    userToHandle: T,
-    mapper: Imapper<User, UserDto>,
-  ) {
+  constructor(id: string, userToHandle: T, mapper: Imapper<User, UserDto>) {
     this.id = id;
     this.userToHandle = userToHandle;
     this.mapper = mapper;

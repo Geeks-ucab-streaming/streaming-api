@@ -1,4 +1,12 @@
-import { Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   GetSongByIdService,
   GetSongByIdServiceDto,
@@ -44,6 +52,9 @@ import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject'
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
 import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
+import { IsUUID } from 'class-validator';
+import { StreamInfoDto } from '../stream.dto';
 
 export class TrendingSongsDto {
   songs: SongDto[];
@@ -83,7 +94,8 @@ export class SongsController {
       for (const song of songsResponse.Value) {
         let artistsAux: { id: string; name: string }[] = [];
         for (const artist of song.Artists) {
-          const dtoArtist = ArtistID.create(artist);
+          let dtoArtist: ArtistID;
+          dtoArtist = ArtistID.create(artist);
           const dto: GetArtistProfilesApplicationServiceDto = {
             id: dtoArtist,
           };
@@ -115,7 +127,9 @@ export class SongsController {
 
   @ApiTags('Songs')
   @Get('/:id')
-  async findById(@Param('id') id: string): Promise<MyResponse<Song>> {
+  async findById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<MyResponse<Song>> {
     // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
     // const song: Song = await this.getSongByIdService.execute(id);
     // return song;
@@ -131,7 +145,7 @@ export class SongsController {
   @ApiTags('Songs')
   @Get('/artist/:artistId')
   async findByArtistId(
-    @Param('artistId') id: string,
+    @Param('artistId', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<Song[]>> {
     const dto: FindSongsByArtistIdServiceDto = { id: ArtistID.create(id) };
     this.findSongsByArtistIdService = new FindSongsByArtistIdService(
@@ -143,7 +157,7 @@ export class SongsController {
   @ApiTags('Songs')
   @Get('/playlist/:playlistId')
   async findByPlaylistId(
-    @Param('playlistId') id: string,
+    @Param('playlistId', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<Song[]>> {
     this.getSongBPlaylistIdService = new GetSongBPlaylistIdService(
       this.ormSongRepository,
@@ -159,9 +173,7 @@ export class SongsController {
 
   @ApiTags('StreamedSong')
   @Post('/streamedsong')
-  addStreamToSong(
-    @Query() streamDto: { user: string; song: string; playlist?: string },
-  ): void {
+  addStreamToSong(@Query() streamDto: StreamInfoDto): void {
     const streamAppDto: StreamDto = {
       user: userId.create(streamDto.user),
       song: SongID.create(streamDto.song),

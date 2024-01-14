@@ -5,7 +5,7 @@
 // import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByArtistId.service';
 // import { Artist } from 'src/artists/domain/artist';
 
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { OrmArtistRepository } from '../repositories/artist.repository.impl';
 import { Result } from 'src/common/domain/logic/Result';
 import {
@@ -92,7 +92,7 @@ export class ArtistController {
   @ApiTags('Artist')
   @Get('/:ArtistId')
   async getArtist(
-    @Param('ArtistId') id: string,
+    @Param('ArtistId', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<AllArtistInfoDto>> {
     const iddto = ArtistID.create(id);
     const dto: GetArtistProfilesApplicationServiceDto = { id: iddto };

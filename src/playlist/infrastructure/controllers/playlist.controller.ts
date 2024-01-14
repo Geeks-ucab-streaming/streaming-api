@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseUUIDPipe } from '@nestjs/common';
 import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindPlaylistByID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
@@ -77,7 +77,7 @@ export class PlaylistController {
   @ApiTags('Playlist')
   @Get('/FindByArtistID/:id')
   async findByArtistId(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<Playlist[]>> {
     this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
       this.repository,
@@ -91,7 +91,9 @@ export class PlaylistController {
   }
   @ApiTags('Playlist')
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<MyResponse<PlaylistDto>> {
+  async findById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<MyResponse<PlaylistDto>> {
     this.findPlaylistByIdService = new FindAlbumByPlaylistIDService(
       this.repository,
       this.songRepository,
