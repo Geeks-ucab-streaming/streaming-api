@@ -8,7 +8,7 @@ import { Result } from 'src/common/domain/logic/Result';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 export interface GetSongByIdServiceDto {
-  id?: string;
+  id?: SongID;
 }
 export class GetSongByIdService
   implements IApplicationService<GetSongByIdServiceDto, Song>

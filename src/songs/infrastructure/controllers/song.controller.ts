@@ -32,6 +32,7 @@ import { IPlaylistStreamRepository } from 'src/common/domain/repositories/IPlayl
 import { PlaylistStreamsRepository } from 'src/common/infrastructure/repositories/playlistStreamsRepository.impl';
 import { MyResponse } from 'src/common/infrastructure/Response';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 
 export class TrendingSongsDto {
   songs: SongDto[];
@@ -107,7 +108,7 @@ export class SongsController {
     // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
     // const song: Song = await this.getSongByIdService.execute(id);
     // return song;
-    const dto: GetSongByIdServiceDto = { id };
+    const dto: GetSongByIdServiceDto = { id: SongID.create(id) };
     const service = new LoggingApplicationServiceDecorator(
       new GetSongByIdService(this.ormSongRepository),
       new NestLogger(),
