@@ -1,5 +1,4 @@
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
-import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from 'src/users/domain/userAggregate/user';
 import { NotFoundException } from '@nestjs/common';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
@@ -10,9 +9,10 @@ import { DomainException } from '../../../common/domain/exceptions/domain-except
 import { ITokenUserRepository } from '../../domain/tokenUser.repository';
 import { TokenEntity } from '../../domain/userAggregate/entities/token';
 import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
+import { ICreateUserDto } from 'src/common/Application/dtoPorts/createUserDtoPort';
 
 export class SignUserUpDigitel
-  implements IApplicationService<CreateUserDto, User>
+  implements IApplicationService<ICreateUserDto, User>
 {
   constructor(
     private phone: IApplicationService<string, Phone>,
@@ -26,7 +26,7 @@ export class SignUserUpDigitel
     return this.constructor.name;
   }
 
-  async execute(usersDto: CreateUserDto): Promise<Result<User>> {
+  async execute(usersDto: ICreateUserDto): Promise<Result<User>> {
     await this.transactionHandler.startTransaction();
     const users = await this.findByPhoneUserService.execute(usersDto.phone);
 

@@ -9,12 +9,12 @@ import { IApplicationService } from "src/common/Application/application-service/
 import { Result } from "src/common/domain/logic/Result";
 import { ParameterObjectUser } from "../ParameterObjects/updateUser";
 import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
-import { UserDto } from "../dtos/user.dto";
-import { UpdateUserDto } from "../dtos/update-user.dto";
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
+import { IUpdateUserDto } from "src/common/Application/dtoPorts/updateUserDtoPort";
+import { IUserDto } from "src/common/Application/dtoPorts/userDtoPort";
 
-export class UpdateUserById implements IApplicationService<ParameterObjectUser<UpdateUserDto>, UserDto> {
+export class UpdateUserById implements IApplicationService<ParameterObjectUser<IUpdateUserDto>, IUserDto> {
   constructor(
     private readonly repo: IUserRepository,
     private readonly transactionHandler:ItransactionHandler
@@ -23,12 +23,12 @@ export class UpdateUserById implements IApplicationService<ParameterObjectUser<U
     throw new Error("Method not implemented.");
   }
 
-  async execute(usuarioParametrizado: ParameterObjectUser<UpdateUserDto>): Promise<Result<UserDto>>{
+  async execute(usuarioParametrizado: ParameterObjectUser<IUpdateUserDto>): Promise<Result<IUserDto>>{
     await this.transactionHandler.startTransaction()
     const user = await this.repo.findById(usuarioParametrizado.id);
     
     if (!user){
-      return Result.fail<UserDto>(new NotFoundException('user not found'))
+      return Result.fail<IUserDto>(new NotFoundException('user not found'))
     }
 
     const userUpdated = User.create(
@@ -56,13 +56,13 @@ export class UpdateUserById implements IApplicationService<ParameterObjectUser<U
           userUpdated.updateUsersBirthDate(UserBirthDate.create(birthDate, birthDate.getFullYear()));
         }else{
           await this.transactionHandler.rollbackTransaction()
-          return Result.fail<UserDto>(new DomainException<UserDto>(void 0,'Invalid Birth Date','BirthDateError',400));
+          return Result.fail<IUserDto>(new DomainException<IUserDto>(void 0,'Invalid Birth Date','BirthDateError',400));
         }
       }
 
     await this.repo.updateUser(userUpdated,this.transactionHandler); //Guarda la instancia en la BD.
     await this.transactionHandler.commitTransaction()
-    return Result.success<UserDto>(await usuarioParametrizado.mapper.domainTo(userUpdated));
+    return Result.success<IUserDto>(await usuarioParametrizado.mapper.domainTo(userUpdated));
   }
   
 }
