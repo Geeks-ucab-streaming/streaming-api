@@ -249,12 +249,13 @@ export class UsersController {
     if (!user.value) throw new NotFoundException('User not found');
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
     return {
-      id: (await userPayload).id,
-      phone: (await userPayload).phone.phoneNumber,
-      email: (await userPayload).email,
-      name: (await userPayload).name,
-      birthDate: (await userPayload).birth_date,
-      gender: (await userPayload).gender,
+      data: { id: (await userPayload).id,
+        phone: (await userPayload).phone.phoneNumber,
+        email: (await userPayload).email,
+        name: (await userPayload).name,
+        birthDate: (await userPayload).birth_date,
+        gender: (await userPayload).gender},
+      statusCode: user.statusCode || 200,
     };
   }
 
