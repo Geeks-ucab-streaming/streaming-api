@@ -88,7 +88,7 @@ export class UsersController {
       this.transactionHandler,
     );
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
-    this.findUserById = new FindUserById(this.userRepository);
+    this.findUserById = new FindUserById(this.userRepository,this.transactionHandler);
     this.updateUserById = new UpdateUserById(
       this.userRepository,
       this.transactionHandler,
