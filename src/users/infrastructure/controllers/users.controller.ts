@@ -320,6 +320,7 @@ export class UsersController {
         new NestLogger(),
       ),
       this.audithRepo,
+      id,
     );
     const service = await result.execute(this.updateUserParameterObjetc);
     //await this.updateUserById.execute(this.updateUserParameterObjetc);
