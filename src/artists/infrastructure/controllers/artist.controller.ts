@@ -58,18 +58,25 @@ import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
       );
       this.audithRepo = new AudithRepositoryImpl();
     }
-
+    @UseGuards(JwtAuthGuard)
     @ApiTags('ArtistTrending')
     @Get('/top_artists')
-    async getArtistTrending(): Promise<MyResponse<TrendingArtistsDto>> {
-      const service = new ErrorApplicationServiceDecorator(
+    async getArtistTrending(
+      @Req() req: Request,
+    ): Promise<MyResponse<TrendingArtistsDto>> {
+      const token = req.headers['authorization']?.split(' ')[1] ?? '';
+      const userid = await this.jwtService.decode(token).id;
+      const dto = GetTrendingArtistsService;
+      const service = new AudithApplicationServiceDecorator(
         new LoggingApplicationServiceDecorator(
           new GetTrendingArtistsService(this.ormArtistRepository),
           new NestLogger(),
         ),
+        this.audithRepo,
+        userid,
       );
 
-      const result = await service.execute();
+      const result = await service.execute(dto);
       if (result.IsSuccess) {
         let trendingArtists: TrendingArtistsDto = { artists: [] };
         for (const artist of result.Value) {
@@ -91,9 +98,9 @@ import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
       const token = req.headers['authorization']?.split(' ')[1] ?? '';
       const userid = await this.jwtService.decode(token).id;
       //Creamos el servicio de aplicación.
-      const dto = GetAllArtistsApplicationService
+      const dto = GetAllArtistsApplicationService;
       const service = new AudithApplicationServiceDecorator(
-          new GetAllArtistsApplicationService(this.ormArtistRepository),
+        new GetAllArtistsApplicationService(this.ormArtistRepository),
         this.audithRepo,
         userid,
       );
