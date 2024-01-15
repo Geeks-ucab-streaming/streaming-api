@@ -15,9 +15,11 @@ export class AudithApplicationServiceDecorator<
   constructor(
     applicationService: IApplicationService<D, R>,
     private readonly audithRepo: IAudithRepository,
+    user_id?: string,
   ) {
     super(applicationService);
     this.operation = applicationService.name;
+    this.user_id = user_id;
     
   }
 
@@ -36,5 +38,6 @@ export class AudithApplicationServiceDecorator<
     this.audithRepo.addAudith(this.user_id, this.operation, this.data);
     
     return result;
+    
   }
 }
