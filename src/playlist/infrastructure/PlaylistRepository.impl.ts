@@ -5,6 +5,7 @@ import { PlaylistEntity } from './entities/playlist.entity';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { PlaylistMapper } from './mappers/playlist.mapper';
 import { PlaylistID } from '../domain/value-objects/PlaylistID-valueobject';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 
 export class PlaylistRepository
   extends Repository<PlaylistEntity>
@@ -98,7 +99,7 @@ export class PlaylistRepository
     return null;
   }
 
-  async findPlaylistById(id: string): Promise<Playlist> {
+  async findPlaylistById(id: PlaylistID): Promise<Playlist> {
     const playlistResponse: PlaylistEntity = await this.createQueryBuilder(
       'playlist',
     )
@@ -108,7 +109,7 @@ export class PlaylistRepository
       .leftJoinAndSelect('playlistSong.song', 'song')
       .leftJoinAndSelect('song.song_artist', 'songArtist')
       .leftJoinAndSelect('songArtist.artist', 'artist2')
-      .where('playlist.id = :playlistId', { playlistId: id })
+      .where('playlist.id = :playlistId', { playlistId: id.Value })
       .getOne();
 
     if (playlistResponse) {
@@ -118,7 +119,7 @@ export class PlaylistRepository
     return null;
   }
 
-  async findAlbumById(id: string): Promise<Playlist> {
+  async findAlbumById(id: PlaylistID): Promise<Playlist> {
     const playlistResponse: PlaylistEntity = await this.createQueryBuilder(
       'playlist',
     )
@@ -128,7 +129,7 @@ export class PlaylistRepository
       .leftJoinAndSelect('playlistSong.song', 'song')
       .leftJoinAndSelect('song.song_artist', 'songArtist')
       .leftJoinAndSelect('songArtist.artist', 'artist2')
-      .where('playlist.id = :playlistId', { playlistId: id })
+      .where('playlist.id = :playlistId', { playlistId: id.Value })
       .andWhere('playlist.isAlbum = :isAlbum', { isAlbum: true })
       .getOne();
 
@@ -138,7 +139,7 @@ export class PlaylistRepository
     }
     return null;
   }
-  async findPlaylistsByArtistId(id: string): Promise<Playlist[]> {
+  async findPlaylistsByArtistId(id: ArtistID): Promise<Playlist[]> {
     const playlistsResponse: PlaylistEntity[] = await this.createQueryBuilder(
       'playlist',
     )
@@ -148,7 +149,7 @@ export class PlaylistRepository
       .leftJoinAndSelect('playlistSong.song', 'song')
       .leftJoinAndSelect('song.song_artist', 'songArtist')
       .leftJoinAndSelect('songArtist.artist', 'artist2')
-      .where('artist.id = :artistId', { artistId: id })
+      .where('artist.id = :artistId', { artistId: id.Value })
       .getMany();
 
     if (playlistsResponse) {

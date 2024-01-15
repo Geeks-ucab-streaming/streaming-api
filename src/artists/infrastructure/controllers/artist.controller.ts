@@ -5,7 +5,7 @@
 // import { GetSongByArtistId } from 'src/artists/application/services/GetSongsByArtistId.service';
 // import { Artist } from 'src/artists/domain/artist';
 
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { OrmArtistRepository } from '../repositories/artist.repository.impl';
 import { Result } from 'src/common/domain/logic/Result';
 import {
@@ -18,7 +18,7 @@ import { LoggingApplicationServiceDecorator } from 'src/common/Application/appli
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetTrendingArtistsService } from 'src/artists/application/services/FindTrendingArtists.service';
 import { AllArtistInfoDto, TrendingArtistsDto } from 'src/dtos';
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
@@ -28,16 +28,26 @@ import {
   FindSongsByArtistIdServiceDto,
 } from 'src/songs/application/services/getSongsByArtist.service';
 import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
-import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
+import {
+  FindAlbumByArtistIDService,
+  FindAlbumByArtistIDServiceDto,
+} from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
 import { MyResponse } from 'src/common/infrastructure/Response';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
+import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
+import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
+import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
+@ApiBearerAuth()
 @Controller('api/artist')
 export class ArtistController {
   private readonly ormArtistRepository: OrmArtistRepository;
   private readonly ormSongsRepository: OrmSongRepository;
   private readonly ormPlaylistRepository: PlaylistRepository;
+  private audithRepo: AudithRepositoryImpl;
+  private jwtService: JwtService = new JwtService();
 
   constructor() {
     this.ormArtistRepository = new OrmArtistRepository(
@@ -49,19 +59,27 @@ export class ArtistController {
     this.ormPlaylistRepository = new PlaylistRepository(
       DataSourceSingleton.getInstance(),
     );
+    this.audithRepo = new AudithRepositoryImpl();
   }
-
+  @UseGuards(JwtAuthGuard)
   @ApiTags('ArtistTrending')
   @Get('/top_artists')
-  async getArtistTrending(): Promise<MyResponse<TrendingArtistsDto>> {
-    const service = new ErrorApplicationServiceDecorator(
+  async getArtistTrending(
+    @Req() req: Request,
+  ): Promise<MyResponse<TrendingArtistsDto>> {
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
+    const dto = GetTrendingArtistsService;
+    const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new GetTrendingArtistsService(this.ormArtistRepository),
         new NestLogger(),
       ),
+      this.audithRepo,
+      userid,
     );
 
-    const result = await service.execute();
+    const result = await service.execute(dto);
     if (result.IsSuccess) {
       let trendingArtists: TrendingArtistsDto = { artists: [] };
       for (const artist of result.Value) {
@@ -76,24 +94,38 @@ export class ArtistController {
     MyResponse.fail(result.statusCode, result.message, result.error);
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Artist')
   @Get()
-  async findAll(): Promise<MyResponse<Artist[]>> {
+  async findAll(@Req() req: Request): Promise<MyResponse<Artist[]>> {
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
     //Creamos el servicio de aplicación.
-    const service = new ErrorApplicationServiceDecorator(
-      new LoggingApplicationServiceDecorator(
-        new GetAllArtistsApplicationService(this.ormArtistRepository),
-        new NestLogger(),
-      ),
+    const dto = GetAllArtistsApplicationService;
+    const service = new AudithApplicationServiceDecorator(
+      new GetAllArtistsApplicationService(this.ormArtistRepository),
+      this.audithRepo,
+      userid,
     );
-    const result = await service.execute();
+
+    // const service = new ErrorApplicationServiceDecorator(
+    //   new LoggingApplicationServiceDecorator(
+    //     new GetAllArtistsApplicationService(this.ormArtistRepository),
+    //     new NestLogger(),
+    //   ),
+    // );
+    const result = await service.execute(dto);
     return MyResponse.fromResult(result);
   }
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Artist')
   @Get('/:ArtistId')
   async getArtist(
-    @Param('ArtistId', ParseUUIDPipe) id: string,
+    @Param('ArtistId') id: string,
+    @Req() req: Request,
   ): Promise<MyResponse<AllArtistInfoDto>> {
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
     const iddto = ArtistID.create(id);
     const dto: GetArtistProfilesApplicationServiceDto = { id: iddto };
     // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
@@ -101,10 +133,18 @@ export class ArtistController {
 
     //Ejecutamos el caso de uso
     //Creamos el servicio de aplicación.
-    const service = new LoggingApplicationServiceDecorator(
-      new GetArtistProfilesApplicationService(this.ormArtistRepository),
-      new NestLogger(),
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new GetArtistProfilesApplicationService(this.ormArtistRepository),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      userid,
     );
+    // const service = new LoggingApplicationServiceDecorator(
+    //   new GetArtistProfilesApplicationService(this.ormArtistRepository),
+    //   new NestLogger(),
+    // );
     const getSongsByArtistIdservice = new ErrorApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new FindSongsByArtistIdService(this.ormSongsRepository),
@@ -132,8 +172,13 @@ export class ArtistController {
       const artistSongsResponse: Result<Song[]> =
         await getSongsByArtistIdservice.execute(getSongByArtistIdDto);
       if (artistSongsResponse.IsSuccess) {
+        const getAlbumsByArtistIdServiceDto: FindAlbumByArtistIDServiceDto = {
+          id: result.Value.Id,
+        };
         const artistAlbumsResponse: Result<Playlist[]> =
-          await getAlbumsByArtistIdservice.execute(result.Value.Id.Value);
+          await getAlbumsByArtistIdservice.execute(
+            getAlbumsByArtistIdServiceDto,
+          );
         if (artistAlbumsResponse.IsSuccess) {
           let allArtistInfo: AllArtistInfoDto = {
             id: '',

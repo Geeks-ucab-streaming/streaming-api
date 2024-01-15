@@ -6,6 +6,8 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   GetSongByIdService,
@@ -20,7 +22,7 @@ import { EntityManager } from 'typeorm';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
   GetSongBPlaylistIdService,
   GetSongBPlaylistIdServiceDto,
@@ -52,8 +54,10 @@ import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject'
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
 import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
-import { DomainException } from 'src/common/domain/exceptions/domain-exception';
-import { IsUUID } from 'class-validator';
+import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
+import { JwtService } from '@nestjs/jwt';
+import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
+import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { StreamInfoDto } from '../stream.dto';
 
 export class TrendingSongsDto {
@@ -62,6 +66,8 @@ export class TrendingSongsDto {
 
 @Controller('api/song')
 export class SongsController {
+  private audithRepo: AudithRepositoryImpl;
+  private jwtService: JwtService = new JwtService();
   private getSongByIdService: GetSongByIdService;
   private getSongBPlaylistIdService: GetSongBPlaylistIdService;
   private findSongsByArtistIdService: FindSongsByArtistIdService;
@@ -75,6 +81,7 @@ export class SongsController {
     this.ormArtistRepository = new OrmArtistRepository(
       DataSourceSingleton.getInstance(),
     );
+    this.audithRepo = new AudithRepositoryImpl();
   }
 
   @ApiTags('Trending Songs')
@@ -125,19 +132,32 @@ export class SongsController {
       );
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Songs')
   @Get('/:id')
   async findById(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id') id: string,
+    @Req() req: Request,
   ): Promise<MyResponse<Song>> {
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
     // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
     // const song: Song = await this.getSongByIdService.execute(id);
     // return song;
     const dto: GetSongByIdServiceDto = { id: SongID.create(id) };
-    const service = new LoggingApplicationServiceDecorator(
-      new GetSongByIdService(this.ormSongRepository),
-      new NestLogger(),
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new GetSongByIdService(this.ormSongRepository),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      userid,
     );
+    // const service = new LoggingApplicationServiceDecorator(
+    //   new GetSongByIdService(this.ormSongRepository),
+    //   new NestLogger(),
+    // );
     const result = await service.execute(dto);
     return MyResponse.fromResult(result);
   }

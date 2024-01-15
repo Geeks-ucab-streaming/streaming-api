@@ -1,9 +1,10 @@
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 import { Playlist } from './playlist';
 import { PlaylistID } from './value-objects/PlaylistID-valueobject';
 
 export interface IPlaylistRepository {
-  findPlaylistById(id: string): Promise<Playlist>;
-  findPlaylistsByArtistId(id: string): Promise<Playlist[]>;
+  findPlaylistById(id: PlaylistID): Promise<Playlist>;
+  findPlaylistsByArtistId(id: ArtistID): Promise<Playlist[]>;
   findTopPlaylists(): Promise<Playlist[]>;
   findTopAlbums(): Promise<Playlist[]>;
   saveStream(id: PlaylistID): Promise<boolean>;
@@ -13,5 +14,5 @@ export interface IPlaylistRepository {
     limit: number,
     offset: number,
   ): Promise<Playlist[]>;
-  findAlbumById(id: string): Promise<Playlist>;
+  findAlbumById(id: PlaylistID): Promise<Playlist>;
 }

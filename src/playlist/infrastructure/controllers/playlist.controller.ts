@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 import { Controller, Get, Inject, Param, ParseUUIDPipe } from '@nestjs/common';
 import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindPlaylistByID.service';
+=======
+import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { FindAlbumByArtistIDService, FindAlbumByArtistIDServiceDto } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
+import {
+  FindAlbumByPlaylistIDService,
+  FindAlbumByPlaylistIDServiceDto,
+} from 'src/playlist/application/services/FindPlaylistByID.service';
+>>>>>>> 8ab093539330a29c38b0de1f9c76d23e3b451fe6
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
@@ -19,6 +28,8 @@ import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/art
 import { Result } from '../../../common/domain/logic/Result';
 import { MyResponse } from 'src/common/infrastructure/Response';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 
 @Controller('api/playlist')
 export class PlaylistController {
@@ -83,7 +94,9 @@ export class PlaylistController {
       this.repository,
       this.songRepository,
     );
-    const response = await this.findPlaylistByArtistIdService.execute(id);
+    const iddto = ArtistID.create(id);
+    const dto: FindAlbumByArtistIDServiceDto = { id: iddto };
+    const response = await this.findPlaylistByArtistIdService.execute(dto);
     if (response.IsSuccess) {
       return MyResponse.fromResult(response);
     }
@@ -104,12 +117,15 @@ export class PlaylistController {
     this.findSongsInCollectionService = new GetSongsInCollectionService(
       this.songRepository,
     );
+    const iddto=PlaylistID.create(id);
+    const dto: FindAlbumByPlaylistIDServiceDto = { id: iddto };
+
     const playlistResult: Result<Playlist> =
-      await this.findPlaylistByIdService.execute(id);
+      await this.findPlaylistByIdService.execute(dto);
 
     if (playlistResult.IsSuccess) {
       const playlistResponse: Playlist = (
-        await this.findPlaylistByIdService.execute(id)
+        await this.findPlaylistByIdService.execute(dto)
       ).Value;
       let playlistCreators: Artist[] = [];
       let creators: { creatorId: string; creatorName: string }[] = [];

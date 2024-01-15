@@ -17,11 +17,11 @@ export class CancelUsersSubscription
   ) {}
 
   get name(): string {
-    throw new Error('Method not implemented.');
+    return this.constructor.name;
   }
 
   async execute(id: userId): Promise<Result<void>> {
-    const user = await this.repo.findById(id.Id);
+    const user = await this.repo.findById(id.Id, this.transactionHandler);
     if (!user) throw new NotFoundException('User not found');
 
     user.updateUsersSuscriptionState(
