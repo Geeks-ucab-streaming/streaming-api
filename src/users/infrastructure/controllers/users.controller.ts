@@ -184,7 +184,7 @@ export class UsersController {
       return result;
     }
   }
- // @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @ApiHeader({
     name: 'device_token',
@@ -202,20 +202,20 @@ export class UsersController {
     body.token = device_token;
 
     const phoneService = this.findByPhoneUserService;
-    const service = new AudithApplicationServiceDecorator(new LoggingApplicationServiceDecorator(
-      new SignUserUpDigitel(
-        this.phonesService,
-        phoneService,
-        this.tokenRepository,
-        this.userRepository,
-        this.transactionHandler,
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new SignUserUpDigitel(
+          this.phonesService,
+          phoneService,
+          this.tokenRepository,
+          this.userRepository,
+          this.transactionHandler,
+        ),
+        new NestLogger(),
       ),
-      new NestLogger(),
-    ),
-    this.audithRepo, 
-    this.jwtService.decode(device_token).id   
+      this.audithRepo,
+      this.jwtService.decode(device_token).id,
     );
-    ;
     const result = await service.execute(body);
     if (result.IsSuccess) {
       let dto: CreateUserDto = new CreateUserDto();
@@ -233,10 +233,10 @@ export class UsersController {
   }
 
   //Inicio de Sesión
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Post('/auth/log-in')
   async signin(@Body() body: CreateUserDto) {
-
     const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new SignUserIn(this.findByPhoneUserService),
@@ -290,7 +290,7 @@ export class UsersController {
       id,
     );
     const user = await service.execute(id);
-  //  const user = await this.findUserById.execute(id);
+    //  const user = await this.findUserById.execute(id);
     if (!user.value) throw new NotFoundException('User not found');
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
     return {
