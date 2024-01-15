@@ -233,7 +233,7 @@ export class UsersController {
   }
 
   //Inicio de Sesión
-  @UseGuards(JwtAuthGuard)
+ // @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Post('/auth/log-in')
   async signin(@Body() body: CreateUserDto) {
@@ -243,7 +243,7 @@ export class UsersController {
         new NestLogger(),
       ),
       this.audithRepo,
-      this.jwtService.decode(body.token).id,
+     // this.jwtService.decode(body.token).id,
     );
     const data = await service.execute(body.phone);
 
