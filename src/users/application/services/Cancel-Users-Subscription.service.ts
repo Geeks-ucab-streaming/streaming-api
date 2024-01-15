@@ -12,7 +12,7 @@ export class CancelUsersSubscription implements IApplicationService<userId, void
 constructor(private readonly repo: IUserRepository,private readonly transactionHandler:ItransactionHandler) {}
 
   get name(): string {
-    throw new Error("Method not implemented.");
+    return this.constructor.name;
   }
 
   async execute(id: userId): Promise<Result<void>>{

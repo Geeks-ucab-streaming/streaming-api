@@ -20,7 +20,7 @@ export class UpdateUserById implements IApplicationService<ParameterObjectUser<U
     private readonly transactionHandler:ItransactionHandler
   ) {}
   get name(): string {
-    throw new Error("Method not implemented.");
+    return 'UpdateUserById';
   }
 
   async execute(usuarioParametrizado: ParameterObjectUser<UpdateUserDto>): Promise<Result<UserDto>>{

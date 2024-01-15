@@ -1,7 +1,7 @@
 import { Result } from "src/common/domain/logic/Result";
-import { IApplicationService } from "../application.service.interface";
+import { IApplicationService } from "../../application.service.interface";
 import { ApplicationServiceDecorator } from "./application.service.decorator";
-import { NotificationHandler } from "../../notificaciont-handler/notification-handler";
+import { NotificationHandler } from "../../../notificaciont-handler/notification-handler";
 
 /** NotifierApplicationServiceDecorator: Es un decorador para enviar notificaciones.*/
 export class NotifierApplicationServiceDecorator<D, R> extends ApplicationServiceDecorator<D, R> {

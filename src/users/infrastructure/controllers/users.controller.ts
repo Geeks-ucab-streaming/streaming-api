@@ -37,6 +37,8 @@ import { OrmTokenRepository } from '../repositories/token.repository.impl';
 import { TokenMapper } from '../mappers/token.mapper';
 import { TransactionHandlerImplementation } from '../../../common/infrastructure/transaction_handler_implementation';
 import { CancelUsersSubscription } from 'src/users/application/services/Cancel-Users-Subscription.service';
+import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
+import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -55,6 +57,7 @@ export class UsersController {
     DataSourceSingleton.getInstance(),
     this.ormPhoneMapper,
   );
+  private audithRepo: AudithRepositoryImpl;
   private tokenRepository = new OrmTokenRepository(this.tokenMapper);
   private lineRepository: OrmLineRepository = new OrmLineRepository(
     DataSourceSingleton.getInstance(),
@@ -69,6 +72,7 @@ export class UsersController {
   private cancelUsersSubscription: CancelUsersSubscription;
 
   constructor() {
+    this.audithRepo = new AudithRepositoryImpl();
     this.phonesService = new PhonesService(
       this.phoneRepository,
       this.lineRepository,
@@ -88,7 +92,10 @@ export class UsersController {
       this.transactionHandler,
     );
     this.signUserIn = new SignUserIn(this.findByPhoneUserService);
-    this.findUserById = new FindUserById(this.userRepository,this.transactionHandler);
+    this.findUserById = new FindUserById(
+      this.userRepository,
+      this.transactionHandler,
+    );
     this.updateUserById = new UpdateUserById(
       this.userRepository,
       this.transactionHandler,
@@ -107,7 +114,7 @@ export class UsersController {
     description: 'Token device from firebase',
   })
   @Post('/auth/log-in/guest')
-  async createGuest(@Headers() headers:Headers) {
+  async createGuest(@Headers() headers: Headers) {
     const device_token = headers['device_token'];
     const jwt = this.jwtService.sign(
       { id: 'asdfgh123456' },
@@ -123,6 +130,7 @@ export class UsersController {
   }
 
   //Registro de Usuario con su número de teléfono
+  // @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @ApiHeader({
     name: 'device_token',
@@ -132,19 +140,27 @@ export class UsersController {
   async createUserMovistar(
     @Body() body: CreateUserDto,
     @Headers() headers: Headers,
+    // @Req() req: Request,
   ) {
+    // const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    // const userid = await this.jwtService.decode(token).id;
     const device_token = headers['device_token'];
     body.token = device_token;
     const phoneService = this.findByPhoneUserService;
-    const serviceMovistar = new LoggingApplicationServiceDecorator(
-      new SignUserUpMovistar(
-        this.phonesService,
-        phoneService,
-        this.tokenRepository,
-        this.userRepository,
-        this.transactionHandler,
+    const serviceMovistar = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new SignUserUpMovistar(
+          this.phonesService,
+          phoneService,
+          this.tokenRepository,
+          this.userRepository,
+          this.transactionHandler,
+        ),
+        new NestLogger(),
       ),
-      new NestLogger(),
+      this.audithRepo,
+      body.phone,
+      //   this.jwtService.decode(device_token).id,
     );
     /* const result = await service.execute(body);
     
@@ -169,7 +185,7 @@ export class UsersController {
       return result;
     }
   }
-
+  // @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @ApiHeader({
     name: 'device_token',
@@ -179,20 +195,28 @@ export class UsersController {
   async createUserDigitel(
     @Body() body: CreateUserDto,
     @Headers() headers: Headers,
+    // @Req() req: Request,
   ) {
+    // const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    // const userid = await this.jwtService.decode(token).id;
     const device_token = headers['device_token'];
     body.token = device_token;
 
     const phoneService = this.findByPhoneUserService;
-    const service = new LoggingApplicationServiceDecorator(
-      new SignUserUpDigitel(
-        this.phonesService,
-        phoneService,
-        this.tokenRepository,
-        this.userRepository,
-        this.transactionHandler,
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new SignUserUpDigitel(
+          this.phonesService,
+          phoneService,
+          this.tokenRepository,
+          this.userRepository,
+          this.transactionHandler,
+        ),
+        new NestLogger(),
       ),
-      new NestLogger(),
+      this.audithRepo,
+      body.phone
+  //    this.jwtService.decode(device_token).id,
     );
     const result = await service.execute(body);
     if (result.IsSuccess) {
@@ -211,10 +235,20 @@ export class UsersController {
   }
 
   //Inicio de Sesión
+ // @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Post('/auth/log-in')
   async signin(@Body() body: CreateUserDto) {
-    const data = await this.signUserIn.execute(body.phone);
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new SignUserIn(this.findByPhoneUserService),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      body.phone,
+     // this.jwtService.decode(body.token).id,
+    );
+    const data = await service.execute(body.phone);
 
     if (!data.IsSuccess) {
       return {
@@ -226,8 +260,12 @@ export class UsersController {
       };
     }
     const jwt = this.jwtService.sign(
-      { id: data.Value.Id.Id, subscription: data.Value.SuscriptionState.SuscriptionState
-          ? data.Value.SuscriptionState.SuscriptionState : 'gratuito' },
+      {
+        id: data.Value.Id.Id,
+        subscription: data.Value.SuscriptionState.SuscriptionState
+          ? data.Value.SuscriptionState.SuscriptionState
+          : 'gratuito',
+      },
       { secret: jwtcontanst.secret, expiresIn: '24h' },
     );
 
@@ -246,16 +284,27 @@ export class UsersController {
   async findUser(@Req() req: Request, @Headers() headers: Headers) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const id = await this.jwtService.decode(token).id;
-    const user = await this.findUserById.execute(id);
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new FindUserById(this.userRepository, this.transactionHandler),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      id,
+    );
+    const user = await service.execute(id);
+    //  const user = await this.findUserById.execute(id);
     if (!user.value) throw new NotFoundException('User not found');
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
     return {
-      data: { id: (await userPayload).id,
+      data: {
+        id: (await userPayload).id,
         phone: (await userPayload).phone.phoneNumber,
         email: (await userPayload).email,
         name: (await userPayload).name,
         birthDate: (await userPayload).birth_date,
-        gender: (await userPayload).gender},
+        gender: (await userPayload).gender,
+      },
       statusCode: user.statusCode || 200,
     };
   }
@@ -281,15 +330,32 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @Patch('/user')
-  async updateUser(@Req() req:Request, @Headers() headers:Headers, @Body() body: UpdateUserDto) {
+  async updateUser(
+    @Req() req: Request,
+    @Headers() headers: Headers,
+    @Body() body: UpdateUserDto,
+  ) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const id = await this.jwtService.decode(token).id;
-    this.updateUserParameterObjetc = new ParameterObjectUser(id,body,this.userMapperForDomainAndDtos);
-    const result = await this.updateUserById.execute(this.updateUserParameterObjetc);
+    this.updateUserParameterObjetc = new ParameterObjectUser(
+      id,
+      body,
+      this.userMapperForDomainAndDtos,
+    );
+    const result = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new UpdateUserById(this.userRepository, this.transactionHandler),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      id,
+    );
+    const service = await result.execute(this.updateUserParameterObjetc);
+    //await this.updateUserById.execute(this.updateUserParameterObjetc);
     return {
-      data: result.value,
-      statusCode: result.statusCode || 200,
-      message: result.message,
+      data: service.value,
+      statusCode: service.statusCode || 200,
+      message: service.message,
     };
   }
 }
