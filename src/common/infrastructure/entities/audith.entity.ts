@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+console.log('probando audith');
 @Entity('Audith')
 export class AudithEntity {
   @PrimaryGeneratedColumn('uuid')

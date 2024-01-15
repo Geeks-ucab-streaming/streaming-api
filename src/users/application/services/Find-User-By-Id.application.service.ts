@@ -11,7 +11,7 @@ export class FindUserById implements IApplicationService<string, User> {
     private readonly transactionHandler: ItransactionHandler
     ) {}
     get name(): string {
-      throw new Error("Method not implemented.");
+      return this.constructor.name;
     }
 
     async execute(id: string): Promise<Result<User>>{
