@@ -37,6 +37,8 @@ import { OrmTokenRepository } from '../repositories/token.repository.impl';
 import { TokenMapper } from '../mappers/token.mapper';
 import { TransactionHandlerImplementation } from '../../../common/infrastructure/transaction_handler_implementation';
 import { CancelUsersSubscription } from 'src/users/application/services/Cancel-Users-Subscription.service';
+import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
+import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -55,6 +57,7 @@ export class UsersController {
     DataSourceSingleton.getInstance(),
     this.ormPhoneMapper,
   );
+  private audithRepo: AudithRepositoryImpl;
   private tokenRepository = new OrmTokenRepository(this.tokenMapper);
   private lineRepository: OrmLineRepository = new OrmLineRepository(
     DataSourceSingleton.getInstance(),
@@ -69,6 +72,7 @@ export class UsersController {
   private cancelUsersSubscription: CancelUsersSubscription;
 
   constructor() {
+    this.audithRepo = new AudithRepositoryImpl();
     this.phonesService = new PhonesService(
       this.phoneRepository,
       this.lineRepository,
@@ -285,11 +289,22 @@ export class UsersController {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const id = await this.jwtService.decode(token).id;
     this.updateUserParameterObjetc = new ParameterObjectUser(id,body,this.userMapperForDomainAndDtos);
-    const result = await this.updateUserById.execute(this.updateUserParameterObjetc);
+    const result = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new UpdateUserById(
+          this.userRepository,
+          this.transactionHandler,
+        ),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+    );
+    const service = await result.execute(this.updateUserParameterObjetc);
+    //await this.updateUserById.execute(this.updateUserParameterObjetc);
     return {
-      data: result.value,
-      statusCode: result.statusCode || 200,
-      message: result.message,
+      data: service.value,
+      statusCode: service.statusCode || 200,
+      message: service.message,
     };
   }
 }
