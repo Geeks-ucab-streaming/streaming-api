@@ -37,196 +37,206 @@ import { AudithApplicationServiceDecorator } from 'src/common/Application/applic
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
-@Controller('api/artist')
-export class ArtistController {
-  private readonly ormArtistRepository: OrmArtistRepository;
-  private readonly ormSongsRepository: OrmSongRepository;
-  private readonly ormPlaylistRepository: PlaylistRepository;
-  private audithRepo: AudithRepositoryImpl;
-  private jwtService: JwtService = new JwtService();
-
-  constructor() {
-    this.ormArtistRepository = new OrmArtistRepository(
-      DataSourceSingleton.getInstance(),
-    );
-    this.ormSongsRepository = new OrmSongRepository(
-      DataSourceSingleton.getInstance(),
-    );
-    this.ormPlaylistRepository = new PlaylistRepository(
-      DataSourceSingleton.getInstance(),
-    );
-    this.audithRepo = new AudithRepositoryImpl();
-  }
-
-  @ApiTags('ArtistTrending')
-  @Get('/top_artists')
-  async getArtistTrending(): Promise<MyResponse<TrendingArtistsDto>> {
-    const service = new ErrorApplicationServiceDecorator(
-      new LoggingApplicationServiceDecorator(
-        new GetTrendingArtistsService(this.ormArtistRepository),
-        new NestLogger(),
-      ),
-    );
-
-    const result = await service.execute();
-    if (result.IsSuccess) {
-      let trendingArtists: TrendingArtistsDto = { artists: [] };
-      for (const artist of result.Value) {
-        trendingArtists.artists.push({
-          id: artist.Id.Value,
-          name: artist.Name.Value,
-          image: artist.Image,
-        });
-      }
-      return MyResponse.success(trendingArtists);
-    }
-    MyResponse.fail(result.statusCode, result.message, result.error);
-  }
-
-  @ApiTags('Artist')
-  @Get()
-  async findAll(): Promise<MyResponse<Artist[]>> {
-    //Creamos el servicio de aplicación.
-    const service = new ErrorApplicationServiceDecorator(
-      new LoggingApplicationServiceDecorator(
-        new GetAllArtistsApplicationService(this.ormArtistRepository),
-        new NestLogger(),
-      ),
-    );
-    const result = await service.execute();
-    return MyResponse.fromResult(result);
-  }
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @ApiTags('Artist')
-  @Get('/:ArtistId')
-  async getArtist(
-    @Param('ArtistId') id: string,
-    @Req() req: Request,
-  ): Promise<MyResponse<AllArtistInfoDto>> {
-    const token = req.headers['authorization']?.split(' ')[1] ?? '';
-    const userid = await this.jwtService.decode(token).id;
-    const iddto = ArtistID.create(id);
-    const dto: GetArtistProfilesApplicationServiceDto = { id: iddto };
-    // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
-    //Mapeamos y retornamos.
+  @Controller('api/artist')
+  export class ArtistController {
+    private readonly ormArtistRepository: OrmArtistRepository;
+    private readonly ormSongsRepository: OrmSongRepository;
+    private readonly ormPlaylistRepository: PlaylistRepository;
+    private audithRepo: AudithRepositoryImpl;
+    private jwtService: JwtService = new JwtService();
 
-    //Ejecutamos el caso de uso
-    //Creamos el servicio de aplicación.
-    const service = new AudithApplicationServiceDecorator(
-      new LoggingApplicationServiceDecorator(
-        new GetArtistProfilesApplicationService(this.ormArtistRepository),
-        new NestLogger(),
-      ),
-      this.audithRepo,
-      userid,
-    );
-    // const service = new LoggingApplicationServiceDecorator(
-    //   new GetArtistProfilesApplicationService(this.ormArtistRepository),
-    //   new NestLogger(),
-    // );
-    const getSongsByArtistIdservice = new ErrorApplicationServiceDecorator(
-      new LoggingApplicationServiceDecorator(
-        new FindSongsByArtistIdService(this.ormSongsRepository),
-        new NestLogger(),
-      ),
-    );
-    const getAlbumsByArtistIdservice = new ErrorApplicationServiceDecorator(
-      new LoggingApplicationServiceDecorator(
-        new FindAlbumByArtistIDService(
-          this.ormPlaylistRepository,
-          this.ormSongsRepository,
+    constructor() {
+      this.ormArtistRepository = new OrmArtistRepository(
+        DataSourceSingleton.getInstance(),
+      );
+      this.ormSongsRepository = new OrmSongRepository(
+        DataSourceSingleton.getInstance(),
+      );
+      this.ormPlaylistRepository = new PlaylistRepository(
+        DataSourceSingleton.getInstance(),
+      );
+      this.audithRepo = new AudithRepositoryImpl();
+    }
+
+    @ApiTags('ArtistTrending')
+    @Get('/top_artists')
+    async getArtistTrending(): Promise<MyResponse<TrendingArtistsDto>> {
+      const service = new ErrorApplicationServiceDecorator(
+        new LoggingApplicationServiceDecorator(
+          new GetTrendingArtistsService(this.ormArtistRepository),
+          new NestLogger(),
         ),
-        new NestLogger(),
-      ),
-    );
+      );
 
-    const getArtistGenre: GetArtistGenre = GetArtistGenre.getInstance();
+      const result = await service.execute();
+      if (result.IsSuccess) {
+        let trendingArtists: TrendingArtistsDto = { artists: [] };
+        for (const artist of result.Value) {
+          trendingArtists.artists.push({
+            id: artist.Id.Value,
+            name: artist.Name.Value,
+            image: artist.Image,
+          });
+        }
+        return MyResponse.success(trendingArtists);
+      }
+      MyResponse.fail(result.statusCode, result.message, result.error);
+    }
 
-    const result = await service.execute(dto);
+    @UseGuards(JwtAuthGuard)
+    @ApiTags('Artist')
+    @Get()
+    async findAll(@Req() req: Request): Promise<MyResponse<Artist[]>> {
+      const token = req.headers['authorization']?.split(' ')[1] ?? '';
+      const userid = await this.jwtService.decode(token).id;
+      //Creamos el servicio de aplicación.
+      const dto = GetAllArtistsApplicationService
+      const service = new AudithApplicationServiceDecorator(
+          new GetAllArtistsApplicationService(this.ormArtistRepository),
+        this.audithRepo,
+        userid,
+      );
 
-    if (result.IsSuccess) {
-      const getSongByArtistIdDto: FindSongsByArtistIdServiceDto = {
-        id: result.Value.Id,
-      };
-      const artistSongsResponse: Result<Song[]> =
-        await getSongsByArtistIdservice.execute(getSongByArtistIdDto);
-      if (artistSongsResponse.IsSuccess) {
-        const getAlbumsByArtistIdServiceDto: FindAlbumByArtistIDServiceDto = {
+      // const service = new ErrorApplicationServiceDecorator(
+      //   new LoggingApplicationServiceDecorator(
+      //     new GetAllArtistsApplicationService(this.ormArtistRepository),
+      //     new NestLogger(),
+      //   ),
+      // );
+      const result = await service.execute(dto);
+      return MyResponse.fromResult(result);
+    }
+    @UseGuards(JwtAuthGuard)
+    @ApiTags('Artist')
+    @Get('/:ArtistId')
+    async getArtist(
+      @Param('ArtistId') id: string,
+      @Req() req: Request,
+    ): Promise<MyResponse<AllArtistInfoDto>> {
+      const token = req.headers['authorization']?.split(' ')[1] ?? '';
+      const userid = await this.jwtService.decode(token).id;
+      const iddto = ArtistID.create(id);
+      const dto: GetArtistProfilesApplicationServiceDto = { id: iddto };
+      // const service=new GetArtistProfilesApplicationServiceDto(this.ormArtistRepository);
+      //Mapeamos y retornamos.
+
+      //Ejecutamos el caso de uso
+      //Creamos el servicio de aplicación.
+      const service = new AudithApplicationServiceDecorator(
+        new LoggingApplicationServiceDecorator(
+          new GetArtistProfilesApplicationService(this.ormArtistRepository),
+          new NestLogger(),
+        ),
+        this.audithRepo,
+        userid,
+      );
+      // const service = new LoggingApplicationServiceDecorator(
+      //   new GetArtistProfilesApplicationService(this.ormArtistRepository),
+      //   new NestLogger(),
+      // );
+      const getSongsByArtistIdservice = new ErrorApplicationServiceDecorator(
+        new LoggingApplicationServiceDecorator(
+          new FindSongsByArtistIdService(this.ormSongsRepository),
+          new NestLogger(),
+        ),
+      );
+      const getAlbumsByArtistIdservice = new ErrorApplicationServiceDecorator(
+        new LoggingApplicationServiceDecorator(
+          new FindAlbumByArtistIDService(
+            this.ormPlaylistRepository,
+            this.ormSongsRepository,
+          ),
+          new NestLogger(),
+        ),
+      );
+
+      const getArtistGenre: GetArtistGenre = GetArtistGenre.getInstance();
+
+      const result = await service.execute(dto);
+
+      if (result.IsSuccess) {
+        const getSongByArtistIdDto: FindSongsByArtistIdServiceDto = {
           id: result.Value.Id,
         };
-        const artistAlbumsResponse: Result<Playlist[]> =
-          await getAlbumsByArtistIdservice.execute(
-            getAlbumsByArtistIdServiceDto,
-          );
-        if (artistAlbumsResponse.IsSuccess) {
-          let allArtistInfo: AllArtistInfoDto = {
-            id: '',
-            name: '',
-            genre: '',
-            image: null,
-            albums: [],
-            songs: [],
+        const artistSongsResponse: Result<Song[]> =
+          await getSongsByArtistIdservice.execute(getSongByArtistIdDto);
+        if (artistSongsResponse.IsSuccess) {
+          const getAlbumsByArtistIdServiceDto: FindAlbumByArtistIDServiceDto = {
+            id: result.Value.Id,
           };
+          const artistAlbumsResponse: Result<Playlist[]> =
+            await getAlbumsByArtistIdservice.execute(
+              getAlbumsByArtistIdServiceDto,
+            );
+          if (artistAlbumsResponse.IsSuccess) {
+            let allArtistInfo: AllArtistInfoDto = {
+              id: '',
+              name: '',
+              genre: '',
+              image: null,
+              albums: [],
+              songs: [],
+            };
 
-          const genre = getArtistGenre.execute(artistSongsResponse.Value);
+            const genre = getArtistGenre.execute(artistSongsResponse.Value);
 
-          allArtistInfo.id = result.Value.Id.Value;
-          allArtistInfo.name = result.Value.Name.Value;
-          allArtistInfo.image = result.Value.Image;
-          allArtistInfo.genre = genre;
-          if (artistAlbumsResponse.Value.length >= 1) {
-            for (const album of artistAlbumsResponse.Value) {
-              allArtistInfo.albums.push({
-                id: album.Id.Value,
-                image: album.Playlist_Image,
-              });
-            }
-          }
-          if (artistSongsResponse.Value.length >= 1) {
-            for (const song of artistSongsResponse.Value) {
-              let artistsAux: { id: string; name: string }[] = [];
-              for (const artist of song.Artists) {
-                if (artist === result.Value.Id.Value) {
-                  artistsAux.push({
-                    id: result.Value.Id.Value,
-                    name: result.Value.Name.Value,
-                  });
-                } else {
-                  const dtoArtist = ArtistID.create(artist);
-                  const dto: GetArtistProfilesApplicationServiceDto = {
-                    id: dtoArtist,
-                  };
-                  const otherArtist: Result<Artist> =
-                    await service.execute(dto);
-                  artistsAux.push({
-                    id: otherArtist.Value.Id.Value,
-                    name: otherArtist.Value.Name.Value,
-                  });
-                }
+            allArtistInfo.id = result.Value.Id.Value;
+            allArtistInfo.name = result.Value.Name.Value;
+            allArtistInfo.image = result.Value.Image;
+            allArtistInfo.genre = genre;
+            if (artistAlbumsResponse.Value.length >= 1) {
+              for (const album of artistAlbumsResponse.Value) {
+                allArtistInfo.albums.push({
+                  id: album.Id.Value,
+                  image: album.Playlist_Image,
+                });
               }
-              allArtistInfo.songs.push({
-                id: song.Id.Value,
-                name: song.Name,
-                duration: song.DurationString,
-                image: song.Image,
-                artists: artistsAux,
-              });
             }
-          }
-          return MyResponse.success(allArtistInfo);
+            if (artistSongsResponse.Value.length >= 1) {
+              for (const song of artistSongsResponse.Value) {
+                let artistsAux: { id: string; name: string }[] = [];
+                for (const artist of song.Artists) {
+                  if (artist === result.Value.Id.Value) {
+                    artistsAux.push({
+                      id: result.Value.Id.Value,
+                      name: result.Value.Name.Value,
+                    });
+                  } else {
+                    const dtoArtist = ArtistID.create(artist);
+                    const dto: GetArtistProfilesApplicationServiceDto = {
+                      id: dtoArtist,
+                    };
+                    const otherArtist: Result<Artist> =
+                      await service.execute(dto);
+                    artistsAux.push({
+                      id: otherArtist.Value.Id.Value,
+                      name: otherArtist.Value.Name.Value,
+                    });
+                  }
+                }
+                allArtistInfo.songs.push({
+                  id: song.Id.Value,
+                  name: song.Name,
+                  duration: song.DurationString,
+                  image: song.Image,
+                  artists: artistsAux,
+                });
+              }
+            }
+            return MyResponse.success(allArtistInfo);
+          } else
+            MyResponse.fail(
+              artistAlbumsResponse.statusCode,
+              artistAlbumsResponse.message,
+              artistAlbumsResponse.error,
+            );
         } else
           MyResponse.fail(
-            artistAlbumsResponse.statusCode,
-            artistAlbumsResponse.message,
-            artistAlbumsResponse.error,
+            artistSongsResponse.statusCode,
+            artistSongsResponse.message,
+            artistSongsResponse.error,
           );
-      } else
-        MyResponse.fail(
-          artistSongsResponse.statusCode,
-          artistSongsResponse.message,
-          artistSongsResponse.error,
-        );
-    } else MyResponse.fail(result.statusCode, result.message, result.error);
+      } else MyResponse.fail(result.statusCode, result.message, result.error);
+    }
   }
-}
