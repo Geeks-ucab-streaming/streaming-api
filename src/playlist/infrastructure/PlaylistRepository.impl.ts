@@ -4,6 +4,8 @@ import { Playlist } from '../domain/playlist';
 import { PlaylistEntity } from './entities/playlist.entity';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { PlaylistMapper } from './mappers/playlist.mapper';
+import { PlaylistID } from '../domain/value-objects/PlaylistID-valueobject';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 
 export class PlaylistRepository
   extends Repository<PlaylistEntity>
@@ -34,9 +36,6 @@ export class PlaylistRepository
       .offset(offset)
       .getMany();
 
-    console.log(playlistsResponse);
-    console.log('AQUI');
-
     if (playlistsResponse) {
       let playlists: Playlist[] = [];
       if (playlistsResponse.length > 0)
@@ -48,8 +47,8 @@ export class PlaylistRepository
     }
     return null;
   }
-  async saveStream(id: string): Promise<boolean> {
-    const playlist = await this.findOne({ where: { id } });
+  async saveStream(id: PlaylistID): Promise<boolean> {
+    const playlist = await this.findOne({ where: { id: id.Value } });
 
     if (playlist) {
       playlist.reproductions += 1;
@@ -100,7 +99,7 @@ export class PlaylistRepository
     return null;
   }
 
-  async findPlaylistById(id: string): Promise<Playlist> {
+  async findPlaylistById(id: PlaylistID): Promise<Playlist> {
     const playlistResponse: PlaylistEntity = await this.createQueryBuilder(
       'playlist',
     )
@@ -110,7 +109,7 @@ export class PlaylistRepository
       .leftJoinAndSelect('playlistSong.song', 'song')
       .leftJoinAndSelect('song.song_artist', 'songArtist')
       .leftJoinAndSelect('songArtist.artist', 'artist2')
-      .where('playlist.id = :playlistId', { playlistId: id })
+      .where('playlist.id = :playlistId', { playlistId: id.Value })
       .getOne();
 
     if (playlistResponse) {
@@ -119,7 +118,28 @@ export class PlaylistRepository
     }
     return null;
   }
-  async findPlaylistsByArtistId(id: string): Promise<Playlist[]> {
+
+  async findAlbumById(id: PlaylistID): Promise<Playlist> {
+    const playlistResponse: PlaylistEntity = await this.createQueryBuilder(
+      'playlist',
+    )
+      .leftJoinAndSelect('playlist.playlistCreator', 'playlistCreator')
+      .leftJoinAndSelect('playlistCreator.artist', 'artist')
+      .leftJoinAndSelect('playlist.playlistSong', 'playlistSong')
+      .leftJoinAndSelect('playlistSong.song', 'song')
+      .leftJoinAndSelect('song.song_artist', 'songArtist')
+      .leftJoinAndSelect('songArtist.artist', 'artist2')
+      .where('playlist.id = :playlistId', { playlistId: id.Value })
+      .andWhere('playlist.isAlbum = :isAlbum', { isAlbum: true })
+      .getOne();
+
+    if (playlistResponse) {
+      const playlist = await this.playlistMapper.ToDomain(playlistResponse);
+      return playlist;
+    }
+    return null;
+  }
+  async findPlaylistsByArtistId(id: ArtistID): Promise<Playlist[]> {
     const playlistsResponse: PlaylistEntity[] = await this.createQueryBuilder(
       'playlist',
     )
@@ -129,7 +149,7 @@ export class PlaylistRepository
       .leftJoinAndSelect('playlistSong.song', 'song')
       .leftJoinAndSelect('song.song_artist', 'songArtist')
       .leftJoinAndSelect('songArtist.artist', 'artist2')
-      .where('artist.id = :artistId', { artistId: id })
+      .where('artist.id = :artistId', { artistId: id.Value })
       .getMany();
 
     if (playlistsResponse) {

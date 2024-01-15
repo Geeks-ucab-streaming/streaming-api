@@ -8,6 +8,8 @@ import { UserEntity } from 'src/users/infrastructure/entities/users.entity';
 import { ReproducedPlaylist } from '../entities/ReproducedPlaylist.entity';
 import { IPlaylistStreamRepository } from 'src/common/domain/repositories/IPlaylistStreamRepository';
 import { PlaylistEntity } from 'src/playlist/infrastructure/entities/playlist.entity';
+import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
+import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 
 export class PlaylistStreamsRepository
   extends Repository<ReproducedPlaylist>
@@ -17,16 +19,19 @@ export class PlaylistStreamsRepository
     super(ReproducedPlaylist, dataSource.manager);
   }
 
-  async savePlaylistStream(user: string, playlist: string): Promise<boolean> {
-    const previousStream = await this.findStream(user, playlist);
+  async savePlaylistStream(
+    user: userId,
+    playlistId: PlaylistID,
+  ): Promise<boolean> {
+    const previousStream = await this.findStream(user.Id, playlistId.Value);
 
     if (previousStream) {
       if (this.validatePreviousStream(previousStream.reproduced_date)) {
-        this.insertStream(user, playlist);
+        this.insertStream(user.Id, playlistId.Value);
         return true;
       } else return false;
     } else {
-      this.insertStream(user, playlist);
+      this.insertStream(user.Id, playlistId.Value);
       return true;
     }
   }

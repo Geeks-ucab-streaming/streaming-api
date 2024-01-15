@@ -17,7 +17,7 @@ constructor(private readonly repo: IUserRepository,private readonly transactionH
 
   async execute(id: userId): Promise<Result<void>>{
 
-    const user = await this.repo.findById(id.Id);
+    const user = await this.repo.findById(id.Id, this.transactionHandler);
     if (!user) 
       throw new NotFoundException('User not found');
 

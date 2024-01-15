@@ -1,20 +1,19 @@
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 import { IFindService } from 'src/common/domain/ifind.service';
 import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
+import { Result } from 'src/common/domain/logic/Result';
 import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { CalculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
+import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
-import { Result } from '../../../common/domain/logic/Result';
-import { DomainException } from 'src/common/domain/exceptions/domain-exception';
 
-export interface QueryDto {
-  query: string;
-  album: boolean;
+export interface FindAlbumByPlaylistIDServiceDto {
+  id?: PlaylistID;
 }
-
-export class BrowseAlbumPlaylistService
-  implements IApplicationService<QueryDto, Playlist[]>
+export class FindAlbumByPlaylistIDService
+  implements IApplicationService<FindAlbumByPlaylistIDServiceDto, Playlist>
 {
   private readonly playlistRepository: IPlaylistRepository;
   private readonly songRepository: ISongRepository;
@@ -32,30 +31,24 @@ export class BrowseAlbumPlaylistService
     return this.constructor.name;
   }
 
-  async execute(dto: QueryDto): Promise<Result<Playlist[]>> {
-    const response: Playlist[] = await this.playlistRepository.browsePlaylists(
-      dto.query,
-      dto.album,
-      5,
-      0,
-    );
-    if (response) {
-      const playlists = response;
-      for (const playlist of playlists) {
-        await this.calculateDurationService.execute(
-          playlist,
-          this.songRepository,
-        );
-      }
-      console.log(playlists);
-      return Result.success<Playlist[]>(playlists);
+  async execute(
+    dto: FindAlbumByPlaylistIDServiceDto,
+  ): Promise<Result<Playlist>> {
+    const playlist: Playlist =
+      await this.playlistRepository.findPlaylistById(PlaylistID.create(dto.id.Value));
+    if (playlist) {
+      await this.calculateDurationService.execute(
+        playlist,
+        this.songRepository,
+      );
+      return Result.success<Playlist>(playlist);
     }
     return Result.fail(
       new DomainException(
         void 0,
-        `No se encontraron ${dto.album ? 'albums' : 'playlists'} para: ${
-          dto.query
-        }`,
+        `No se encontró playlist para el id: ${dto.id.Value}`,
+        'Not Found Exception',
+        404,
       ),
     );
   }
