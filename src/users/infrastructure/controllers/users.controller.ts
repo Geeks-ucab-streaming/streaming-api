@@ -236,7 +236,16 @@ export class UsersController {
   @ApiTags('Users')
   @Post('/auth/log-in')
   async signin(@Body() body: CreateUserDto) {
-    const data = await this.signUserIn.execute(body.phone);
+    
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new SignUserIn(this.findByPhoneUserService),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      this.jwtService.decode(body.token).id,
+    );
+    const data = await service.execute(body.phone);
 
     if (!data.IsSuccess) {
       return {
