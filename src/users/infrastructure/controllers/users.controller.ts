@@ -236,7 +236,7 @@ export class UsersController {
   @ApiTags('Users')
   @Post('/auth/log-in')
   async signin(@Body() body: CreateUserDto) {
-    
+
     const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new SignUserIn(this.findByPhoneUserService),
@@ -281,7 +281,16 @@ export class UsersController {
   async findUser(@Req() req: Request, @Headers() headers: Headers) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const id = await this.jwtService.decode(token).id;
-    const user = await this.findUserById.execute(id);
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new FindUserById(this.userRepository, this.transactionHandler),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      id,
+    );
+    const user = await service.execute(id);
+  //  const user = await this.findUserById.execute(id);
     if (!user.value) throw new NotFoundException('User not found');
     const userPayload = this.userMapperForDomainAndDtos.domainTo(user.Value);
     return {
