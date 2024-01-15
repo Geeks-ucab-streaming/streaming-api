@@ -5,6 +5,9 @@ export class PlaylistSongEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  User_id: string;
+
   @Column({ type: 'date', nullable: true })
   added_date: Date;
 
