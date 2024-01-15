@@ -1,6 +1,4 @@
-import { PlaylistEntity } from 'src/playlist/infrastructure/entities/playlist.entity';
-import { SongEntity } from 'src/songs/infrastructure/entities/song.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Audith')
 export class PlaylistSongEntity {
