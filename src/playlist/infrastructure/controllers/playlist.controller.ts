@@ -1,6 +1,9 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
-import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindPlaylistByID.service';
+import { FindAlbumByArtistIDService, FindAlbumByArtistIDServiceDto } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
+import {
+  FindAlbumByPlaylistIDService,
+  FindAlbumByPlaylistIDServiceDto,
+} from 'src/playlist/application/services/FindPlaylistByID.service';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
@@ -9,12 +12,18 @@ import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.re
 import { FindTopPlaylistsService } from 'src/playlist/application/services/FindTopPlaylists.service';
 import { PlaylistDto, SongDto, TopPlaylistDto } from 'src/dtos';
 import { Artist } from 'src/artists/domain/artist';
-import { GetSongsInCollectionService } from 'src/songs/application/services/getSongsInCollection.service';
+import {
+  GetSongsInCollectionService,
+  GetSongsInCollectionServiceDto,
+} from 'src/songs/application/services/getSongsInCollection.service';
 import { Song } from 'src/songs/domain/song';
 import { FindArtistsInCollectionService } from 'src/artists/application/services/FindArtistsInCollection.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 import { Result } from '../../../common/domain/logic/Result';
 import { MyResponse } from 'src/common/infrastructure/Response';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 
 @Controller('api/playlist')
 export class PlaylistController {
@@ -79,7 +88,9 @@ export class PlaylistController {
       this.repository,
       this.songRepository,
     );
-    const response = await this.findPlaylistByArtistIdService.execute(id);
+    const iddto = ArtistID.create(id);
+    const dto: FindAlbumByArtistIDServiceDto = { id: iddto };
+    const response = await this.findPlaylistByArtistIdService.execute(dto);
     if (response.IsSuccess) {
       return MyResponse.fromResult(response);
     }
@@ -98,12 +109,15 @@ export class PlaylistController {
     this.findSongsInCollectionService = new GetSongsInCollectionService(
       this.songRepository,
     );
+    const iddto=PlaylistID.create(id);
+    const dto: FindAlbumByPlaylistIDServiceDto = { id: iddto };
+
     const playlistResult: Result<Playlist> =
-      await this.findPlaylistByIdService.execute(id);
+      await this.findPlaylistByIdService.execute(dto);
 
     if (playlistResult.IsSuccess) {
       const playlistResponse: Playlist = (
-        await this.findPlaylistByIdService.execute(id)
+        await this.findPlaylistByIdService.execute(dto)
       ).Value;
       let playlistCreators: Artist[] = [];
       let creators: { creatorId: string; creatorName: string }[] = [];
@@ -131,14 +145,20 @@ export class PlaylistController {
           );
       }
 
-      let songsId: string[] = [];
+      let songsId: SongID[] = [];
 
       for (const song of playlistResponse.PlaylistSong) {
         songsId.push(song);
       }
 
+      const findSongsInCollectionDto: GetSongsInCollectionServiceDto = {
+        songsId,
+      };
+
       const songsResponse: Result<Song[]> =
-        await this.findSongsInCollectionService.execute(songsId);
+        await this.findSongsInCollectionService.execute(
+          findSongsInCollectionDto,
+        );
 
       let playlistSongs: SongDto[] = [];
       if (songsResponse.IsSuccess) {

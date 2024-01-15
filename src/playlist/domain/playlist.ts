@@ -35,12 +35,12 @@ export class Playlist extends AggregateRoot<PlaylistID> {
     if (!this.image_reference)
       throw new Error('Referencia de imagen de playlist invalida');
     if (!this.streams) throw new Error('Streams de playlist invalido');
-   // if (!this.isAlbum) throw new Error('Tipo de playlist invalido');
-   // if (!this.playlist_Image) throw new Error('Imagen de playlist invalida');
-  //  if (!this.playlistCreator) throw new Error('Creadores de playlist invalidos');
-  //  if (!this.playlistSong) throw new Error('Canciones de playlist invalidas');
+    // if (!this.isAlbum) throw new Error('Tipo de playlist invalido');
+    // if (!this.playlist_Image) throw new Error('Imagen de playlist invalida');
+    //  if (!this.playlistCreator) throw new Error('Creadores de playlist invalidos');
+    //  if (!this.playlistSong) throw new Error('Canciones de playlist invalidas');
   }
- // private id: PlaylistID;
+  // private id: PlaylistID;
   private name: PlaylistName;
   private duration: PlaylistDuration;
   private image_reference: PlaylistImageReference;
@@ -102,12 +102,15 @@ export class Playlist extends AggregateRoot<PlaylistID> {
     }
     return values;
   }
-  get PlaylistSong(): string[] {
+  get PlaylistSongStrings(): string[] {
     let values: string[] = [];
     for (const id of this.playlistSong) {
       values.push(id.Value);
     }
     return values;
+  }
+  get PlaylistSong(): SongID[] {
+    return this.playlistSong;
   }
   public setDuration(duration: number) {
     this.duration = PlaylistDuration.create(duration);

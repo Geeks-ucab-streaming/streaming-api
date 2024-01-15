@@ -4,6 +4,8 @@ import { SongEntity } from '../entities/song.entity';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
 import { SongsMapper } from '../mappers/Song.mapper';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
+import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 
 export class OrmSongRepository
   extends Repository<SongEntity>
@@ -14,8 +16,8 @@ export class OrmSongRepository
     super(SongEntity, dataSource.manager);
     this.songMapper = new SongsMapper();
   }
-  async saveStream(id: string) {
-    const song = await this.findOne({ where: { id } });
+  async saveStream(id: SongID) {
+    const song = await this.findOne({ where: { id: id.Value } });
 
     if (!song) {
       throw new Error(`La canción con ID ${id} no se encontró`);
@@ -81,14 +83,14 @@ export class OrmSongRepository
     }
     return null;
   }
-  async findOrmEntityById(id: string): Promise<SongEntity> {
-    return this.findOneBy({ id });
+  async findOrmEntityById(id: SongID): Promise<SongEntity> {
+    return this.findOneBy({ id: id.Value });
   }
-  async findById(id: string): Promise<Song> {
+  async findById(id: SongID): Promise<Song> {
     const songResponse = await this.createQueryBuilder('song')
       .leftJoinAndSelect('song.song_artist', 'song_artist')
       .leftJoinAndSelect('song_artist.artist', 'artist')
-      .where('song.id = :id', { id: id })
+      .where('song.id = :id', { id: id.Value })
       .getOne();
 
     if (songResponse) {
@@ -98,7 +100,7 @@ export class OrmSongRepository
     }
     return null;
   }
-  async findByArtistId(artistId: string): Promise<Song[]> {
+  async findByArtistId(artistId: ArtistID): Promise<Song[]> {
     const subquery = await this.createQueryBuilder('song')
       .innerJoin(
         'song.song_artist',
@@ -106,7 +108,7 @@ export class OrmSongRepository
         'song.id = songArtist.songId',
       )
       .innerJoin('Artists', 'a', 'a.id = songArtist.artistId')
-      .where('a.id = :artistId', { artistId })
+      .where('a.id = :id', { id: artistId.Value })
       .select('song.id')
       .getMany();
 
@@ -131,7 +133,7 @@ export class OrmSongRepository
     }
     return null;
   }
-  async findByPlaylistId(playlistId: string): Promise<Song[]> {
+  async findByPlaylistId(playlistId: PlaylistID): Promise<Song[]> {
     const subquery = await this.createQueryBuilder('song')
       .innerJoin(
         'song.playlistSong',
@@ -139,7 +141,7 @@ export class OrmSongRepository
         'song.id = playlistSong.song',
       )
       .innerJoin('Playlists', 'p', 'p.id = playlistSong.playlist')
-      .where('p.id = :playlistId', { playlistId })
+      .where('p.id = :playlistId', { playlistId: playlistId.Value })
       .select('song.id')
       .getMany();
 
@@ -163,7 +165,11 @@ export class OrmSongRepository
     return null;
   }
 
-  async findSongsInCollection(ids: string[]): Promise<Song[]> {
+  async findSongsInCollection(songIds: SongID[]): Promise<Song[]> {
+    let ids: string[] = [];
+
+    songIds.forEach((id) => ids.push(id.Value));
+
     const songsResponse = await this.createQueryBuilder('song')
       .where('song.id IN (:...ids)', { ids })
       .leftJoinAndSelect('song.song_artist', 'song_artist')

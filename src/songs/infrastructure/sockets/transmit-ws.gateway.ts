@@ -18,6 +18,7 @@ import {
 import { createReadStream } from 'fs';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 
 @WebSocketGateway({ cors: true }) // RUTA: http://localhost:3000/socket.io/socket.io.js
 export class TransmitWsGateway
@@ -49,7 +50,9 @@ export class TransmitWsGateway
       client.data.currentStream = null;
     }
     let cont = 0;
-    const getSongByIdServiceDto: GetSongByIdServiceDto = { id: payload.songId };
+    const getSongByIdServiceDto: GetSongByIdServiceDto = {
+      id: SongID.create(payload.songId),
+    };
     console.log(payload.songId);
     console.log(getSongByIdServiceDto);
     const song: Song = (

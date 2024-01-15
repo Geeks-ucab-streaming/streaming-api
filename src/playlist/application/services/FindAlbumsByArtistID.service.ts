@@ -1,17 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { DomainException } from 'src/common/domain/exceptions/domain-exception';
-import { IFindService } from 'src/common/domain/ifind.service';
-import { IFindGenericRepository } from 'src/common/domain/ifindgeneric.repository';
 import { Result } from 'src/common/domain/logic/Result';
 import { IPlaylistRepository } from 'src/playlist/domain/IPlaylistRepository';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { CalculatePlaylistDurationService } from 'src/playlist/domain/services/calculatePlaylistDuration.service';
 import { ISongRepository } from 'src/songs/domain/ISongRepository';
-
+export interface FindAlbumByArtistIDServiceDto {
+  id?: ArtistID;
+}
 @Injectable()
 export class FindAlbumByArtistIDService
-  implements IApplicationService<string, Playlist[]>
+  implements IApplicationService<FindAlbumByArtistIDServiceDto, Playlist[]>
 {
   private readonly calculateDurationService: CalculatePlaylistDurationService =
     CalculatePlaylistDurationService.getInstance();
@@ -24,9 +25,11 @@ export class FindAlbumByArtistIDService
     return this.constructor.name;
   }
 
-  async execute(id: string): Promise<Result<Playlist[]>> {
+  async execute(
+    dto: FindAlbumByArtistIDServiceDto,
+  ): Promise<Result<Playlist[]>> {
     const response: Playlist[] =
-      await this.albumRepository.findPlaylistsByArtistId(id);
+      await this.albumRepository.findPlaylistsByArtistId(ArtistID.create(dto.id.Value));
     if (response) {
       const playlists: Playlist[] = response;
       for (const playlist of playlists) {
@@ -40,7 +43,7 @@ export class FindAlbumByArtistIDService
     return Result.fail(
       new DomainException(
         void 0,
-        `No se encontró ningún album para el id de artista: ${id}`,
+        `No se encontró ningún album para el id de artista: ${dto.id.Value}`,
         'Not Found Exception',
         404,
       ),
