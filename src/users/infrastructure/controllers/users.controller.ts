@@ -159,7 +159,8 @@ export class UsersController {
         new NestLogger(),
       ),
       this.audithRepo,
-   //   this.jwtService.decode(device_token).id,
+      body.phone,
+      //   this.jwtService.decode(device_token).id,
     );
     /* const result = await service.execute(body);
     
@@ -214,6 +215,7 @@ export class UsersController {
         new NestLogger(),
       ),
       this.audithRepo,
+      body.phone
   //    this.jwtService.decode(device_token).id,
     );
     const result = await service.execute(body);
@@ -243,6 +245,7 @@ export class UsersController {
         new NestLogger(),
       ),
       this.audithRepo,
+      body.phone,
      // this.jwtService.decode(body.token).id,
     );
     const data = await service.execute(body.phone);
