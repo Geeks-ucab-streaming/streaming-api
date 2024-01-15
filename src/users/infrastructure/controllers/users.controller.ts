@@ -130,7 +130,7 @@ export class UsersController {
   }
 
   //Registro de Usuario con su número de teléfono
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @ApiHeader({
     name: 'device_token',
@@ -140,10 +140,10 @@ export class UsersController {
   async createUserMovistar(
     @Body() body: CreateUserDto,
     @Headers() headers: Headers,
-    @Req() req: Request,
+    // @Req() req: Request,
   ) {
-    const token = req.headers['authorization']?.split(' ')[1] ?? '';
-    const userid = await this.jwtService.decode(token).id;
+    // const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    // const userid = await this.jwtService.decode(token).id;
     const device_token = headers['device_token'];
     body.token = device_token;
     const phoneService = this.findByPhoneUserService;
@@ -159,8 +159,8 @@ export class UsersController {
         new NestLogger(),
       ),
       this.audithRepo,
-      userid,
-    ); ;
+      this.jwtService.decode(device_token).id,
+    );
     /* const result = await service.execute(body);
     
     const userPayload = this.userMapperForDomainAndDtos.domainTo(result.Value);
@@ -184,7 +184,7 @@ export class UsersController {
       return result;
     }
   }
-
+ // @UseGuards(JwtAuthGuard)
   @ApiTags('Users')
   @ApiHeader({
     name: 'device_token',
@@ -194,12 +194,15 @@ export class UsersController {
   async createUserDigitel(
     @Body() body: CreateUserDto,
     @Headers() headers: Headers,
+    // @Req() req: Request,
   ) {
+    // const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    // const userid = await this.jwtService.decode(token).id;
     const device_token = headers['device_token'];
     body.token = device_token;
 
     const phoneService = this.findByPhoneUserService;
-    const service = new LoggingApplicationServiceDecorator(
+    const service = new AudithApplicationServiceDecorator(new LoggingApplicationServiceDecorator(
       new SignUserUpDigitel(
         this.phonesService,
         phoneService,
@@ -208,7 +211,11 @@ export class UsersController {
         this.transactionHandler,
       ),
       new NestLogger(),
+    ),
+    this.audithRepo, 
+    this.jwtService.decode(device_token).id   
     );
+    ;
     const result = await service.execute(body);
     if (result.IsSuccess) {
       let dto: CreateUserDto = new CreateUserDto();
