@@ -316,11 +316,18 @@ export class UsersController {
   async cancelSubscription(@Req() req: Request, @Headers() headers: Headers) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const id = await this.jwtService.decode(token).id;
-    const user = await this.findUserById.execute(id);
-    if (!user.value) throw new NotFoundException('User not found');
-    const result = await this.cancelUsersSubscription.execute(user.Value.Id);
+     const user = await this.findUserById.execute(id);
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new CancelUsersSubscription(this.userRepository, this.transactionHandler),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      user.Value.Id.Id,
+    );
+    const result = await service.execute(user.Value.Id);
     return {
-      data: result.value,
+      data: result.Value,
       statusCode: result.statusCode || 200,
       message: "User's subscription canceled",
     };
