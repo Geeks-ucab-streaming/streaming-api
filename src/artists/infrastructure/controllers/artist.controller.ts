@@ -33,10 +33,12 @@ import { Playlist } from 'src/playlist/domain/playlist';
 import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
 import { MyResponse } from 'src/common/infrastructure/Response';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
+import {
+  AudithApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/audith.service.decorator';
   @ApiBearerAuth()
   @Controller('api/artist')
   export class ArtistController {

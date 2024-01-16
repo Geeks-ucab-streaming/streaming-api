@@ -1,4 +1,3 @@
-
-export interface IaudithRepository {
-    audith(id: string, origin:JSON):Promise<JSON>;
-  }
+export interface IAudithRepository {
+  addAudith(user_id: string, operation: string, data: string): Promise<void>;
+}

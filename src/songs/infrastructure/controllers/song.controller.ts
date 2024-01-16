@@ -46,8 +46,10 @@ import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
 import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
+import {
+  AudithApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/audith.service.decorator';
 
 export class TrendingSongsDto {
   songs: SongDto[];

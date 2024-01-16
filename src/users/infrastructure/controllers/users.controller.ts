@@ -38,7 +38,9 @@ import { TokenMapper } from '../mappers/token.mapper';
 import { TransactionHandlerImplementation } from '../../../common/infrastructure/transaction_handler_implementation';
 import { CancelUsersSubscription } from 'src/users/application/services/Cancel-Users-Subscription.service';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
+import {
+  AudithApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/audith.service.decorator';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
