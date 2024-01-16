@@ -4,5 +4,5 @@ import { User } from 'src/users/domain/userAggregate/user';
 import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
 
 export interface IStreamRepository {
-  saveSongStream(user: userId, song: SongID);
+  saveSongStream(user: userId, song: SongID): Promise<boolean>;
 }

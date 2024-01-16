@@ -47,10 +47,15 @@ export class AddStreamToSongService
   }
   async execute(dto: StreamDto): Promise<Result<void>> {
     const song: Song = await this.songRepository.findById(dto.song);
-    await this.streamsRepository.saveSongStream(dto.user, dto.song);
-    await this.songRepository.saveStream(dto.song);
-    for (const artist of song.Artists) {
-      await this.artistRepository.saveStream(artist);
+    const saveSong = await this.streamsRepository.saveSongStream(
+      dto.user,
+      dto.song,
+    );
+    if (saveSong) {
+      await this.songRepository.saveStream(dto.song);
+      for (const artist of song.Artists) {
+        await this.artistRepository.saveStream(artist);
+      }
     }
     if (dto.playlist) {
       const save = await this.playlistStreamsRepository.savePlaylistStream(

@@ -1,4 +1,3 @@
-import { Inject } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -6,8 +5,6 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { IFindService } from 'src/common/domain/ifind.service';
-import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { Song } from 'src/songs/domain/song';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
@@ -15,10 +12,10 @@ import {
   GetSongByIdService,
   GetSongByIdServiceDto,
 } from 'src/songs/application/services/getSongById.service';
-import { createReadStream } from 'fs';
 import axios from 'axios';
-import { ConfigService } from '@nestjs/config';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
+import { JwtService } from '@nestjs/jwt';
+import { jwtcontanst } from 'src/users/application/constants/jwt.constansts';
 
 @WebSocketGateway({ cors: true }) // RUTA: http://localhost:3000/socket.io/socket.io.js
 export class TransmitWsGateway
@@ -28,11 +25,23 @@ export class TransmitWsGateway
     new GetSongByIdService(
       new OrmSongRepository(DataSourceSingleton.getInstance()),
     );
+  private readonly jwtService: JwtService = new JwtService();
+  private id: string;
+  private subscription: string;
 
   constructor() {}
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
     console.log('cliente conectado: ', client.id);
     client.data = { currentStream: null };
+    const token = client.handshake.auth.token;
+    console.log(token);
+    const userInfo = this.jwtService.verify(token, {
+      secret: jwtcontanst.secret,
+    });
+    this.id = userInfo.id;
+    this.subscription = userInfo.subscription;
+    console.log(this.id);
+    console.log(this.subscription);
   }
 
   handleDisconnect(client: Socket) {
@@ -60,7 +69,7 @@ export class TransmitWsGateway
     ).value;
 
     const filePath: string = `https://desarrollosoundspace.blob.core.windows.net/${
-      payload.preview
+      this.sendPreview(this.subscription)
         ? process.env.PREVIEWS_CONTAINER
         : process.env.SONGS_CONTAINER
     }/${song.AudioReference}`;
@@ -96,6 +105,19 @@ export class TransmitWsGateway
       });
     } catch (error) {
       console.log('Error fetching data: ', error);
+    }
+  }
+
+  sendPreview(sub: string): boolean {
+    switch (sub) {
+      case 'premium':
+        return false;
+      case 'vencido':
+        return true;
+      case 'eliminado':
+        return true;
+      case 'gratuito':
+        return true;
     }
   }
 }
