@@ -1,8 +1,9 @@
 import { Expose } from 'class-transformer';
-import { PhoneDto } from 'src/phones/application/dtos/phone.dto';
+import { PhoneDto } from 'src/phones/infrastructure/dtos/phone.dto';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
+import { IUserDto } from 'src/common/Application/dtoPorts/userDtoPort';
 
-export class UserDto {
+export class UserDto implements IUserDto {
   @Expose()
   id: string;
 

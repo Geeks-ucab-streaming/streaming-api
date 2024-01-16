@@ -40,8 +40,6 @@ export class TransmitWsGateway
     });
     this.id = userInfo.id;
     this.subscription = userInfo.subscription;
-    console.log(this.id);
-    console.log(this.subscription);
   }
 
   handleDisconnect(client: Socket) {
@@ -51,7 +49,7 @@ export class TransmitWsGateway
   @SubscribeMessage('message-from-client')
   async sendSong(
     client: Socket,
-    payload: { preview: boolean; songId: string; second: number | 0 },
+    payload: { songId: string; second: number | 0 },
   ) {
     // Si hay un stream actual, lo cerramos
     if (client.data.currentStream) {
