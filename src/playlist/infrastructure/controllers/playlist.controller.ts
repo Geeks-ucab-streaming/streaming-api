@@ -1,15 +1,12 @@
-<<<<<<< HEAD
 import { Controller, Get, Inject, Param, ParseUUIDPipe } from '@nestjs/common';
-import { FindAlbumByArtistIDService } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
-import { FindAlbumByPlaylistIDService } from 'src/playlist/application/services/FindPlaylistByID.service';
-=======
-import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { FindAlbumByArtistIDService, FindAlbumByArtistIDServiceDto } from 'src/playlist/application/services/FindAlbumsByArtistID.service';
+import {
+  FindAlbumByArtistIDService,
+  FindAlbumByArtistIDServiceDto,
+} from 'src/playlist/application/services/FindAlbumsByArtistID.service';
 import {
   FindAlbumByPlaylistIDService,
   FindAlbumByPlaylistIDServiceDto,
 } from 'src/playlist/application/services/FindPlaylistByID.service';
->>>>>>> 8ab093539330a29c38b0de1f9c76d23e3b451fe6
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
@@ -117,7 +114,7 @@ export class PlaylistController {
     this.findSongsInCollectionService = new GetSongsInCollectionService(
       this.songRepository,
     );
-    const iddto=PlaylistID.create(id);
+    const iddto = PlaylistID.create(id);
     const dto: FindAlbumByPlaylistIDServiceDto = { id: iddto };
 
     const playlistResult: Result<Playlist> =
