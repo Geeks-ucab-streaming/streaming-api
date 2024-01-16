@@ -1,23 +1,23 @@
-import { IUserRepository } from "src/users/domain/IUserRepository";
-import { User } from "src/users/domain/userAggregate/user";
-import { userName } from "src/users/domain/userAggregate/value-objects/userName";
-import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/userBirthDate";
-import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
-import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
+import { IUserRepository } from 'src/users/domain/IUserRepository';
+import { User } from 'src/users/domain/userAggregate/user';
+import { userName } from 'src/users/domain/userAggregate/value-objects/userName';
+import { UserBirthDate } from 'src/users/domain/userAggregate/value-objects/userBirthDate';
+import { UserGender } from 'src/users/domain/userAggregate/value-objects/userGender';
+import { userSuscriptionState } from 'src/users/domain/userAggregate/value-objects/userSuscriptionState';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { IApplicationService } from "src/common/Application/application-service/application.service.interface";
-import { Result } from "src/common/domain/logic/Result";
-import { ParameterObjectUser } from "../ParameterObjects/updateUser";
-import { userEmail } from "src/users/domain/userAggregate/value-objects/userEmail";
+import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
+import { Result } from 'src/common/domain/logic/Result';
+import { ParameterObjectUser } from '../ParameterObjects/updateUser';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
 import { IUpdateUserDto } from "src/common/Application/dtoPorts/updateUserDtoPort";
 import { IUserDto } from "src/common/Application/dtoPorts/userDtoPort";
+import { userEmail } from 'src/users/domain/userAggregate/value-objects/userEmail';
 
 export class UpdateUserById implements IApplicationService<ParameterObjectUser<IUpdateUserDto>, IUserDto> {
   constructor(
     private readonly repo: IUserRepository,
-    private readonly transactionHandler:ItransactionHandler
+    private readonly transactionHandler: ItransactionHandler,
   ) {}
   get name(): string {
     return 'UpdateUserById';
@@ -34,21 +34,26 @@ export class UpdateUserById implements IApplicationService<ParameterObjectUser<I
     const userUpdated = User.create(
       user.Id,
       user.Phone,
-      userSuscriptionState.create(user.SuscriptionState.SuscriptionState, user.SuscriptionState.suscription_date),
+      userSuscriptionState.create(
+        user.SuscriptionState.SuscriptionState,
+        user.SuscriptionState.suscription_date,
+      ),
       null,
-      )
+    );
 
-      if (usuarioParametrizado.userToHandle.name) {
-        userUpdated.updateUsersName(userName.create(usuarioParametrizado.userToHandle.name));
-      }
-  
-      if (usuarioParametrizado.userToHandle.email) {
-        userUpdated.updateUsersEmail(userEmail.create(usuarioParametrizado.userToHandle.email));
-      }
-  
-      if (usuarioParametrizado.userToHandle.gender) {
-        userUpdated.updateUsersGender(UserGender.create(usuarioParametrizado.userToHandle.gender));
-      }
+    if (usuarioParametrizado.userToHandle.name) {
+      userUpdated.updateUsersName(
+        userName.create(usuarioParametrizado.userToHandle.name),
+      );
+    }
+
+    if (usuarioParametrizado.userToHandle.email) {
+      userUpdated.updateUsersEmail(userEmail.create(usuarioParametrizado.userToHandle.email));
+    }
+
+    if (usuarioParametrizado.userToHandle.gender) {
+      userUpdated.updateUsersGender(UserGender.create(usuarioParametrizado.userToHandle.gender));
+    }
 
       if (usuarioParametrizado.userToHandle.birth_date) {
         let birthDate = new Date(usuarioParametrizado.userToHandle.birth_date);
@@ -64,5 +69,4 @@ export class UpdateUserById implements IApplicationService<ParameterObjectUser<I
     await this.transactionHandler.commitTransaction()
     return Result.success<IUserDto>(await usuarioParametrizado.mapper.domainTo(userUpdated));
   }
-  
 }

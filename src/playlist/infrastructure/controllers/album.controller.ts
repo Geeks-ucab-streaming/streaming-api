@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
@@ -73,7 +73,9 @@ export class AlbumController {
   }
   @ApiTags('Album')
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<MyResponse<PlaylistDto>> {
+  async findById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<MyResponse<PlaylistDto>> {
     this.findAlbumByIDService = new FindAlbumByIDService(
       this.repository,
       this.songRepository,
