@@ -3,7 +3,7 @@ import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { phoneNumber } from 'src/phones/domain/phoneAggregate/value-objects/phoneNumber';
 import { phoneId } from 'src/phones/domain/phoneAggregate/value-objects/phoneId';
 import { Line } from 'src/phones/domain/phoneAggregate/value-objects/line';
-import { PhoneDto } from 'src/phones/application/dtos/phone.dto';
+import { PhoneDto } from 'src/phones/infrastructure/dtos/phone.dto';
 
 export class PhoneAndDtoMapper implements Imapper<Phone, PhoneDto> {
   async domainTo(phoneDomainEntity: Phone): Promise<PhoneDto> {

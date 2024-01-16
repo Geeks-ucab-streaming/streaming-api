@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsDate, IsOptional, IsEmail, IsIn } from 'class-validator';
+import { IUpdateUserDto } from "src/common/Application/dtoPorts/updateUserDtoPort";
 import { Check } from 'typeorm';
 
-export class  UpdateUserDto{
+export class  UpdateUserDto implements IUpdateUserDto{
 
   @ApiProperty()
   @IsOptional()
