@@ -91,6 +91,7 @@ export class TransmitWsGateway
 
       response.data.on('end', () => {
         console.log('Streaming complete');
+        client.emit('message-from-server', { chunk: [] });
         client.data.currentStream = null;
       });
     } catch (error) {

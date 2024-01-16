@@ -1,4 +1,14 @@
-import { Controller, Get, Inject, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   GetSongByIdService,
   GetSongByIdServiceDto,
@@ -48,6 +58,7 @@ import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
+import { StreamInfoDto } from '../stream.dto';
 
 export class TrendingSongsDto {
   songs: SongDto[];
@@ -90,7 +101,8 @@ export class SongsController {
       for (const song of songsResponse.Value) {
         let artistsAux: { id: string; name: string }[] = [];
         for (const artist of song.Artists) {
-          const dtoArtist = ArtistID.create(artist);
+          let dtoArtist: ArtistID;
+          dtoArtist = ArtistID.create(artist);
           const dto: GetArtistProfilesApplicationServiceDto = {
             id: dtoArtist,
           };
@@ -119,7 +131,7 @@ export class SongsController {
         songsResponse.error,
       );
   }
-  
+
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiTags('Songs')
@@ -153,7 +165,7 @@ export class SongsController {
   @ApiTags('Songs')
   @Get('/artist/:artistId')
   async findByArtistId(
-    @Param('artistId') id: string,
+    @Param('artistId', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<Song[]>> {
     const dto: FindSongsByArtistIdServiceDto = { id: ArtistID.create(id) };
     this.findSongsByArtistIdService = new FindSongsByArtistIdService(
@@ -165,7 +177,7 @@ export class SongsController {
   @ApiTags('Songs')
   @Get('/playlist/:playlistId')
   async findByPlaylistId(
-    @Param('playlistId') id: string,
+    @Param('playlistId', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<Song[]>> {
     this.getSongBPlaylistIdService = new GetSongBPlaylistIdService(
       this.ormSongRepository,
@@ -181,9 +193,7 @@ export class SongsController {
 
   @ApiTags('StreamedSong')
   @Post('/streamedsong')
-  addStreamToSong(
-    @Query() streamDto: { user: string; song: string; playlist?: string },
-  ): void {
+  addStreamToSong(@Query() streamDto: StreamInfoDto): void {
     const streamAppDto: StreamDto = {
       user: userId.create(streamDto.user),
       song: SongID.create(streamDto.song),

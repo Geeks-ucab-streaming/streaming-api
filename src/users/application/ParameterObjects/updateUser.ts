@@ -8,11 +8,7 @@ export class ParameterObjectUser<T> {
   public userToHandle: T;
   public mapper: Imapper<User, UserDto>;
 
-  constructor(
-    id: string,
-    userToHandle: T,
-    mapper: Imapper<User, UserDto>,
-  ) {
+  constructor(id: string, userToHandle: T, mapper: Imapper<User, UserDto>) {
     this.id = id;
     this.userToHandle = userToHandle;
     this.mapper = mapper;
