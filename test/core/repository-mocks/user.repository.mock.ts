@@ -1,7 +1,7 @@
-import { Result } from "src/common/domain/logic/Result";
-import { Phone } from "src/phones/domain/phoneAggregate/phone";
-import { IUserRepository } from "src/users/domain/IUserRepository";
-import { User } from "src/users/domain/userAggregate/user";
+import { Result } from "../../../src/common/domain/logic/Result";
+import { Phone } from "../../../src/phones/domain/phoneAggregate/phone";
+import { IUserRepository } from "../../../src/users/domain/IUserRepository";
+import { User } from "../../../src/users/domain/userAggregate/user";
 
 export class UserRepositoryMock implements IUserRepository {
   private readonly users: User[] = [];
