@@ -14,9 +14,7 @@ export class UserRepositoryMock implements IUserRepository {
     }
   }
   async finderCriteria(criteria: Partial<Phone>): Promise<User | undefined> {
-    // Search for matching users based on criteria (e.g., phone number)
     const matchingUser = this.users.find((user) => {
-      // Implement your matching logic here
       return user.Phone.PhoneNumber === criteria.PhoneNumber; // Example: matching by phone number
     });
     // Return the matching user or undefined if not found
@@ -36,7 +34,7 @@ export class UserRepositoryMock implements IUserRepository {
     }
   }
   
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<User[]> {
     return this.users;
   }
 }
