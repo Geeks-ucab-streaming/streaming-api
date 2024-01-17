@@ -6,7 +6,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Result } from '../domain/logic/Result';
 import { PlaylistDto, SongDto } from 'src/dtos';
-import { LoggingApplicationServiceDecorator } from '../Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
+import { LoggingApplicationServiceDecorator } from '../Application/application-service/decorators/loggin-application.service.decorator';
 import { NestLogger } from './logger/nest-logger';
 import { BrowseSongsService } from 'src/songs/application/services/browseSongs.service';
 import { Song } from 'src/songs/domain/song';
