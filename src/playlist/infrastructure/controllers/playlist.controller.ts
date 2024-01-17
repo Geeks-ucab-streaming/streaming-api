@@ -55,7 +55,7 @@ export class PlaylistController {
     );
     this.audithRepo = new AudithRepositoryImpl();
   }
-  
+
   @UseGuards(JwtAuthGuard)
   @ApiTags('TopPlaylist')
   @Get('/top_playlists')
@@ -98,18 +98,27 @@ export class PlaylistController {
       );
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Playlist')
   @Get('/FindByArtistID/:id')
   async findByArtistId(
+    @Req() req: Request,
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<Playlist[]>> {
-    this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
-      this.repository,
-      this.songRepository,
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
+    const service = new AudithApplicationServiceDecorator(
+      new FindAlbumByArtistIDService(this.repository, this.songRepository),
+      this.audithRepo,
+      userid,
     );
+    // this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
+    //   this.repository,
+    //   this.songRepository,
+    // );
     const iddto = ArtistID.create(id);
     const dto: FindAlbumByArtistIDServiceDto = { id: iddto };
-    const response = await this.findPlaylistByArtistIdService.execute(dto);
+    const response = await service.execute(dto);
     if (response.IsSuccess) {
       return MyResponse.fromResult(response);
     }
