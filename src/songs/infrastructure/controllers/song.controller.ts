@@ -80,17 +80,19 @@ export class TrendingSongsDto {
     @UseGuards(JwtAuthGuard)
     @ApiTags('Trending Songs')
     @Get('/top_songs')
-    async findTrendingSongs(@Req() req: Request): Promise<MyResponse<TrendingSongsDto>> {
+    async findTrendingSongs(
+      @Req() req: Request,
+    ): Promise<MyResponse<TrendingSongsDto>> {
       const token = req.headers['authorization']?.split(' ')[1] ?? '';
       const userid = await this.jwtService.decode(token).id;
       const service = new AudithApplicationServiceDecorator(
         new LoggingApplicationServiceDecorator(
           new GetTrendingSongsService(this.ormSongRepository),
-          new NestLogger()
+          new NestLogger(),
         ),
         this.audithRepo,
-        userid
-      ); ;
+        userid,
+      );
       const findArtistByIdService = new LoggingApplicationServiceDecorator(
         new GetArtistProfilesApplicationService(this.ormArtistRepository),
         new NestLogger(),
@@ -153,39 +155,58 @@ export class TrendingSongsDto {
       const result = await service.execute(dto);
       return MyResponse.fromResult(result);
     }
-
+    @UseGuards(JwtAuthGuard)
     @ApiTags('Songs')
     @Get('/artist/:artistId')
     async findByArtistId(
       @Param('artistId', ParseUUIDPipe) id: string,
+      @Req() req: Request,
     ): Promise<MyResponse<Song[]>> {
+      const token = req.headers['authorization']?.split(' ')[1] ?? '';
+      const userid = await this.jwtService.decode(token).id;
       const dto: FindSongsByArtistIdServiceDto = { id: ArtistID.create(id) };
-      this.findSongsByArtistIdService = new FindSongsByArtistIdService(
-        this.ormSongRepository,
+      const service = new AudithApplicationServiceDecorator(
+        new LoggingApplicationServiceDecorator(
+          new FindSongsByArtistIdService(this.ormSongRepository),
+          new NestLogger(),
+        ),
+        this.audithRepo,
+        userid,
       );
-      const result = await this.findSongsByArtistIdService.execute(dto);
+
+      const result = await service.execute(dto);
       return MyResponse.fromResult(result);
     }
+    @UseGuards(JwtAuthGuard)
     @ApiTags('Songs')
     @Get('/playlist/:playlistId')
     async findByPlaylistId(
       @Param('playlistId', ParseUUIDPipe) id: string,
+      @Req() req: Request,
     ): Promise<MyResponse<Song[]>> {
-      this.getSongBPlaylistIdService = new GetSongBPlaylistIdService(
-        this.ormSongRepository,
+      const token = req.headers['authorization']?.split(' ')[1] ?? '';
+      const userid = await this.jwtService.decode(token).id;
+      const service = new AudithApplicationServiceDecorator(
+        new LoggingApplicationServiceDecorator(
+          new GetSongBPlaylistIdService(this.ormSongRepository),
+          new NestLogger(),
+        ),
+        this.audithRepo,
+        userid,
       );
       const getSongsByPlaylistIdDto: GetSongBPlaylistIdServiceDto = {
         id: PlaylistID.create(id),
       };
-      const result = await this.getSongBPlaylistIdService.execute(
-        getSongsByPlaylistIdDto,
-      );
+      const result = await service.execute(getSongsByPlaylistIdDto);
       return MyResponse.fromResult(result);
     }
 
+    @UseGuards(JwtAuthGuard)
     @ApiTags('StreamedSong')
     @Post('/streamedsong')
-    addStreamToSong(@Query() streamDto: StreamInfoDto): void {
+    async addStreamToSong(@Query() streamDto: StreamInfoDto,@Req() req: Request): Promise<void> {
+      const token = req.headers['authorization']?.split(' ')[1] ?? '';
+      const userid = await this.jwtService.decode(token).id;
       const streamAppDto: StreamDto = {
         user: userId.create(streamDto.user),
         song: SongID.create(streamDto.song),
@@ -201,17 +222,19 @@ export class TrendingSongsDto {
       const playlistRepository: PlaylistRepository = new PlaylistRepository(
         DataSourceSingleton.getInstance(),
       );
-      const service = new LoggingApplicationServiceDecorator(
-        new AddStreamToSongService(
-          streamRepository,
-          playlistStreamRepository,
-          this.ormArtistRepository,
-          this.ormSongRepository,
-          playlistRepository,
-        ),
-        new NestLogger(),
-      );
-      service.execute(streamAppDto);
+      const service = new AudithApplicationServiceDecorator(
+          new LoggingApplicationServiceDecorator(
+            new AddStreamToSongService(
+            streamRepository,
+            playlistStreamRepository,
+            this.ormArtistRepository,
+            this.ormSongRepository,
+            playlistRepository,
+          ),new NestLogger(),
+      ),
+      this.audithRepo,
+      userid);
+      await service.execute(streamAppDto);
       return;
     }
   }
