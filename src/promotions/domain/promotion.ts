@@ -1,51 +1,47 @@
-// import { UniqueEntityID } from 'src/common/domain/unique-entity-id';
-// import { Entity } from 'src/common/domain/Entity/entity';
-// import { PromotionImage } from './promotionImage-valueobject';
-// import { Result } from 'src/common/domain/logic/Result';
-// import { Guard } from 'src/common/domain/logic/Guard';
+import { AggregateRoot } from 'src/common/domain/aggregate-root';
+import { PromoCreatedEvent } from './event/PromoCreatedEvent';
+import { PromoID } from './value-objects/PromoID-valueobject';
+import { PromoImageReference } from './value-objects/PromoImageReference-valueobject';
+import { DomainEvent } from 'src/common/domain/Event/domain-event';
 
-// interface PromotionProps {
-//   image_reference: PromotionImage;
-//   image: Buffer | null;
-// }
-// export class Promotion extends Entity<PromotionProps> {
-//   image_reference: string;
-//   image: Buffer | null;
+export class Promotion extends AggregateRoot<PromoID> {
+  protected when(event: DomainEvent): void {
+    switch (event.constructor) {
+      case PromoCreatedEvent:
+        const promoCreated = event as PromoCreatedEvent;
+        this.image_reference = promoCreated.image_reference;
+        break;
+      default:
+        throw new Error('Event no fue implementado');
+    }
+  }
+  protected ensureValidState(): void {
+    if (!this.image_reference) throw new Error('Method not implemented.');
+  }
+  private image: Buffer | null;
+  private image_reference: PromoImageReference;
 
-//   get id(): UniqueEntityID {
-//     return this._id;
-//   }
-//   private constructor(props: PromotionProps, id: UniqueEntityID) {
-//     super(props, id);
-//   }
+  get Image_Reference(): string {
+    return this.image_reference.Value;
+  }
 
-//   public static create(
-//     props: PromotionProps,
-//     id?: UniqueEntityID,
-//   ): Result<Promotion> {
-//     const guardResult = Guard.againstNullOrUndefinedBulk([
-//       { argument: props.image_reference, argumentName: 'image_reference' },
-//     ]);
+  get Image(): Buffer | null {
+    return this.image;
+  }
 
-//     if (!guardResult.succeeded) {
-//       return Result.fail<Promotion>(guardResult.message);
-//     }
+  public setImage(image: Buffer) {
+    this.image = image;
+  }
 
-//     const defaultValues: PromotionProps = {
-//       ...props,
-//       image: props.image ? props.image : null,
-//     };
+  protected constructor(id: PromoID, image_reference: PromoImageReference) {
+    const promoCreated = PromoCreatedEvent.create(id, image_reference);
+    super(id, promoCreated);
+  }
 
-//     const promotion = new Promotion(
-//       defaultValues,
-//       id ? id : new UniqueEntityID(),
-//     );
-//     return Result.ok<Promotion>(promotion);
-//   }
-// }
-
-export class Promotion {
-  id: string;
-  image: Buffer | null;
-  image_reference: string;
+  public static create(id: string, image_reference: string): Promotion {
+    return new Promotion(
+      PromoID.create(id),
+      PromoImageReference.create(image_reference),
+    );
+  }
 }

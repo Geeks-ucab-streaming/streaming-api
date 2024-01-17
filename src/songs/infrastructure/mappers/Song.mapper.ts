@@ -3,13 +3,6 @@ import { Song } from 'src/songs/domain/song';
 import { SongEntity } from '../entities/song.entity';
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
-import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
-import { SongName } from 'src/songs/domain/value-objects/SongName-valueobject';
-import { SongDuration } from 'src/songs/domain/value-objects/SongDuration-valueobject';
-import { SongCreationDate } from 'src/songs/domain/value-objects/SongCreationDate-valueobject';
-import { SongAudioReference } from 'src/songs/domain/value-objects/SongAudioReference-valueobject';
-import { SongImageReference } from 'src/songs/domain/value-objects/SongImageReference-valueobject';
-import { SongStreams } from 'src/songs/domain/value-objects/SongStreams-valueobject';
 
 export class SongsMapper implements Imapper<Song, SongEntity> {
   private readonly getSongImageService: GetFileService;
