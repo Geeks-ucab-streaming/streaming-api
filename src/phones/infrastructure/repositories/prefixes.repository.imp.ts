@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
-import { IPhoneRepository, IgenericRepo } from 'src/phones/domain/generic-repo-phones';
+import { IgenericRepo } from 'src/phones/domain/generic-repo-phones';
 import { PrefixEntity } from '../../../phones/infrastructure/entities/prefixes.entity';
 
 export class OrmLineRepository extends Repository<PrefixEntity> implements IgenericRepo<string,PrefixEntity> {
@@ -16,6 +16,7 @@ export class OrmLineRepository extends Repository<PrefixEntity> implements Igene
     .where("prefix.prefix = :prefix", { prefix: prefix })
     .getOne();
     return phone 
+    
   }
 
 }

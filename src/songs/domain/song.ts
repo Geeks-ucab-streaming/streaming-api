@@ -62,7 +62,7 @@ export class Song extends AggregateRoot<SongID> {
   get Name(): string {
     return this.name.Value;
   }
-  get Duration() {
+  get Duration(): number {
     return this.duration.Value;
   }
   get DurationString(): string {
@@ -98,7 +98,7 @@ export class Song extends AggregateRoot<SongID> {
   get ImageReference(): string {
     return this.image_reference.Value;
   }
-  get Streams(): Number {
+  get Streams(): number {
     return this.streams.Value;
   }
   get Artists(): string[] {

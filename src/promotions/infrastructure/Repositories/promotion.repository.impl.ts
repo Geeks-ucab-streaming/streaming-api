@@ -3,29 +3,29 @@ import { PromotionEntity } from '../entities/promotion.entity';
 import { IPromotionRepository } from '../../domain/IPromotionRepository';
 import { Promotion } from 'src/promotions/domain/promotion';
 import { GetFileService } from '../../../common/infrastructure/services/getFile.service';
+import { PromoID } from 'src/promotions/domain/value-objects/PromoID-valueobject';
+import { PromosMapper } from '../mapper/promoMapper';
 
 export class OrmPromotionRepository
   extends Repository<PromotionEntity>
   implements IPromotionRepository
 {
+  private readonly promoMapper: PromosMapper;
   private readonly getPromoImageService: GetFileService;
   constructor(dataSource: DataSource) {
     super(PromotionEntity, dataSource.manager);
     this.getPromoImageService = new GetFileService(
       process.env.PROMOTION_IMAGES_CONTAINER,
     );
+    this.promoMapper = new PromosMapper();
   }
-  async findById(id: string): Promise<Promotion> {
-    const promotion = await this.findOne({ where: { id: id } });
+  async findById(id: PromoID): Promise<Promotion> {
+    const promotion = await this.findOne({ where: { id: id.Value } });
 
     if (promotion) {
-      const promoImage = await this.getPromoImageService.execute(
-        promotion.image_reference,
-      );
+      const domainPromo: Promotion = await this.promoMapper.ToDomain(promotion);
 
-      const promotionWithImage: Promotion = { ...promotion, image: promoImage };
-
-      return promotionWithImage;
+      return domainPromo;
     }
     return null;
 
@@ -35,20 +35,12 @@ export class OrmPromotionRepository
     let promotions = await this.find();
 
     if (promotions) {
-      if (Array.isArray(promotions)) {
-        const promotionPromises = promotions.map(async (promotion) => {
-          const image = await this.getPromoImageService.execute(
-            promotion.image_reference.toLowerCase(),
-          );
+      let domainPromisePromos: Promise<Promotion>[];
+      promotions.forEach((promo) =>
+        domainPromisePromos.push(this.promoMapper.ToDomain(promo)),
+      );
 
-          const promotionWithImage: Promotion = Object.assign(promotion, {
-            image: image,
-          });
-
-          return promotionWithImage;
-        });
-        return Promise.all(promotionPromises);
-      }
+      return Promise.all(domainPromisePromos);
     }
     return null;
   }
@@ -59,11 +51,9 @@ export class OrmPromotionRepository
       .getOne();
 
     if (promotion) {
-      const image = await this.getPromoImageService.execute(
-        promotion.image_reference.toLowerCase(),
-      );
-      const promoWithImage: Promotion = { ...promotion, image: image };
-      return promoWithImage;
+      const domainPromo: Promotion = await this.promoMapper.ToDomain(promotion);
+
+      return domainPromo;
     }
     return null;
   }

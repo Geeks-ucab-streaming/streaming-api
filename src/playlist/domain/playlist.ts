@@ -150,7 +150,7 @@ export class Playlist extends AggregateRoot<PlaylistID> {
     isAlbum: boolean,
     playlistCreators?: ArtistID[],
     playlistSongs?: SongID[],
-  ) {
+  ): Playlist {
     return new Playlist(
       PlaylistID.create(id),
       PlaylistName.create(name),

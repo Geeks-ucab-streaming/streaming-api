@@ -50,6 +50,7 @@ export class PlaylistStreamsRepository
     const stream = await this.createQueryBuilder('stream')
       .where('stream.user = :user', { user })
       .andWhere('stream.playlist = :playlist', { playlist })
+      .orderBy('stream.reproduced_date', 'DESC')
       .getOne();
     console.log(stream);
     if (stream) return stream;

@@ -1,5 +1,4 @@
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
-import { CreateUserDto } from '../dtos/create-user.dto';
 import { PhonesService } from 'src/phones/application/services/register-users-phone.application.service';
 import { Imapper } from '../../../common/Application/IMapper';
 import { User } from 'src/users/domain/userAggregate/user';
@@ -8,15 +7,16 @@ import { NotFoundException } from '@nestjs/common';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { IUserRepository } from 'src/users/domain/IUserRepository';
 import { UserFactory } from 'src/users/domain/factories/user.factory';
-import { PhoneDto } from 'src/phones/application/dtos/phone.dto';
+import { PhoneDto } from 'src/phones/infrastructure/dtos/phone.dto';
 import { Result } from '../../../common/domain/logic/Result';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ITokenUserRepository } from '../../domain/tokenUser.repository';
-import { TokenEntity } from '../../domain/userAggregate/entities/token';
+import { Token } from '../../domain/userAggregate/value-objects/token';
 import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
+import { ICreateUserDto } from 'src/common/Application/dtoPorts/createUserDtoPort';
 
 export class SignUserUpMovistar
-  implements IApplicationService<CreateUserDto, User>
+  implements IApplicationService<ICreateUserDto, User>
 {
   constructor(
     private phone: PhonesService,
@@ -30,7 +30,7 @@ export class SignUserUpMovistar
     return this.constructor.name;
   }
 
-  async execute(usersDto: CreateUserDto): Promise<Result<User>> {
+  async execute(usersDto: ICreateUserDto): Promise<Result<User>> {
     await this.transactionHandler.startTransaction();
     const users = await this.findByPhoneUserService.execute(usersDto.phone);
     if (users.Value) {
@@ -65,11 +65,11 @@ export class SignUserUpMovistar
       ),
       this.transactionHandler,
     );
-    const tokenEntity = TokenEntity.create(
+    const token = Token.create(
       usersDto.token,
       savedUser.value.Id.Id,
     );
-    await this.tokenRepository.saveToken(tokenEntity, this.transactionHandler);
+    await this.tokenRepository.saveToken(token, this.transactionHandler);
     await this.transactionHandler.commitTransaction();
     return savedUser;
   }

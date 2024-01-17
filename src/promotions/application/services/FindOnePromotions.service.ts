@@ -4,9 +4,14 @@ import { IPromotionRepository } from 'src/promotions/domain/IPromotionRepository
 import { Result } from 'src/common/domain/logic/Result';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
 import { DomainException } from 'src/common/domain/exceptions/domain-exception';
+import { PromoID } from 'src/promotions/domain/value-objects/PromoID-valueobject';
+
+export interface FindOnePromotionsServiceDto {
+  id: PromoID;
+}
 
 export class FindOnePromotionsService
-  implements IApplicationService<string, Promotion>
+  implements IApplicationService<FindOnePromotionsServiceDto, Promotion>
 {
   private readonly promotionRepository: IPromotionRepository;
   constructor(promotionRepository: IPromotionRepository) {
@@ -16,8 +21,8 @@ export class FindOnePromotionsService
     return this.constructor.name;
   }
 
-  async execute(id: string): Promise<Result<Promotion>> {
-    const res = await this.promotionRepository.findById(id);
+  async execute(dto: FindOnePromotionsServiceDto): Promise<Result<Promotion>> {
+    const res = await this.promotionRepository.findById(dto.id);
     if (res) return Result.success(res);
     return Result.fail(
       new DomainException(
