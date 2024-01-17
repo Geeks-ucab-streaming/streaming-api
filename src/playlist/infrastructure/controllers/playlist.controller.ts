@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseUUIDPipe, Req, UseGuards } from '@nestjs/common';
 import {
   FindAlbumByArtistIDService,
   FindAlbumByArtistIDServiceDto,
@@ -10,7 +10,7 @@ import {
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
 import { FindTopPlaylistsService } from 'src/playlist/application/services/FindTopPlaylists.service';
 import { PlaylistDto, SongDto, TopPlaylistDto } from 'src/dtos';
@@ -27,7 +27,13 @@ import { MyResponse } from 'src/common/infrastructure/Response';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
-
+import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
+import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
+import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
+import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
+import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
+@ApiBearerAuth()
 @Controller('api/playlist')
 export class PlaylistController {
   private repository: PlaylistRepository;
@@ -38,6 +44,8 @@ export class PlaylistController {
   private findTopPlaylistsService: FindTopPlaylistsService;
   private findSongsInCollectionService: GetSongsInCollectionService;
   private findArtistsInCollectionService: FindArtistsInCollectionService;
+  private audithRepo: AudithRepositoryImpl;
+  private jwtService: JwtService = new JwtService();
 
   constructor() {
     this.repository = new PlaylistRepository(DataSourceSingleton.getInstance());
@@ -47,24 +55,32 @@ export class PlaylistController {
     this.artistsRepository = new OrmArtistRepository(
       DataSourceSingleton.getInstance(),
     );
+    this.audithRepo = new AudithRepositoryImpl();
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiTags('TopPlaylist')
   @Get('/top_playlists')
-  async findTopPlaylists(): Promise<MyResponse<TopPlaylistDto>> {
-    this.findTopPlaylistsService = new FindTopPlaylistsService(
-      this.repository,
-      this.songRepository,
+  async findTopPlaylists(
+    @Req() req: Request,
+  ): Promise<MyResponse<TopPlaylistDto>> {
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
+    const service = new AudithApplicationServiceDecorator(
+      new FindTopPlaylistsService(this.repository, this.songRepository),
+      this.audithRepo,
+      userid,
     );
+    // this.findTopPlaylistsService = new FindTopPlaylistsService(
+    //   this.repository,
+    //   this.songRepository,
+    // );
     let topPlaylistsInfo: TopPlaylistDto = {
       playlists: [],
     };
-    const playlistsResponse: Result<Playlist[]> =
-      await this.findTopPlaylistsService.execute();
+    const playlistsResponse: Result<Playlist[]> = await service.execute();
     if (playlistsResponse.IsSuccess) {
-      const playlistsResult: Playlist[] = (
-        await this.findTopPlaylistsService.execute()
-      ).Value;
+      const playlistsResult: Playlist[] = playlistsResponse.Value;
 
       for (const playlist of playlistsResult) {
         topPlaylistsInfo.playlists.push({
@@ -82,32 +98,53 @@ export class PlaylistController {
       );
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Playlist')
   @Get('/FindByArtistID/:id')
   async findByArtistId(
+    @Req() req: Request,
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<Playlist[]>> {
-    this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
-      this.repository,
-      this.songRepository,
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
+    const service = new AudithApplicationServiceDecorator(
+      new FindAlbumByArtistIDService(this.repository, this.songRepository),
+      this.audithRepo,
+      userid,
     );
+    // this.findPlaylistByArtistIdService = new FindAlbumByArtistIDService(
+    //   this.repository,
+    //   this.songRepository,
+    // );
     const iddto = ArtistID.create(id);
     const dto: FindAlbumByArtistIDServiceDto = { id: iddto };
-    const response = await this.findPlaylistByArtistIdService.execute(dto);
+    const response = await service.execute(dto);
     if (response.IsSuccess) {
       return MyResponse.fromResult(response);
     }
     MyResponse.fail(response.statusCode, response.message, response.error);
   }
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Playlist')
   @Get(':id')
   async findById(
+    @Req() req: Request,
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<PlaylistDto>> {
-    this.findPlaylistByIdService = new FindAlbumByPlaylistIDService(
-      this.repository,
-      this.songRepository,
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new FindAlbumByPlaylistIDService(this.repository, this.songRepository),
+        new NestLogger()
+      ),
+      this.audithRepo,
+      userid,
     );
+    // this.findPlaylistByIdService = new FindAlbumByPlaylistIDService(
+    //   this.repository,
+    //   this.songRepository,
+    // );
     this.findArtistsInCollectionService = new FindArtistsInCollectionService(
       this.artistsRepository,
     );
@@ -117,13 +154,10 @@ export class PlaylistController {
     const iddto = PlaylistID.create(id);
     const dto: FindAlbumByPlaylistIDServiceDto = { id: iddto };
 
-    const playlistResult: Result<Playlist> =
-      await this.findPlaylistByIdService.execute(dto);
+    const playlistResult: Result<Playlist> = await service.execute(dto);
 
     if (playlistResult.IsSuccess) {
-      const playlistResponse: Playlist = (
-        await this.findPlaylistByIdService.execute(dto)
-      ).Value;
+      const playlistResponse: Playlist = playlistResult.Value;
       let playlistCreators: Artist[] = [];
       let creators: { creatorId: string; creatorName: string }[] = [];
 

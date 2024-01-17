@@ -35,14 +35,15 @@ export class TransmitWsGateway
     client.data = { currentStream: null };
     const token = client.handshake.auth.token;
     console.log(token);
-    const userInfo = this.jwtService.verify(token, {
-      secret: jwtcontanst.secret,
-    });
+    const userInfo = await this.jwtService.decode(token);
     this.id = userInfo.id;
     this.subscription = userInfo.subscription;
     console.log(this.id);
     console.log(this.subscription);
   }
+  // {
+  //   secret: jwtcontanst.secret,
+  // }
 
   handleDisconnect(client: Socket) {
     console.log('cliente desconectado: ', client.id);

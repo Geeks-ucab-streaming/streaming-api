@@ -1,6 +1,6 @@
 import { phoneId } from "src/phones/domain/phoneAggregate/value-objects/phoneId";
 import { phoneNumber } from "src/phones/domain/phoneAggregate/value-objects/phoneNumber";
-import { phoneOperatorsEnum } from "../../../phones/domain/phoneAggregate/enums/phoneOperators.enum";
+import { phoneOperatorsEnum } from "../phoneAggregate/value-objects/phoneOperators.enum";
 import { Phone } from "src/phones/domain/phoneAggregate/phone";
 import { Line } from "src/phones/domain/phoneAggregate/value-objects/line";
 import { PhoneParameterObject } from "src/phones/domain/parameterObjects/phoneParameterObject";

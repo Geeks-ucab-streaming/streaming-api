@@ -1,8 +1,8 @@
 import { AggregateRoot } from 'src/common/domain/aggregate-root';
+import { DomainEvent } from 'src/common/domain/Event/domain-event';
 import { PromoCreatedEvent } from './event/PromoCreatedEvent';
 import { PromoID } from './value-objects/PromoID-valueobject';
 import { PromoImageReference } from './value-objects/PromoImageReference-valueobject';
-import { DomainEvent } from 'src/common/domain/Event/domain-event';
 
 export class Promotion extends AggregateRoot<PromoID> {
   protected when(event: DomainEvent): void {
