@@ -21,8 +21,4 @@ export class PlaylistStreams implements IValueObject<PlaylistStreams> {
   public static create(value: number): PlaylistStreams {
     return new PlaylistStreams(value);
   }
-
-  public addstreams(): void {
-    this.value++;
-  }
 }

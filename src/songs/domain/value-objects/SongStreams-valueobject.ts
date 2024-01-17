@@ -21,8 +21,4 @@ export class SongStreams implements IValueObject<SongStreams> {
   public static create(value: number): SongStreams {
     return new SongStreams(value);
   }
-
-  public addstreams(): void {
-    this.value++;
-  }
 }
