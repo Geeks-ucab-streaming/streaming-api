@@ -121,9 +121,7 @@ export class PlaylistController {
       await this.findPlaylistByIdService.execute(dto);
 
     if (playlistResult.IsSuccess) {
-      const playlistResponse: Playlist = (
-        await this.findPlaylistByIdService.execute(dto)
-      ).Value;
+      const playlistResponse: Playlist = playlistResult.Value;
       let playlistCreators: Artist[] = [];
       let creators: { creatorId: string; creatorName: string }[] = [];
 
