@@ -4,7 +4,7 @@ import { userId } from "../userAggregate/value-objects/userId";
 import { UserPhoneFactory } from "./user-phone.factory";
 import { PhoneParameterObject } from "src/phones/domain/parameterObjects/phoneParameterObject";
 import { v4 as uuidv4 } from 'uuid';
-import { TokenEntity } from '../userAggregate/entities/token';
+import { Token } from '../userAggregate/value-objects/token';
 
 
 export class UserFactory {
@@ -16,7 +16,7 @@ export class UserFactory {
       userId.create(userUUID)
     , UserPhoneFactory.phoneFactoryMethod(new PhoneParameterObject(phoneId,phoneNumber,linesPhoneId,linesName))
     , userSuscriptionState.create(suscription,new Date(Date.now()))
-    , [TokenEntity.create(token,userUUID)]
+    , [Token.create(token,userUUID)]
      ) 
     return usuario;
   }

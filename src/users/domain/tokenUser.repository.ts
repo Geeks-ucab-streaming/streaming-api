@@ -1,7 +1,7 @@
-import { TokenEntity } from './userAggregate/entities/token';
+import { Token } from './userAggregate/value-objects/token';
 import { ItransactionHandler } from '../../common/domain/transaction_handler/transaction_handler';
 
 export interface ITokenUserRepository {
   findTokens(): Promise<string[]>
-  saveToken(token: TokenEntity, runner? : ItransactionHandler): Promise<void>
+  saveToken(token: Token, runner? : ItransactionHandler): Promise<void>
 }

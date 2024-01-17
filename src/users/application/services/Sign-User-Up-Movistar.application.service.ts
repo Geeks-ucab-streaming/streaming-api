@@ -11,7 +11,7 @@ import { PhoneDto } from 'src/phones/infrastructure/dtos/phone.dto';
 import { Result } from '../../../common/domain/logic/Result';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ITokenUserRepository } from '../../domain/tokenUser.repository';
-import { TokenEntity } from '../../domain/userAggregate/entities/token';
+import { Token } from '../../domain/userAggregate/value-objects/token';
 import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
 import { ICreateUserDto } from 'src/common/Application/dtoPorts/createUserDtoPort';
 
@@ -65,11 +65,11 @@ export class SignUserUpMovistar
       ),
       this.transactionHandler,
     );
-    const tokenEntity = TokenEntity.create(
+    const token = Token.create(
       usersDto.token,
       savedUser.value.Id.Id,
     );
-    await this.tokenRepository.saveToken(tokenEntity, this.transactionHandler);
+    await this.tokenRepository.saveToken(token, this.transactionHandler);
     await this.transactionHandler.commitTransaction();
     return savedUser;
   }
