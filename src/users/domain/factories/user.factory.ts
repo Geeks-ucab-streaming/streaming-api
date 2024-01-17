@@ -4,7 +4,7 @@ import { userId } from "../userAggregate/value-objects/userId";
 import { UserPhoneFactory } from "./user-phone.factory";
 import { PhoneParameterObject } from "src/phones/domain/parameterObjects/phoneParameterObject";
 import { v4 as uuidv4 } from 'uuid';
-import { Token } from '../userAggregate/entities/token';
+import { Token } from '../userAggregate/value-objects/token';
 
 
 export class UserFactory {

@@ -15,7 +15,7 @@ import { UserNameUpdated } from "../events/user-name-updated";
 import { UserBirthDateUpdated } from "../events/user-birthDate-updated";
 import { UserGenderUpdated } from "../events/user-gender-updated";
 import { InvalidUserException } from "../exceptions/invalid-user.exception";
-import { Token } from './entities/token';
+import { Token } from './value-objects/token';
 import { UserSuscriptionUpdated } from "../events/user-suscription-updated";
 
 export class User extends AggregateRoot<userId> {

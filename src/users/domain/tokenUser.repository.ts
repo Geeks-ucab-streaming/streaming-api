@@ -1,4 +1,4 @@
-import { Token } from './userAggregate/entities/token';
+import { Token } from './userAggregate/value-objects/token';
 import { ItransactionHandler } from '../../common/domain/transaction_handler/transaction_handler';
 
 export interface ITokenUserRepository {

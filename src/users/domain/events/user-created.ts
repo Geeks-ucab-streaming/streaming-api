@@ -5,7 +5,7 @@ import { UserBirthDate } from "../userAggregate/value-objects/userBirthDate";
 import { UserGender } from "../userAggregate/value-objects/userGender";
 import { userSuscriptionState } from "../userAggregate/value-objects/userSuscriptionState";
 import { Phone } from "src/phones/domain/phoneAggregate/phone";
-import { Token } from '../userAggregate/entities/token';
+import { Token } from '../userAggregate/value-objects/token';
 
 export class UserCreated extends DomainEvent {
   protected constructor(

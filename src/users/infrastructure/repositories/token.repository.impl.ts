@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { TokenDeviceUserEntity } from '../entities/tokenDeviceUser.entity';
 import { UserEntity } from '../entities/users.entity';
 import { DataSourceSingleton } from '../../../common/infrastructure/dataSourceSingleton';
-import { Token } from '../../domain/userAggregate/entities/token';
+import { Token } from '../../domain/userAggregate/value-objects/token';
 import { Imapper } from '../../../common/Application/IMapper';
 import { User } from '../../domain/userAggregate/user';
 import { TransactionHandlerImplementation } from '../../../common/infrastructure/transaction_handler_implementation';

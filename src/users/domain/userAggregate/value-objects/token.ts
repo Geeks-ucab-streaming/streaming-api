@@ -1,4 +1,6 @@
-export class Token {
+import { IValueObject } from "src/common/domain/ValueObjects/value-object.interface";
+
+export class Token implements IValueObject<Token>{
 
   private readonly _token: string;
   private readonly _userId: string;
@@ -19,4 +21,9 @@ export class Token {
   static create(token: string,userId: string): Token {
     return new Token(token,userId);
   }
+
+  public equals(userToken: Token): boolean {
+    return this.token === userToken.token;
+}
+
 }

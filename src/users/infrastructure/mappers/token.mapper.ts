@@ -7,7 +7,7 @@ import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/user
 import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { phoneMapper } from "src/phones/infrastructure/mapper/phone.mapper";
-import { Token } from '../../domain/userAggregate/entities/token';
+import { Token } from '../../domain/userAggregate/value-objects/token';
 import { userEmail } from 'src/users/domain/userAggregate/value-objects/userEmail';
 import { TokenDeviceUserEntity } from '../entities/tokenDeviceUser.entity';
 

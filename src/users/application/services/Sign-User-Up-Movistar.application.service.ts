@@ -11,7 +11,7 @@ import { PhoneDto } from 'src/phones/infrastructure/dtos/phone.dto';
 import { Result } from '../../../common/domain/logic/Result';
 import { DomainException } from '../../../common/domain/exceptions/domain-exception';
 import { ITokenUserRepository } from '../../domain/tokenUser.repository';
-import { Token } from '../../domain/userAggregate/entities/token';
+import { Token } from '../../domain/userAggregate/value-objects/token';
 import { ItransactionHandler } from '../../../common/domain/transaction_handler/transaction_handler';
 import { ICreateUserDto } from 'src/common/Application/dtoPorts/createUserDtoPort';
 
