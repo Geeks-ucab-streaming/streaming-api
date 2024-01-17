@@ -35,11 +35,11 @@ export class TransmitWsGateway
     client.data = { currentStream: null };
     const token = client.handshake.auth.token;
     console.log(token);
-    const userInfo = this.jwtService.verify(token, {
-      secret: jwtcontanst.secret,
-    });
-    this.id = userInfo.id;
-    this.subscription = userInfo.subscription;
+    // const userInfo = this.jwtService.verify(token, {
+    //   secret: jwtcontanst.secret,
+    // });
+    // this.id = userInfo.id;
+    // this.subscription = userInfo.subscription;
   }
 
   handleDisconnect(client: Socket) {
