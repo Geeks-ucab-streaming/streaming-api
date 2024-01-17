@@ -157,7 +157,7 @@ export class PlaylistController {
     const playlistResult: Result<Playlist> = await service.execute(dto);
 
     if (playlistResult.IsSuccess) {
-      const playlistResponse: Playlist = (playlistResult).Value;
+      const playlistResponse: Playlist = playlistResult.Value;
       let playlistCreators: Artist[] = [];
       let creators: { creatorId: string; creatorName: string }[] = [];
 
