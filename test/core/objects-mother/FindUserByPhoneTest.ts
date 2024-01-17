@@ -3,7 +3,7 @@ import { findByPhoneUserService } from '../../../src/phones/application/services
 import { ItransactionHandler } from '../../../src/common/domain/transaction_handler/transaction_handler';
 
 export class FindUserByPhoneTest {
-  public static findUserByPhoneService(mock: UserRepositoryMock,qk: ItransactionHandler,) {
-    return new findByPhoneUserService(mock, null);
+  public static findUserByPhoneService(mock: UserRepositoryMock,mockth: ItransactionHandler,) {
+    return new findByPhoneUserService(mock, mockth);
   }
 }

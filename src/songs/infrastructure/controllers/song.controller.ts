@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Inject,
   Param,
   ParseUUIDPipe,
   Post,
@@ -18,9 +17,7 @@ import {
   FindSongsByArtistIdService,
   FindSongsByArtistIdServiceDto,
 } from '../../application/services/getSongsByArtist.service';
-import { EntityManager } from 'typeorm';
 import { OrmSongRepository } from '../repositories/song.repository.impl';
-import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
@@ -31,8 +28,6 @@ import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/art
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { Result } from 'src/common/domain/logic/Result';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
-import { TransmitWsGateway } from '../sockets/transmit-ws.gateway';
-import { Socket } from 'socket.io';
 import { GetTrendingSongsService } from 'src/songs/application/services/getTrendingSongs.service';
 import { SongDto } from 'src/dtos';
 import {
@@ -44,7 +39,6 @@ import {
   AddStreamToSongService,
   StreamDto,
 } from 'src/songs/application/services/addStreamtoSong.service';
-import { IStreamRepository } from 'src/common/domain/repositories/ISongStreamRepository';
 import { StreamRepository } from 'src/common/infrastructure/repositories/streamsRepository.impl';
 import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistRepository.impl';
 import { IPlaylistStreamRepository } from 'src/common/domain/repositories/IPlaylistStreamRepository';
@@ -142,9 +136,6 @@ export class SongsController {
   ): Promise<MyResponse<Song>> {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
     const userid = await this.jwtService.decode(token).id;
-    // this.getSongByIdService = new GetSongByIdService(this.ormSongRepository);
-    // const song: Song = await this.getSongByIdService.execute(id);
-    // return song;
     const dto: GetSongByIdServiceDto = { id: SongID.create(id) };
     const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
@@ -154,10 +145,6 @@ export class SongsController {
       this.audithRepo,
       userid,
     );
-    // const service = new LoggingApplicationServiceDecorator(
-    //   new GetSongByIdService(this.ormSongRepository),
-    //   new NestLogger(),
-    // );
     const result = await service.execute(dto);
     return MyResponse.fromResult(result);
   }
