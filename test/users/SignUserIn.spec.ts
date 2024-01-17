@@ -15,6 +15,6 @@ describe('Testing SignUserIn Service...', () => {
     const result = await service.execute(phone.PhoneNumber.phoneNumber);
 
     //Assert
-    expect(result.IsSuccess).toBeDefined();
+    expect(result.Value).not.toBeNull();
   });
 });
