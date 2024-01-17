@@ -119,6 +119,8 @@ export class TransmitWsGateway
         return true;
       case 'gratuito':
         return true;
+      default:
+        return true;
     }
   }
 }
