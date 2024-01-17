@@ -5,19 +5,19 @@ import { UserBirthDate } from "../userAggregate/value-objects/userBirthDate";
 import { UserGender } from "../userAggregate/value-objects/userGender";
 import { userSuscriptionState } from "../userAggregate/value-objects/userSuscriptionState";
 import { Phone } from "src/phones/domain/phoneAggregate/phone";
-import { TokenEntity } from '../userAggregate/entities/token';
+import { Token } from '../userAggregate/entities/token';
 
 export class UserCreated extends DomainEvent {
   protected constructor(
     public id: userId,
     public phone: Phone,
     public suscriptionState: userSuscriptionState,
-    public token?: TokenEntity[],
+    public token?: Token[],
     ) {
     super();
     }
 
-  static create(id: userId,  phone: Phone, suscriptionState: userSuscriptionState, token:TokenEntity[]): UserCreated {
+  static create(id: userId,  phone: Phone, suscriptionState: userSuscriptionState, token:Token[]): UserCreated {
       return new UserCreated(id, phone, suscriptionState,token);
   }
 }

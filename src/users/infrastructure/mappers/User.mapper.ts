@@ -7,7 +7,7 @@ import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/user
 import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { phoneMapper } from "src/phones/infrastructure/mapper/phone.mapper";
-import { TokenEntity } from '../../domain/userAggregate/entities/token';
+import { Token } from '../../domain/userAggregate/entities/token';
 import { userEmail } from 'src/users/domain/userAggregate/value-objects/userEmail';
 
 
@@ -41,7 +41,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
   }
 
   async ToDomain(ormEntity: UserEntity): Promise<User> {
-    let tokenArray: TokenEntity[] = [];
+    let tokenArray: Token[] = [];
     /*ormEntity.tokenDeviceUser.map((token) => {
       tokenArray.push(TokenEntity.create(token.token));
     });*/
@@ -70,7 +70,7 @@ export class UsersMapper implements Imapper<User, UserEntity> {
     }
     if(ormEntity.tokenDeviceUser){
       ormEntity.tokenDeviceUser.map((token) => {
-        user.Token.push(TokenEntity.create(token.token,ormEntity.id));
+        user.Token.push(Token.create(token.token,ormEntity.id));
       });
     }
 

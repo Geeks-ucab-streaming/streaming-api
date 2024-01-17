@@ -7,14 +7,14 @@ import { UserBirthDate } from "src/users/domain/userAggregate/value-objects/user
 import { userSuscriptionState } from "src/users/domain/userAggregate/value-objects/userSuscriptionState";
 import { UserGender } from "src/users/domain/userAggregate/value-objects/userGender";
 import { phoneMapper } from "src/phones/infrastructure/mapper/phone.mapper";
-import { TokenEntity } from '../../domain/userAggregate/entities/token';
+import { Token } from '../../domain/userAggregate/entities/token';
 import { userEmail } from 'src/users/domain/userAggregate/value-objects/userEmail';
 import { TokenDeviceUserEntity } from '../entities/tokenDeviceUser.entity';
 
 
-export class TokenMapper implements Imapper<TokenEntity, TokenDeviceUserEntity> {
+export class TokenMapper implements Imapper<Token, TokenDeviceUserEntity> {
 
-  async domainTo(domainEntity: TokenEntity): Promise<TokenDeviceUserEntity> {
+  async domainTo(domainEntity: Token): Promise<TokenDeviceUserEntity> {
     const ormEntity:TokenDeviceUserEntity = new TokenDeviceUserEntity();
     const userEntity:UserEntity = new UserEntity();
     userEntity.id = domainEntity.userId;
@@ -25,7 +25,7 @@ export class TokenMapper implements Imapper<TokenEntity, TokenDeviceUserEntity> 
     return ormEntity;
   }
 
-  async ToDomain(ormEntity: TokenDeviceUserEntity): Promise<TokenEntity> {
+  async ToDomain(ormEntity: TokenDeviceUserEntity): Promise<Token> {
 
     return null
   }

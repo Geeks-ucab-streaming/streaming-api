@@ -1,4 +1,4 @@
-export class TokenEntity {
+export class Token {
 
   private readonly _token: string;
   private readonly _userId: string;
@@ -16,7 +16,7 @@ export class TokenEntity {
   get userId(): string {
     return this._userId;
   }
-  static create(token: string,userId: string): TokenEntity {
-    return new TokenEntity(token,userId);
+  static create(token: string,userId: string): Token {
+    return new Token(token,userId);
   }
 }
