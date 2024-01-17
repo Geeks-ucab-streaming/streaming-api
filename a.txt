@@ -3,7 +3,7 @@ VALUES ('0001', 'Laptop HP Pavilion', 'Laptop con pantalla táctil, procesador I
 
 INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
 VALUES ('0002', 'Smartphone Samsung Galaxy S21', 'Teléfono inteligente con cámara de alta resolución, pantalla AMOLED y 128 GB de almacenamiento.');
-
+ 
 INSERT INTO public.dim_producto (cod_producto, nombre_producto, descripcion_producto)
 VALUES ('0003', 'Cámara DSLR Canon EOS Rebel T7i', 'Cámara digital de alta calidad con sensor CMOS de 24.2 megapíxeles y grabación de video Full HD.');
 

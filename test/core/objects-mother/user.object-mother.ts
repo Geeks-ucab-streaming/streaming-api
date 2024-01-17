@@ -1,7 +1,7 @@
 import { PhoneParameterObject } from 'src/phones/domain/parameterObjects/phoneParameterObject';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { UserPhoneFactory } from 'src/users/domain/factories/user-phone.factory';
-import { TokenEntity } from 'src/users/domain/userAggregate/entities/token';
+import { TokenEntity } from 'src/users/domain/userAggregate/value-objects/token';
 import { User } from 'src/users/domain/userAggregate/user';
 import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
 import { userSuscriptionState } from 'src/users/domain/userAggregate/value-objects/userSuscriptionState';
