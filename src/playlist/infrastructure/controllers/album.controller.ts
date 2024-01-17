@@ -60,10 +60,9 @@ export class AlbumController {
     const userid = await this.jwtService.decode(token).id;
     const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
-         new FindTopAlbumsService(this.repository, this.songRepository)
-        ,new NestLogger()
-        )
-      ,
+        new FindTopAlbumsService(this.repository, this.songRepository),
+        new NestLogger(),
+      ),
       this.audithRepo,
       userid,
     );
@@ -92,15 +91,30 @@ export class AlbumController {
         albumsResult.error,
       );
   }
+  @UseGuards(JwtAuthGuard)
   @ApiTags('Album')
   @Get(':id')
   async findById(
+    @Req() req: Request,
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<MyResponse<PlaylistDto>> {
-    this.findAlbumByIDService = new FindAlbumByIDService(
-      this.repository,
-      this.songRepository,
+    const token = req.headers['authorization']?.split(' ')[1] ?? '';
+    const userid = await this.jwtService.decode(token).id;
+    const service = new AudithApplicationServiceDecorator(
+      new LoggingApplicationServiceDecorator(
+        new FindAlbumByIDService(
+          this.repository,
+          this.songRepository,
+        ),
+        new NestLogger(),
+      ),
+      this.audithRepo,
+      userid,
     );
+    // this.findAlbumByIDService = new FindAlbumByIDService(
+    //   this.repository,
+    //   this.songRepository,
+    // );
     this.findArtistsInCollectionService = new FindArtistsInCollectionService(
       this.artistsRepository,
     );
@@ -109,8 +123,7 @@ export class AlbumController {
     );
     const iddto = PlaylistID.create(id);
     const dto: FindAlbumByIDServiceDto = { id: iddto };
-    const AlbumResult: Result<Playlist> =
-      await this.findAlbumByIDService.execute(dto);
+    const AlbumResult: Result<Playlist> = await service.execute(dto);
 
     if (AlbumResult.IsSuccess) {
       const albumResponse: Playlist = AlbumResult.Value;
