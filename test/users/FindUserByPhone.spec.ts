@@ -9,10 +9,8 @@ describe('FindUserByPhoneService!!', () => {
     //Arrange
     const user = UserObjectMother.createUser();
     const mock = new UserRepositoryMock();
-    const handler = new TransactionHandlerImplementation(
-      DataSourceSingleton.getInstance().createQueryRunner(),
-    );
-    const service = FindUserByPhoneTest.findUserByPhoneService(mock, handler);
+
+    const service = FindUserByPhoneTest.findUserByPhoneService(mock, null);
 
     //Act
     const result = await service.execute(user.Phone.PhoneNumber.phoneNumber);
