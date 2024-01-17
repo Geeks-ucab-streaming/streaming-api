@@ -1,6 +1,5 @@
-
 import { FindUserByPhoneTest } from '../core/objects-mother/FindUserByPhoneTest';
-import { UserObjectMother } from '../../test/core/objects-mother/user.object-mother';
+import { UserObjectMother } from 'test/core/objects-mother/UserObjectMother';
 import { UserRepositoryMock } from '../../test/core/repository-mocks/user.repository.mock';
 
 describe('FindUserByPhoneService!!', () => {

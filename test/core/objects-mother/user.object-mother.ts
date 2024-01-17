@@ -1,8 +1,8 @@
 import { PhoneParameterObject } from 'src/phones/domain/parameterObjects/phoneParameterObject';
 import { Phone } from 'src/phones/domain/phoneAggregate/phone';
 import { UserPhoneFactory } from 'src/users/domain/factories/user-phone.factory';
-import { TokenEntity } from 'src/users/domain/userAggregate/value-objects/token';
 import { User } from 'src/users/domain/userAggregate/user';
+import { Token } from 'src/users/domain/userAggregate/value-objects/token';
 import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
 import { userSuscriptionState } from 'src/users/domain/userAggregate/value-objects/userSuscriptionState';
 
@@ -20,7 +20,7 @@ export class UserObjectMother {
       ),
       userSuscriptionState.create('premium', new Date(Date.now())),
       [
-        TokenEntity.create(
+        Token.create(
           'dfhygzT0QZG8Qt2gavQIdI:APA91bHr1cGJCUK9cfW7UuYOqH-dfqfRxP1Gp61riytbvoS7Y3kjRCu2NMGxb44wp_ChfCWbxDgbJ7W-4yTewALy4frn54S9sMcK5cN-XiKln9OcZfdFgrFydyffvH2wFtk5kCw20Pst',
           '2a211e29-4290-4783-9f7b-e98b36fbfe35',
         ),
@@ -41,7 +41,7 @@ export class UserObjectMother {
         ),
       ),
       userSuscriptionState.create('gratuito', new Date(Date.now())),
-      [TokenEntity.create('00000', '000000')],
+      [Token.create('00000', '000000')],
     );
     return usuario;
   }
