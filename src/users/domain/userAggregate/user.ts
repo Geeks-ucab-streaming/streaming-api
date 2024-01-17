@@ -15,7 +15,7 @@ import { UserNameUpdated } from "../events/user-name-updated";
 import { UserBirthDateUpdated } from "../events/user-birthDate-updated";
 import { UserGenderUpdated } from "../events/user-gender-updated";
 import { InvalidUserException } from "../exceptions/invalid-user.exception";
-import { TokenEntity } from './entities/token';
+import { Token } from './value-objects/token';
 import { UserSuscriptionUpdated } from "../events/user-suscription-updated";
 
 export class User extends AggregateRoot<userId> {
@@ -26,10 +26,10 @@ export class User extends AggregateRoot<userId> {
   private suscriptionState: userSuscriptionState;
   //AQUI DEBE IR LA FECHA DE LA SUSCRIPCION O ADENTRO DEL CREATE
   private phone: Phone;
-  private token : TokenEntity[];
+  private token : Token[];
 
   //OJO: Evaluar el protected en la definición del constructor
-    constructor(id: userId, phone: Phone , suscriptionState: userSuscriptionState, token?: TokenEntity[]) {
+    constructor(id: userId, phone: Phone , suscriptionState: userSuscriptionState, token?: Token[]) {
     const userCreated = UserCreated.create(id, phone ,suscriptionState,token);
     super(id, userCreated);
   } 
@@ -58,15 +58,15 @@ export class User extends AggregateRoot<userId> {
     return this.phone;
   }
 
-  get Token(): TokenEntity[] {
+  get Token(): Token[] {
     return this.token;
   }
 
-  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState,token?:TokenEntity[], email?: userEmail,name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
+  static create(id: userId, phone: Phone , suscriptionState: userSuscriptionState,token?:Token[], email?: userEmail,name?: userName, birthDate?: UserBirthDate, gender?: UserGender): User {
     return new User(id, phone ,suscriptionState,token);
   }
 
-  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState,token?:TokenEntity[]) {
+  public createUser(id: userId, phone: Phone ,suscriptionState: userSuscriptionState,token?:Token[]) {
     this.apply(UserCreated.create(id, phone , suscriptionState,token));
   }
 

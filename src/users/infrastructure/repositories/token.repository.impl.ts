@@ -3,17 +3,16 @@ import { Repository } from 'typeorm';
 import { TokenDeviceUserEntity } from '../entities/tokenDeviceUser.entity';
 import { UserEntity } from '../entities/users.entity';
 import { DataSourceSingleton } from '../../../common/infrastructure/dataSourceSingleton';
-import { TokenEntity } from '../../domain/userAggregate/entities/token';
+import { Token } from '../../domain/userAggregate/value-objects/token';
 import { Imapper } from '../../../common/Application/IMapper';
-
 import { User } from '../../domain/userAggregate/user';
 import { TransactionHandlerImplementation } from '../../../common/infrastructure/transaction_handler_implementation';
 
 
 export class OrmTokenRepository  extends Repository<TokenDeviceUserEntity> implements ITokenUserRepository {
-  tokenMapper: Imapper<TokenEntity, TokenDeviceUserEntity>;
+  tokenMapper: Imapper<Token, TokenDeviceUserEntity>;
   constructor(
-    tokenMapper: Imapper<TokenEntity, TokenDeviceUserEntity>
+    tokenMapper: Imapper<Token, TokenDeviceUserEntity>
   ) {
 
     super(TokenDeviceUserEntity, DataSourceSingleton.getInstance().manager);
@@ -27,7 +26,7 @@ export class OrmTokenRepository  extends Repository<TokenDeviceUserEntity> imple
       .then((tokens) => tokens.map((token) => token.token));
      }
 
-  async saveToken(token: TokenEntity, runner?: TransactionHandlerImplementation): Promise<void> {
+  async saveToken(token: Token, runner?: TransactionHandlerImplementation): Promise<void> {
     const tokenOrm = await this.tokenMapper.domainTo(token)
     const runnerTransaction = runner.getRunner()
     await runnerTransaction.manager.save(tokenOrm)
