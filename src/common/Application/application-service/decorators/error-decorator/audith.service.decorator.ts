@@ -23,7 +23,7 @@ export class AudithApplicationServiceDecorator<
     
   }
 
-  async execute(dto: D): Promise<Result<R>> {
+  async execute(dto?: D): Promise<Result<R>> {
         const result = await super.execute(dto);
 
     try { 
