@@ -13,8 +13,8 @@ import {
   GetArtistProfilesApplicationServiceDto,
 } from 'src/artists/application/services/get-artist-profile.application.service';
 import { Artist } from 'src/artists/domain/artist';
-import { ErrorApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/error-application.service.decorator';
-import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
+
+
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
@@ -36,10 +36,18 @@ import { Playlist } from 'src/playlist/domain/playlist';
 import { GetArtistGenre } from 'src/artists/domain/services/getArtistGenreDomain.service';
 import { MyResponse } from 'src/common/infrastructure/Response';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
+import {
+  AudithApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/audith.service.decorator';
+import {
+  LoggingApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/loggin-application.service.decorator';
+import {
+  ErrorApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/error-application.service.decorator';
 @ApiBearerAuth()
 @Controller('api/artist')
 export class ArtistController {

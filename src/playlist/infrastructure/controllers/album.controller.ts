@@ -20,12 +20,16 @@ import { Song } from 'src/songs/domain/song';
 import { FindAlbumByIDService, FindAlbumByIDServiceDto } from 'src/playlist/application/services/FindAlbumByID.service';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
+import {
+  AudithApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/audith.service.decorator';
+import {
+  LoggingApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/loggin-application.service.decorator';
 @ApiBearerAuth()
 @Controller('api/album')
 export class AlbumController {

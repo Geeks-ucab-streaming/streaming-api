@@ -25,7 +25,6 @@ import {
   GetSongBPlaylistIdServiceDto,
 } from 'src/songs/application/services/getSongsByPlaylistId.service';
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
-import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { Result } from 'src/common/domain/logic/Result';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { GetTrendingSongsService } from 'src/songs/application/services/getTrendingSongs.service';
@@ -50,9 +49,14 @@ import { userId } from 'src/users/domain/userAggregate/value-objects/userId';
 import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { StreamInfoDto } from '../stream.dto';
+import {
+  AudithApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/audith.service.decorator';
+import {
+  LoggingApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/loggin-application.service.decorator';
 
 export class TrendingSongsDto {
   songs: SongDto[];

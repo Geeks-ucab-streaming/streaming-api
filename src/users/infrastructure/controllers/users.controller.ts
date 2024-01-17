@@ -41,6 +41,8 @@ import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/aud
 import {
   AudithApplicationServiceDecorator
 } from '../../../common/Application/application-service/decorators/audith.service.decorator';
+import { PhoneAlreadyExistsExceptions } from '../../domain/exceptions/user-already-exists.exception';
+import { MyResponse } from '../../../common/infrastructure/Response';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -184,7 +186,7 @@ export class UsersController {
         statusCode: result.statusCode || 200,
       };
     } else {
-      return result;
+      MyResponse.fail(result.statusCode, result.message, result.error);
     }
   }
   // @UseGuards(JwtAuthGuard)
@@ -232,7 +234,7 @@ export class UsersController {
         statusCode: 200,
       };
     } else {
-      return result;
+      MyResponse.fail(result.statusCode, result.message, result.error);
     }
   }
 
@@ -253,13 +255,7 @@ export class UsersController {
     const data = await service.execute(body.phone);
 
     if (!data.IsSuccess) {
-      return {
-        data: {
-          message: data.message,
-          error: data.error,
-        },
-        statusCode: data.statusCode || 200,
-      };
+      MyResponse.fail(data.statusCode, data.message, data.error);
     }
     const jwt = this.jwtService.sign(
       {
