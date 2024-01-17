@@ -120,7 +120,7 @@ export class UsersController {
     const device_token = headers['device_token'];
     const jwt = this.jwtService.sign(
       { id: 'asdfgh123456' },
-      { secret: jwtcontanst.secret, expiresIn: '24h' },
+      { secret: jwtcontanst.secret, expiresIn: '1m' },
     );
 
     return {
@@ -268,7 +268,7 @@ export class UsersController {
           ? data.Value.SuscriptionState.SuscriptionState
           : 'gratuito',
       },
-      { secret: jwtcontanst.secret, expiresIn: '24h' },
+      { secret: jwtcontanst.secret, expiresIn: '10s' },
     );
 
     return {
@@ -285,7 +285,10 @@ export class UsersController {
   @Get('/user')
   async findUser(@Req() req: Request, @Headers() headers: Headers) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
-    const id = await this.jwtService.decode(token).id;
+
+    const id = await this.jwtService.verify(token,{
+      secret: jwtcontanst.secret,
+    }).id;
     const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new FindUserById(this.userRepository, this.transactionHandler),
