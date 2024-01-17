@@ -32,7 +32,7 @@ export class TransmitWsGateway
   constructor() {}
   async handleConnection(client: Socket) {
     console.log('cliente conectado: ', client.id);
-    client.data = { currentStream: null };
+    client.data = { currentStream: null, stop: false };
     const token = client.handshake.auth.token;
     console.log(token);
     const userInfo = await this.jwtService.decode(token);
@@ -47,6 +47,8 @@ export class TransmitWsGateway
 
   handleDisconnect(client: Socket) {
     console.log('cliente desconectado: ', client.id);
+    client.data.currentStream = null;
+    client.data.stop = true;
   }
 
   @SubscribeMessage('message-from-client')
@@ -95,8 +97,10 @@ export class TransmitWsGateway
 
       response.data.on('data', (chunk: Buffer) => {
         cont++;
-        client.emit('message-from-server', { chunk });
-        console.log(cont);
+        if (!client.data.stop) {
+          client.emit('message-from-server', { chunk });
+          console.log(cont);
+        }
       });
 
       response.data.on('end', () => {
