@@ -35,12 +35,15 @@ export class TransmitWsGateway
     client.data = { currentStream: null };
     const token = client.handshake.auth.token;
     console.log(token);
-    // const userInfo = this.jwtService.verify(token, {
-    //   secret: jwtcontanst.secret,
-    // });
-    // this.id = userInfo.id;
-    // this.subscription = userInfo.subscription;
+    const userInfo = await this.jwtService.decode(token);
+    this.id = userInfo.id;
+    this.subscription = userInfo.subscription;
+    console.log(this.id);
+    console.log(this.subscription);
   }
+  // {
+  //   secret: jwtcontanst.secret,
+  // }
 
   handleDisconnect(client: Socket) {
     console.log('cliente desconectado: ', client.id);
@@ -49,7 +52,7 @@ export class TransmitWsGateway
   @SubscribeMessage('message-from-client')
   async sendSong(
     client: Socket,
-    payload: { songId: string; second: number | 0 },
+    payload: { preview: boolean; songId: string; second: number | 0 },
   ) {
     // Si hay un stream actual, lo cerramos
     if (client.data.currentStream) {
