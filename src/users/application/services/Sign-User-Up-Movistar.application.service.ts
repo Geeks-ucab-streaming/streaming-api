@@ -25,11 +25,9 @@ export class SignUserUpMovistar
     private readonly repo: IUserRepository,
     private readonly transactionHandler: ItransactionHandler,
   ) {}
-
   get name(): string {
     return this.constructor.name;
   }
-
   async execute(usersDto: ICreateUserDto): Promise<Result<User>> {
     await this.transactionHandler.startTransaction();
     const users = await this.findByPhoneUserService.execute(usersDto.phone);
