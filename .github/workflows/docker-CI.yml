@@ -26,7 +26,7 @@ jobs:
 
     - name: Deploy to ACI
       run: |
-        az login -u lagil.19@est.ucab.edu.ve -p Chu090697
+          az login --service-principal -u "${{ secrets.AZURE_APP_ID }}" -p "${{ secrets.AZURE_PASSWORD }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
         az container delete --resource-group soundspace2024 --name streaming-api --yes
     - name: Create new ACI with updated image
       run: |
