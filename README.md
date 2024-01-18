@@ -9,7 +9,7 @@ https://lucid.app/lucidchart/f9202a4f-fac1-49ae-b385-e59cd17f2d64/edit?viewport_
 
 ## ¿Cómo funciona el proyecto?
 
-El proyecto consiste en una API que expone varios endpoints para acceder a los servicios de streaming de música. Esta se comunica con una base de datos en la nube (Azure) que almacena la información de las canciones, los artistas, los álbumes, las listas de reproducción, álbumes y los usuarios.
+El proyecto consiste en una API que expone varios endpoints para acceder a los servicios de streaming de música. Esta se comunica con una base de datos en la nube (Azure) que almacena la información de las canciones, los artistas, los álbumes, las listas de reproducción y los usuarios.
 
 
 La estructura de este proyecto sigue una arquitectura hexagonal, donde el núcleo del sistema es el modelo de dominio, que contiene las clases y las interfaces que representan los conceptos del dominio de la música. El modelo de dominio se comunica con el exterior a través de puertos y adaptadores. 
