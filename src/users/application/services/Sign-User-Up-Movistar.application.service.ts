@@ -44,8 +44,7 @@ export class SignUserUpMovistar
         new DomainException<string>(
           void 0,
           phoneMovistar.message,
-          phoneMovistar.error,
-          phoneMovistar.statusCode,
+          phoneMovistar.error, phoneMovistar.statusCode,
         ),
       );
     }
