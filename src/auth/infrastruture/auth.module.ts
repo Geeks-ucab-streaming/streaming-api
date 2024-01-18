@@ -14,7 +14,7 @@ import { JwtStrategy } from 'src/users/application/jwtoken/jwt.strategies';
         return {
           secret: jwtcontanst.secret,
           signOptions: {
-            expiresIn: '24h',
+            expiresIn: '10s',
           },
         };
       },

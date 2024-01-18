@@ -30,7 +30,7 @@ import { UpdateUserById } from 'src/users/application/services/Update-User-By-id
 import { ParameterObjectUser } from 'src/users/application/ParameterObjects/updateUser';
 import { UsersForDtoMapper } from '../mappers/UserForDto.mapper';
 import { SignUserUpDigitel } from 'src/users/application/services/Sign-User-Up-Digitel.application.service';
-import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
+import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { jwtcontanst } from '../../application/constants/jwt.constansts';
 import { OrmTokenRepository } from '../repositories/token.repository.impl';
@@ -38,7 +38,11 @@ import { TokenMapper } from '../mappers/token.mapper';
 import { TransactionHandlerImplementation } from '../../../common/infrastructure/transaction_handler_implementation';
 import { CancelUsersSubscription } from 'src/users/application/services/Cancel-Users-Subscription.service';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
+import {
+  AudithApplicationServiceDecorator
+} from '../../../common/Application/application-service/decorators/audith.service.decorator';
+import { PhoneAlreadyExistsExceptions } from '../../domain/exceptions/user-already-exists.exception';
+import { MyResponse } from '../../../common/infrastructure/Response';
 
 @ApiBearerAuth()
 @Controller('api') //Recuerda que este es como un prefijo para nuestras rutas
@@ -118,7 +122,7 @@ export class UsersController {
     const device_token = headers['device_token'];
     const jwt = this.jwtService.sign(
       { id: 'asdfgh123456' },
-      { secret: jwtcontanst.secret, expiresIn: '24h' },
+      { secret: jwtcontanst.secret, expiresIn: '1m' },
     );
 
     return {
@@ -182,7 +186,7 @@ export class UsersController {
         statusCode: result.statusCode || 200,
       };
     } else {
-      return result;
+      MyResponse.fail(result.statusCode, result.message, result.error);
     }
   }
   // @UseGuards(JwtAuthGuard)
@@ -230,7 +234,7 @@ export class UsersController {
         statusCode: 200,
       };
     } else {
-      return result;
+      MyResponse.fail(result.statusCode, result.message, result.error);
     }
   }
 
@@ -251,13 +255,7 @@ export class UsersController {
     const data = await service.execute(body.phone);
 
     if (!data.IsSuccess) {
-      return {
-        data: {
-          message: data.message,
-          error: data.error,
-        },
-        statusCode: data.statusCode || 200,
-      };
+      MyResponse.fail(data.statusCode, data.message, data.error);
     }
     const jwt = this.jwtService.sign(
       {
@@ -266,7 +264,7 @@ export class UsersController {
           ? data.Value.SuscriptionState.SuscriptionState
           : 'gratuito',
       },
-      { secret: jwtcontanst.secret, expiresIn: '24h' },
+      { secret: jwtcontanst.secret, expiresIn: '10s' },
     );
 
     return {
@@ -283,7 +281,10 @@ export class UsersController {
   @Get('/user')
   async findUser(@Req() req: Request, @Headers() headers: Headers) {
     const token = req.headers['authorization']?.split(' ')[1] ?? '';
-    const id = await this.jwtService.decode(token).id;
+
+    const id = await this.jwtService.verify(token,{
+      secret: jwtcontanst.secret,
+    }).id;
     const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new FindUserById(this.userRepository, this.transactionHandler),

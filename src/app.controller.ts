@@ -9,6 +9,6 @@ export class AppController {
   @ApiTags('Hello')
   @Get()
   getHello(): string {
-    return "ogdsafas";
+    return  this.appService.getHello();
   }
 }

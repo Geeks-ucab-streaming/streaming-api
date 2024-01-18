@@ -1,14 +1,8 @@
 //Decoradores
 import {
-    AfterInsert,
-    AfterUpdate,
-    AfterRemove,
     Entity,
     Column,
     PrimaryGeneratedColumn,
-    OneToMany,
-    OneToOne,
-    Check,
     JoinColumn, ManyToOne,
 } from 'typeorm';
 import {UserEntity} from "./users.entity";

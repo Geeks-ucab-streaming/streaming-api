@@ -1,5 +1,5 @@
 import { Result } from 'src/common/domain/logic/Result';
-import { IApplicationService } from '../../application.service.interface';
+import { IApplicationService } from '../application.service.interface';
 import { ApplicationServiceDecorator } from './application.service.decorator';
 import { ILogger } from 'src/common/Application/loggin-handler/logger.interface';
 

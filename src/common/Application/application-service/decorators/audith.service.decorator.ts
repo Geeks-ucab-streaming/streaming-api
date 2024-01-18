@@ -1,7 +1,7 @@
 import { Result } from 'src/common/domain/logic/Result';
 import { IApplicationService } from 'src/common/Application/application-service/application.service.interface';
-import { ApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/application.service.decorator';
-import { IAudithRepository } from 'src/common/domain/repositories/IAudithRepository';
+import { IAudithRepository } from "src/common/domain/repositories/audit-repository";
+import { ApplicationServiceDecorator } from './application.service.decorator';
 
 /** AudithApplicationServiceDecorator: Es un decorador para agregar la auditoria.*/
 export class AudithApplicationServiceDecorator<

@@ -4,7 +4,7 @@ import {
   IgenericRepo,
 } from 'src/phones/domain/generic-repo-phones';
 //ESTO DEBERIA SER UNA INTERFAZ Y NO USAR LA LIBRERIA DIRECTAMENTE
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { PrefixEntity } from '../../infrastructure/entities/prefixes.entity';
 import { PhoneInvalidExceptions } from 'src/phones/domain/exceptions/phone-not-valid-exception';
 import { ValidateIsUsableOperatorService } from 'src/phones/domain/services/validate-is-usable-operator.domain.service';

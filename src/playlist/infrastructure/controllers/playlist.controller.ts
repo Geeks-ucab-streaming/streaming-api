@@ -34,15 +34,15 @@ import { MyResponse } from 'src/common/infrastructure/Response';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
-import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { TopPlaylistDto } from '../dtos/topPlaylistDto';
 import { PlaylistDto } from '../dtos/playlistDto';
 import { SongDto } from 'src/songs/infrastructure/dtos/Song.dto';
+import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/audith.service.decorator';
+import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/loggin-application.service.decorator';
 @ApiBearerAuth()
 @Controller('api/playlist')
 export class PlaylistController {
