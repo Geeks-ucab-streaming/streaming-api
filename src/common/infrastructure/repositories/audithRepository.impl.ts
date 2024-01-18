@@ -1,4 +1,4 @@
-import { IAudithRepository } from "src/common/domain/repositories/IAudithRepository";
+import { IAudithRepository } from "src/common/domain/repositories/IaudithRepository";
 import { AudithEntity } from "../entities/audith.entity";
 import { Repository } from "typeorm";
 import { DataSourceSingleton } from "../dataSourceSingleton";
