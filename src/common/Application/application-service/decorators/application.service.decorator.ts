@@ -1,5 +1,5 @@
 import { Result } from "src/common/domain/logic/Result";
-import { IApplicationService } from "../../application.service.interface";
+import { IApplicationService } from "../application.service.interface";
 
 export abstract class ApplicationServiceDecorator<D, R>
   implements IApplicationService<D, R>

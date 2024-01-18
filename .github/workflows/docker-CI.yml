@@ -30,6 +30,6 @@ jobs:
         az container delete --resource-group deploy_container --name streaming-app-container --yes
     - name: Create new ACI with updated image
       run: |
-          az container create --resource-group deploy_container --name streaming-app-container --image ${{ secrets.USER }}/streaming-app-des-nest-app:v1 --dns-name-label streaming-api --environment-variables HOST=${{ secrets.HOST }} --query ipAddress.fqdn --ports 3000
+          az container create --resource-group soundspace2024 --name streaming-api --image ${{ secrets.USER }}/streaming-app-des-nest-app:v1 --dns-name-label streaming-api --environment-variables HOST=${{ secrets.HOST }} --query ipAddress.fqdn --ports 3000
 
         

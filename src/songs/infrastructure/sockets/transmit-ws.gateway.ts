@@ -32,7 +32,7 @@ export class TransmitWsGateway
   constructor() {}
   async handleConnection(client: Socket) {
     console.log('cliente conectado: ', client.id);
-    client.data = { currentStream: null };
+    client.data = { currentStream: null, stop: false };
     const token = client.handshake.auth.token;
     console.log(token);
     const userInfo = await this.jwtService.decode(token);
@@ -47,6 +47,8 @@ export class TransmitWsGateway
 
   handleDisconnect(client: Socket) {
     console.log('cliente desconectado: ', client.id);
+    client.data.currentStream = null;
+    client.data.stop = true;
   }
 
   @SubscribeMessage('message-from-client')
@@ -68,6 +70,7 @@ export class TransmitWsGateway
     const song: Song = (
       await this.getSongByIdService.execute(getSongByIdServiceDto)
     ).value;
+    client.data.stop = false;
 
     const filePath: string = `https://desarrollosoundspace.blob.core.windows.net/${
       this.sendPreview(this.subscription)
@@ -94,9 +97,16 @@ export class TransmitWsGateway
       client.data.currentStream = response.data;
 
       response.data.on('data', (chunk: Buffer) => {
-        cont++;
-        client.emit('message-from-server', { chunk });
-        console.log(cont);
+        if (!client.data.stop) {
+         cont++;
+          client.emit('message-from-server', { chunk });
+          console.log(cont);
+        }
+      });
+
+      client.on('client-stopping', () => {
+        client.data.stop = true;
+        console.log('paro la cancion');
       });
 
       response.data.on('end', () => {
@@ -118,6 +128,8 @@ export class TransmitWsGateway
       case 'eliminado':
         return true;
       case 'gratuito':
+        return true;
+      default:
         return true;
     }
   }

@@ -1,10 +1,16 @@
-import { Controller, Get, Param, ParseUUIDPipe, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { Playlist } from 'src/playlist/domain/playlist';
 import { PlaylistRepository } from '../PlaylistRepository.impl';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
-import { PlaylistDto, SongDto, TopAlbumsDto, TopPlaylistDto } from 'src/dtos';
 import { FindTopAlbumsService } from 'src/playlist/application/services/FindTopAlbums.service';
 import { Result } from 'src/common/domain/logic/Result';
 import { MyResponse } from 'src/common/infrastructure/Response';
@@ -17,24 +23,28 @@ import { FindArtistsInCollectionService } from 'src/artists/application/services
 import { OrmArtistRepository } from 'src/artists/infrastructure/repositories/artist.repository.impl';
 import { Artist } from 'src/artists/domain/artist';
 import { Song } from 'src/songs/domain/song';
-import { FindAlbumByIDService, FindAlbumByIDServiceDto } from 'src/playlist/application/services/FindAlbumByID.service';
+import {
+  FindAlbumByIDService,
+  FindAlbumByIDServiceDto,
+} from 'src/playlist/application/services/FindAlbumByID.service';
 import { SongID } from 'src/songs/domain/value-objects/SongID-valueobject';
 import { PlaylistID } from 'src/playlist/domain/value-objects/PlaylistID-valueobject';
-import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/audith.service.decorator';
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
+import { TopPlaylistDto } from '../dtos/topPlaylistDto';
+import { PlaylistDto } from '../dtos/playlistDto';
+import { TopAlbumsDto } from '../dtos/topAlbumsDto';
+import { SongDto } from 'src/songs/infrastructure/dtos/Song.dto';
+import { AudithApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/audith.service.decorator';
+import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/loggin-application.service.decorator';
 @ApiBearerAuth()
 @Controller('api/album')
 export class AlbumController {
   private repository: PlaylistRepository;
   private songRepository: OrmSongRepository;
   private artistsRepository: OrmArtistRepository;
-  private findTopAlbumsService: FindTopAlbumsService;
-  private findAlbumByIDService: FindAlbumByIDService;
-  private findPlaylistByIdService: FindAlbumByPlaylistIDService;
   private findSongsInCollectionService: GetSongsInCollectionService;
   private findArtistsInCollectionService: FindArtistsInCollectionService;
   private audithRepo: AudithRepositoryImpl;
@@ -102,10 +112,7 @@ export class AlbumController {
     const userid = await this.jwtService.decode(token).id;
     const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
-        new FindAlbumByIDService(
-          this.repository,
-          this.songRepository,
-        ),
+        new FindAlbumByIDService(this.repository, this.songRepository),
         new NestLogger(),
       ),
       this.audithRepo,

@@ -5,8 +5,6 @@ import { PlaylistRepository } from 'src/playlist/infrastructure/PlaylistReposito
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Result } from '../domain/logic/Result';
-import { PlaylistDto, SongDto } from 'src/dtos';
-import { LoggingApplicationServiceDecorator } from '../Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from './logger/nest-logger';
 import { BrowseSongsService } from 'src/songs/application/services/browseSongs.service';
 import { Song } from 'src/songs/domain/song';
@@ -21,6 +19,8 @@ import { Playlist } from 'src/playlist/domain/playlist';
 import { MyResponse } from './Response';
 import { PaginationDto } from './Dtos/pagination.dto';
 import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject';
+import { SongDto } from 'src/songs/infrastructure/dtos/Song.dto';
+import { LoggingApplicationServiceDecorator } from '../Application/application-service/decorators/loggin-application.service.decorator';
 
 export class QueryDto {
   artists?: { id: string; name: string; image: Buffer }[];
