@@ -18,7 +18,7 @@ export class GetArtistGenre {
 
     const mostCommonGenre = genres.reduce((acc, genre) => {
       acc[genre] = (acc[genre] || 0) + 1;
-      return acc;
+      return acc; 
     }, {});
     const genre: string = Object.keys(mostCommonGenre).reduce((a, b) =>
       mostCommonGenre[a] > mostCommonGenre[b] ? a : b,
