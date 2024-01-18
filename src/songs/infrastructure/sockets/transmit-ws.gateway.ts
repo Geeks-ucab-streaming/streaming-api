@@ -70,7 +70,7 @@ export class TransmitWsGateway
     const song: Song = (
       await this.getSongByIdService.execute(getSongByIdServiceDto)
     ).value;
-    //client.data.stop = false;
+    client.data.stop = false;
 
     const filePath: string = `https://desarrollosoundspace.blob.core.windows.net/${
       this.sendPreview(this.subscription)
@@ -98,16 +98,16 @@ export class TransmitWsGateway
 
       response.data.on('data', (chunk: Buffer) => {
         if (!client.data.stop) {
-        //  cont++;
+         cont++;
           client.emit('message-from-server', { chunk });
           console.log(cont);
         }
       });
 
-      // client.on('client-stopping', () => {
-      //   client.data.stop = true;
-      //   console.log('paro la cancion');
-      // });
+      client.on('client-stopping', () => {
+        client.data.stop = true;
+        console.log('paro la cancion');
+      });
 
       response.data.on('end', () => {
         console.log('Streaming complete');
