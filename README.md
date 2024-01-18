@@ -2,7 +2,7 @@
 # Sound-Space API
 Proyecto hecho en TypeScript que sirve como API para una aplicación de streaming de música. 
 
-Está realizado con una arquitectura hexagonal, siguiendo los principios de Domain Driven Design.
+Está realizado con arquitectura hexagonal, siguiendo los principios de Domain Driven Design.
 
 Modelo de dominio y Arquitectura hexagonal del proyecto en el siguiente link de lucidchart:
 https://lucid.app/lucidchart/f9202a4f-fac1-49ae-b385-e59cd17f2d64/edit?viewport_loc=3673%2C-1262%2C4063%2C1857%2CcDu60uZC6Uby&invitationId=inv_7e2b3c3e-ee33-47a9-a8d6-193279445e03
