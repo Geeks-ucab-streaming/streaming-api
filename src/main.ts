@@ -39,6 +39,6 @@ async function bootstrap() {
     console.log('Error sending message:', error);
   });*/
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
