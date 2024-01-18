@@ -1,4 +1,12 @@
-import { Controller, Get, Inject, Param, ParseUUIDPipe, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseUUIDPipe,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   FindAlbumByArtistIDService,
   FindAlbumByArtistIDServiceDto,
@@ -13,7 +21,6 @@ import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSinglet
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
 import { FindTopPlaylistsService } from 'src/playlist/application/services/FindTopPlaylists.service';
-import { PlaylistDto, SongDto, TopPlaylistDto } from 'src/dtos';
 import { Artist } from 'src/artists/domain/artist';
 import {
   GetSongsInCollectionService,
@@ -33,15 +40,15 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
 import { LoggingApplicationServiceDecorator } from 'src/common/Application/application-service/decorators/error-decorator/loggin-application.service.decorator';
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
+import { TopPlaylistDto } from '../dtos/topPlaylistDto';
+import { PlaylistDto } from '../dtos/playlistDto';
+import { SongDto } from 'src/songs/infrastructure/dtos/Song.dto';
 @ApiBearerAuth()
 @Controller('api/playlist')
 export class PlaylistController {
   private repository: PlaylistRepository;
   private songRepository: OrmSongRepository;
   private artistsRepository: OrmArtistRepository;
-  private findPlaylistByIdService: FindAlbumByPlaylistIDService;
-  private findPlaylistByArtistIdService: FindAlbumByArtistIDService;
-  private findTopPlaylistsService: FindTopPlaylistsService;
   private findSongsInCollectionService: GetSongsInCollectionService;
   private findArtistsInCollectionService: FindArtistsInCollectionService;
   private audithRepo: AudithRepositoryImpl;
@@ -136,7 +143,7 @@ export class PlaylistController {
     const service = new AudithApplicationServiceDecorator(
       new LoggingApplicationServiceDecorator(
         new FindAlbumByPlaylistIDService(this.repository, this.songRepository),
-        new NestLogger()
+        new NestLogger(),
       ),
       this.audithRepo,
       userid,

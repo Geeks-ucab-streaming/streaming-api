@@ -20,7 +20,7 @@ import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSinglet
 import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetTrendingArtistsService } from 'src/artists/application/services/FindTrendingArtists.service';
-import { AllArtistInfoDto, TrendingArtistsDto } from 'src/dtos';
+
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
 import { Song } from 'src/songs/domain/song';
 import {
@@ -40,6 +40,8 @@ import { AudithApplicationServiceDecorator } from 'src/common/Application/applic
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
+import { TrendingArtistsDto } from '../dtos/trendingArtist.dto';
+import { AllArtistInfoDto } from '../dtos/allArtistInfo.dto';
 @ApiBearerAuth()
 @Controller('api/artist')
 export class ArtistController {
