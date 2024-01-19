@@ -14,13 +14,12 @@ import {
 } from 'src/artists/application/services/get-artist-profile.application.service';
 import { Artist } from 'src/artists/domain/artist';
 
-
 import { NestLogger } from 'src/common/infrastructure/logger/nest-logger';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { GetAllArtistsApplicationService } from 'src/artists/application/services/get-all-artists.application.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetTrendingArtistsService } from 'src/artists/application/services/FindTrendingArtists.service';
-import { AllArtistInfoDto, TrendingArtistsDto } from 'src/dtos';
+
 import { OrmSongRepository } from 'src/songs/infrastructure/repositories/song.repository.impl';
 import { Song } from 'src/songs/domain/song';
 import {
@@ -39,15 +38,11 @@ import { ArtistID } from 'src/artists/domain/value-objects/artistID-valueobject'
 import { AudithRepositoryImpl } from 'src/common/infrastructure/repositories/audithRepository.impl';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/users/application/jwtoken/jwt-auth.guard';
-import {
-  AudithApplicationServiceDecorator
-} from '../../../common/Application/application-service/decorators/audith.service.decorator';
-import {
-  LoggingApplicationServiceDecorator
-} from '../../../common/Application/application-service/decorators/loggin-application.service.decorator';
-import {
-  ErrorApplicationServiceDecorator
-} from '../../../common/Application/application-service/decorators/error-application.service.decorator';
+import { TrendingArtistsDto } from '../dtos/trendingArtist.dto';
+import { AllArtistInfoDto } from '../dtos/allArtistInfo.dto';
+import { AudithApplicationServiceDecorator } from '../../../common/Application/application-service/decorators/audith.service.decorator';
+import { LoggingApplicationServiceDecorator } from '../../../common/Application/application-service/decorators/loggin-application.service.decorator';
+import { ErrorApplicationServiceDecorator } from '../../../common/Application/application-service/decorators/error-application.service.decorator';
 @ApiBearerAuth()
 @Controller('api/artist')
 export class ArtistController {

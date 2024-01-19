@@ -25,11 +25,9 @@ export class SignUserUpMovistar
     private readonly repo: IUserRepository,
     private readonly transactionHandler: ItransactionHandler,
   ) {}
-
   get name(): string {
     return this.constructor.name;
   }
-
   async execute(usersDto: ICreateUserDto): Promise<Result<User>> {
     await this.transactionHandler.startTransaction();
     const users = await this.findByPhoneUserService.execute(usersDto.phone);
@@ -44,8 +42,7 @@ export class SignUserUpMovistar
         new DomainException<string>(
           void 0,
           phoneMovistar.message,
-          phoneMovistar.error,
-          phoneMovistar.statusCode,
+          phoneMovistar.error, phoneMovistar.statusCode,
         ),
       );
     }

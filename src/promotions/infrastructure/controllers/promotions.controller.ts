@@ -9,11 +9,11 @@ import { OrmPromotionRepository } from '../Repositories/promotion.repository.imp
 import { GetFileService } from 'src/common/infrastructure/services/getFile.service';
 import { DataSourceSingleton } from 'src/common/infrastructure/dataSourceSingleton';
 import { ApiTags } from '@nestjs/swagger';
-import { PromotionDto } from 'src/dtos';
 import { FindRandomPromotionsService } from 'src/promotions/application/services/FindRandomPromotion.service';
 import { Result } from 'src/common/domain/logic/Result';
 import { MyResponse } from 'src/common/infrastructure/Response';
 import { PromoID } from 'src/promotions/domain/value-objects/PromoID-valueobject';
+import { PromotionDto } from '../dtos/PromotionDto';
 
 @Controller('api/promotion')
 export class PromotionsController {
