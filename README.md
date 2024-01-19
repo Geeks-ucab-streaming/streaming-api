@@ -2,14 +2,11 @@
 # Sound-Space API
 Proyecto hecho en TypeScript que sirve como API para una aplicación de streaming de música. 
 
-Está realizado con arquitectura hexagonal, siguiendo los principios de Domain Driven Design.
-
-Modelo de dominio y Arquitectura hexagonal del proyecto en el siguiente link de lucidchart:
-https://lucid.app/lucidchart/f9202a4f-fac1-49ae-b385-e59cd17f2d64/edit?viewport_loc=3673%2C-1262%2C4063%2C1857%2CcDu60uZC6Uby&invitationId=inv_7e2b3c3e-ee33-47a9-a8d6-193279445e03
+Está realizado con una arquitectura hexagonal, siguiendo los principios de Domain Driven Design.
 
 ## ¿Cómo funciona el proyecto?
 
-El proyecto consiste en una API que expone varios endpoints para acceder a los servicios de streaming de música. Esta se comunica con una base de datos en la nube (Azure) que almacena la información de las canciones, los artistas, los álbumes, las listas de reproducción y los usuarios.
+El proyecto consiste en una API que expone varios endpoints para acceder a los servicios de streaming de música. Esta se comunica con una base de datos en la nube (Azure) que almacena la información de las canciones, los artistas, los álbumes, las listas de reproducción, álbumes y los usuarios.
 
 
 La estructura de este proyecto sigue una arquitectura hexagonal, donde el núcleo del sistema es el modelo de dominio, que contiene las clases y las interfaces que representan los conceptos del dominio de la música. El modelo de dominio se comunica con el exterior a través de puertos y adaptadores. 
@@ -77,5 +74,6 @@ docker-compose up
 - ### [@Diego Argotte](https://github.com/argotte)  [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/diego-argotte-2a82441a8/)
 - ### [@Luis Gil    ](https://github.com/LuisGil11) [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/)
 - ### [@Alejandro Gamboa](https://github.com/gamboaalejandro) [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alejandro-gamboa-6140b3228/)
+
 
 
