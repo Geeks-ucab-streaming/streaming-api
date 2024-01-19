@@ -40,8 +40,9 @@ docker-compose up
 
 # Diseño y Arquitectura:
 
-![Modelo de Dominio (DDD)](/streaming-api/images/UML Desarrollo - Arquitectura Hexagonal.png)
-![Arquitectura Hexagonal](/streaming-api/images/UML Desarrollo - Modelo de Dominio.png)
+<image src="/streaming-api/images/UML Desarrollo - Modelo de Dominio.png" alt="Modelo de Dominio (DDD)">
+
+<image src="/streaming-api/images/UML Desarrollo - Arquitectura Hexagonal.png" alt="Arquitectura Hexagonal">
 
 # Referencias Bibliográficas y Librerías:
 
