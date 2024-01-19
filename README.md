@@ -37,7 +37,36 @@ Install streaming-api with npm
 docker build -t streaming-app-docker .      
  Ejecutar luego este comando al tener el compose.yml
 docker-compose up
-    
+
+# Diseño y Arquitectura:
+
+![Modelo de Dominio (DDD)](/streaming-api/images/UML Desarrollo - Arquitectura Hexagonal.png)
+![Arquitectura Hexagonal](/streaming-api/images/UML Desarrollo - Modelo de Dominio.png)
+
+# Referencias Bibliográficas y Librerías:
+
+## Documentación
+  A continuación, se anexa el material que fue utilizado para aplicar todos los patrones tácticos y seguir los lineamientos planteados en la teoría de diseño de una arquitectura hexagonal:
+
+  ```bash
+ 1) ANICHE, M. (2024). Effective Software Testing A DEVELOPER’S GUIDE. MANNING SHELTER ISLAND.
+ 2) KHORIKOV, V. (2020). Unit Testing: Principles, Practices, and Patterns. MANNING SHELTER ISLAND.
+ 3) Millett, S., & Tune, N. (2015). Pattern Principles, and Practices of Domain Driven Design. Wrox.
+ 4) Plöd, M. (2019). Hands-on Domain-driven Design - by example. LeanPub.
+ 5) VAN DEURSEN, S., & SEEMANN, M. (2019). Dependency Injection Principles, Practices, and Patterns. MANNING Shelter Island.
+
+```
+
+## Liberías y dependencias externas utilizadas:
+
+  ```bash
+ 1) Socket.IO: Biblioteca de JavaScript para aplicaciones web en tiempo real que permite la comunicación bidireccional en tiempo real entre clientes web y servidores.Socket.IO permite establecer una conexión en tiempo real entre el servidor y los clientes. Esto es crucial para enviar datos de las canciones de manera fluida y en tiempo real al frontend. 
+
+ 2) FireBase: Se utiliza para manejar la autenticación y la autorización de los usuarios. La capacidad de Firebase para generar y validar tokens permite gestionar de forma segura las sesiones de los usuarios y proporcionar acceso personalizado a las colecciones de música, preferencias y configuraciones de los usuarios.
+
+ 3) azure/storage-blob: Servicio de almacenamiento de objetos en la nube optimizado para almacenar cantidades masivas de datos no estructurados, como archivos de audio, videos o imágenes.
+
+```    
 
 ## Authors
 
